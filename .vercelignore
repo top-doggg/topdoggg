@@ -1,0 +1,13 @@
+dist
+.design-references
+node_modules
+top-dog-ai
+design-qa.md
+server.js
+data.json
+public/products/watching-me-closely-tee.png
+public/products/young-boyz-tee.png
+public/products/young-boyz-legs-sideview-tee.png
+public/products/young-boyz-lower-body-fixed-tee.png
+public/products/young-boyz-pants-fixed-tee.png
+public/products/young-boyz-sideview-tee.png
