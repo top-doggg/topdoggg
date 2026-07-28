@@ -1,20 +1,118 @@
-# PlusOne Event Companion App
+# TRST Studios Storefront
 
-This workspace contains a v1 product prototype for a one-metro plus-one marketplace. It implements the planned service as a usable booking and operations experience with a small local API layer:
+Official React and Vite storefront for TRST Studios.
 
-- event brief intake with 24-hour and 48-hour planning tiers
-- escrow-style booking estimate
-- vetted companion cards
-- safety policy system and SOS demo flow
-- companion operations model
-- grounded integration readiness cards
-- pilot validation metrics
-- edge-case scenario simulator
+The project combines an editorial portfolio, apparel collection, Printify checkout links, Site Forge lead capture, and responsive interactive presentation.
 
-Run `node server.js` and open `http://localhost:5173` for the API-backed version. The app loads pilot data from `data.json` through `/api/bootstrap` and queues manual-review booking requests through `/api/bookings`.
+## Technology
 
-You can also open `index.html` directly for a static preview. In that mode, the app falls back if the local API is unavailable.
+* React
+* Vite
+* Bun
+* Vercel
+* Vercel Functions
+* Vercel Blob
+* Vercel Analytics
 
-## Launch Notes
+## Local Development
 
-The prototype assumes a U.S.-based, adult-only, public-venue-first pilot with vetted independent contractors and manual booking approval. Legal review is still required before any real launch, especially for worker classification, background checks, local regulations, insurance, cancellation policy, and platform liability.
+```powershell
+cd "D:\common_attachment\trststudios.online"
+bun install
+bun run dev
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+## Production Build
+
+```powershell
+bun run build
+```
+
+The production build is written to:
+
+```text
+dist/
+```
+
+Preview the production build locally:
+
+```powershell
+bun run preview
+```
+
+## Printify Checkout
+
+The storefront sends customers to the TRST Studios Printify storefront for product configuration, payment, and fulfillment.
+
+Create `.env.local` and configure:
+
+```text
+VITE_PRINTIFY_STORE_URL=https://your-store.printify.me
+VITE_PRINTIFY_SIN_MIEDO_URL=https://your-store.printify.me/product/your-product
+```
+
+Use public storefront and product URLs. Do not place Printify API tokens in frontend environment variables.
+
+## Serverless API
+
+The Vercel Functions are located in `api/`.
+
+Current endpoints include:
+
+```text
+POST /api/subscribe
+GET  /api/subscribe
+
+POST /api/site-blueprints
+GET  /api/site-blueprints
+```
+
+The functions use Vercel Blob for private submission storage.
+
+Optional frontend endpoint overrides:
+
+```text
+VITE_SUBSCRIBE_ENDPOINT=/api/subscribe
+VITE_FORGE_ENDPOINT=/api/site-blueprints
+```
+
+## Deployment
+
+Repository:
+
+```text
+top-doggg/topdoggg
+```
+
+Storefront branch:
+
+```text
+trststudios-storefront
+```
+
+The Vercel project should be configured to deploy this branch.
+
+Production domains:
+
+```text
+trststudios.online
+www.trststudios.online
+```
+
+## Repository Organization
+
+```text
+api/        Vercel serverless functions
+docs/       Product, marketing, and deployment documentation
+public/     Static public assets
+scripts/    Printify and artwork-production utilities
+src/        React application source
+```
+
+Large print-production files, local design references, audit output, and unrelated projects are intentionally excluded through `.gitignore`.
