@@ -6,3 +6,17 @@ dist
 *.log
 .DS_Store
 Thumbs.db
+
+# Local design and production assets
+.design-references/
+audit-trststudios-*/
+print-ready/
+rose-printify-contact-sheet.jpg
+
+# Separate local projects
+top-dog-ai/
+
+# Python generated files
+__pycache__/
+*.pyc
+*.pyo
