@@ -46,7 +46,7 @@ The connected project currently contains these empty, RLS-enabled tables:
 | --- | --- | --- |
 | `users` | Public profile paired with `auth.users` | Plausible foundation; not connected to the storefront |
 | `threads` | Community conversation container | Prototype only; product requirements are not defined |
-| `thread_members` | Conversation membership | Recursive SELECT policy repaired and captured in migrations |
+| `thread_members` | Conversation membership | Recursive SELECT policy repaired and captured in the baseline |
 | `messages` | Messages inside a thread | Prototype only; depends on the membership model |
 
 These tables must not be connected to the storefront until account, moderation,
@@ -59,10 +59,9 @@ without a data migration.
 The former `thread_members` SELECT policy queried `thread_members` from inside
 its own policy expression. That caused recursive RLS evaluation.
 
-`supabase/migrations/20260730053257_capture_thread_members_rls_repair.sql`
-preserves the intended behavior: members may see the participants in threads
-they belong to through a narrowly scoped helper in the non-exposed `private`
-schema.
+The complete Supabase baseline in `supabase/migrations/` preserves the intended
+behavior: members may see the participants in threads they belong to through a
+narrowly scoped helper in the non-exposed `private` schema.
 
 The helper:
 
@@ -70,6 +69,15 @@ The helper:
 - Has a fixed empty `search_path`
 - Is callable by `authenticated` only
 - Is not callable by `anon` or `service_role`
+
+The baseline also protects `threads.created_by` with column-level privileges.
+Authenticated members may update only `title`, `summary`, and
+`summary_updated_at`; RLS separately verifies membership before and after the
+update.
+
+The unused `trst` placeholder table was empty, had no application references,
+and had no defined product responsibility. It is intentionally omitted from
+the baseline and removed when the migration is applied.
 
 ## Migration rules
 
