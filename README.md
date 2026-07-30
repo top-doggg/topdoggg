@@ -59,6 +59,20 @@ VITE_PRINTIFY_SIN_MIEDO_URL=https://your-store.printify.me/product/your-product
 
 Use public storefront and product URLs. Do not place Printify API tokens in frontend environment variables.
 
+Printify remains the commerce system of record. The application must not copy
+card numbers, payment credentials, or other sensitive payment data into
+Supabase.
+
+## Data Architecture
+
+Supabase is reserved for owned experiences such as accounts, community,
+editorial content, and saved customer preferences. It is not currently part of
+the public storefront request path.
+
+See [`docs/data-architecture.md`](docs/data-architecture.md) for the reviewed
+system boundaries, the existing community-schema assessment, RLS requirements,
+and the explicit Data API grant convention for future migrations.
+
 ## Serverless API
 
 The Vercel Functions are located in `api/`.

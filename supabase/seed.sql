@@ -1,0 +1,3 @@
+-- Add development-only seed records here when community product requirements
+-- are defined. Never copy production customer or authentication data into this
+-- file.
