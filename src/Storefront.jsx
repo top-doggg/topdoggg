@@ -376,7 +376,9 @@ function StorefrontSchema() {
 export default function Storefront() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
-  const featuredProducts = useMemo(() => products, []);
+  const featuredProducts = useMemo(() => products.filter((p) => 
+  ["better-together", "no-bad-days", "bandana-inspired-corner-print"].includes(p.id)
+), []);
 
   function openProduct(product) {
     setActiveProduct(product);
