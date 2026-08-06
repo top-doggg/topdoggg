@@ -377,7 +377,7 @@ export default function Storefront() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
   const featuredProducts = useMemo(() => products.filter((p) => 
-    ["better-together", "no-bad-days", "sin-miedo"].includes(p.id)
+    ["young-boyz", "no-bad-days", "sin-miedo"].includes(p.id)
   ), []);
 
   function openProduct(product) {
