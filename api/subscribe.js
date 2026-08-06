@@ -1,5 +1,6 @@
 import { put } from "@vercel/blob";
 import { checkRateLimit } from "./_rate-limit.js";
+import { syncSubscriberToResend } from "./_resend.js";
 import { createHash } from "node:crypto";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -54,6 +55,20 @@ function normalizeEmail(value) {
 
 function hashEmail(email) {
   return createHash("sha256").update(email).digest("hex");
+}
+
+function cleanText(value, maxLength) {
+  return String(value || "").trim().slice(0, maxLength);
+}
+
+function cleanUtm(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+
+  return Object.fromEntries(
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
+      .map((key) => [key, cleanText(value[key], 160)])
+      .filter(([, item]) => item),
+  );
 }
 
 export default async function handler(request, response) {
@@ -125,8 +140,11 @@ export default async function handler(request, response) {
       email,
       emailHash,
       status: "subscribed",
-      source: String(body.source || "trststudios.online").slice(0, 120),
-      path: String(body.path || "").slice(0, 240),
+      source: cleanText(body.source || "direct", 120),
+      placement: cleanText(body.placement || "page", 80),
+      path: cleanText(body.path, 240),
+      referrer: cleanText(body.referrer, 500),
+      utm: cleanUtm(body.utm),
       subscribedAt: now.toISOString(),
       userAgent: String(request.headers["user-agent"] || "").slice(0, 240),
     };
@@ -142,6 +160,42 @@ export default async function handler(request, response) {
         cacheControlMaxAge: 0,
       },
     );
+
+    let emailDelivery = { status: "not_configured" };
+    try {
+      emailDelivery = await syncSubscriberToResend({ email, emailHash });
+    } catch (error) {
+      emailDelivery = { status: "failed" };
+      console.error("Resend subscriber sync failed", {
+        status: error.status || 500,
+      });
+    }
+
+    record.emailDelivery = {
+      provider: "resend",
+      status: emailDelivery.status,
+      attemptedAt: new Date().toISOString(),
+      contactId: emailDelivery.contactId || undefined,
+      emailId: emailDelivery.emailId || undefined,
+    };
+
+    try {
+      await put(
+        `subscribers/${emailHash}.json`,
+        JSON.stringify(record, null, 2),
+        {
+          access: "private",
+          allowOverwrite: true,
+          addRandomSuffix: false,
+          contentType: "application/json",
+          cacheControlMaxAge: 0,
+        },
+      );
+    } catch (error) {
+      console.error("Subscriber delivery status could not be saved", {
+        status: error.statusCode || 500,
+      });
+    }
 
     sendJson(response, 200, { ok: true, subscribed: true });
   } catch (error) {

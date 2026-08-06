@@ -6,8 +6,9 @@ import "./storefront.css";
 const SUBSCRIBE_ENDPOINT = (import.meta.env.VITE_SUBSCRIBE_ENDPOINT || "/api/subscribe").trim();
 const POPUP_KEY = "trst-subscriber-popup-v2";
 const INSTAGRAM_URL = "https://www.instagram.com/_de.la.costa_/";
+const SITE_URL = "https://trststudios.online";
 
-const products = [
+export const products = [
   {
     id: "bandana-inspired-corner-print",
     name: "Bandana Corner Tee",
@@ -125,15 +126,31 @@ function trackStorefront(name, properties = {}) {
   }
 }
 
-async function subscribe(email, website = "") {
+function getSubscriberAttribution(placement) {
+  const params = new URLSearchParams(window.location.search);
+  const utm = Object.fromEntries(
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
+      .map((key) => [key, params.get(key)?.trim()])
+      .filter(([, value]) => value),
+  );
+
+  return {
+    source: utm.utm_source || "direct",
+    placement,
+    path: window.location.pathname,
+    referrer: document.referrer || "",
+    utm,
+  };
+}
+
+async function subscribe(email, website = "", placement = "page") {
   const response = await fetch(SUBSCRIBE_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({
       email,
       website,
-      source: "trststudios.online",
-      path: window.location.pathname,
+      ...getSubscriberAttribution(placement),
     }),
   });
 
@@ -173,6 +190,10 @@ function ProductModal({ product, onClose }) {
   }, [product]);
 
   useEffect(() => {
+    trackStorefront("Product detail viewed", { product: product.id });
+  }, [product]);
+
+  useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKeyDown = (event) => event.key === "Escape" && onClose();
@@ -187,7 +208,7 @@ function ProductModal({ product, onClose }) {
     setStoreState({ loading: true, error: "" });
     try {
       const url = getPrintifyCheckoutUrl([{ id: product.id, size }]);
-      trackStorefront("Product checkout", { product: product.id, size });
+      trackStorefront("Checkout started", { product: product.id, size, price: priceFor(product, size) });
       window.open(url, "_blank", "noopener,noreferrer");
       setStoreState({ loading: false, error: "" });
     } catch (error) {
@@ -202,8 +223,8 @@ function ProductModal({ product, onClose }) {
         <div className="product-gallery">
           <img src={view === "front" ? product.image : product.backImage} alt={`${product.name}, ${view} view`} />
           <div className="gallery-controls" aria-label="Product views">
-            <button className={view === "front" ? "active" : ""} type="button" onClick={() => setView("front")}>Front</button>
-            <button className={view === "back" ? "active" : ""} type="button" onClick={() => setView("back")}>Back</button>
+            <button className={view === "front" ? "active" : ""} type="button" onClick={() => { setView("front"); trackStorefront("Product view changed", { product: product.id, view: "front" }); }}>Front</button>
+            <button className={view === "back" ? "active" : ""} type="button" onClick={() => { setView("back"); trackStorefront("Product view changed", { product: product.id, view: "back" }); }}>Back</button>
           </div>
         </div>
         <div className="product-details">
@@ -222,7 +243,7 @@ function ProductModal({ product, onClose }) {
             <legend>Choose size</legend>
             <div>
               {sizes.map((item) => (
-                <button className={size === item ? "active" : ""} type="button" key={item} onClick={() => setSize(item)}>
+                <button className={size === item ? "active" : ""} type="button" key={item} onClick={() => { setSize(item); trackStorefront("Product size selected", { product: product.id, size: item, price: priceFor(product, item) }); }}>
                   {item}
                 </button>
               ))}
@@ -259,9 +280,11 @@ function SubscribeForm({ compact = false, onSuccess }) {
 
     setState({ status: "loading", message: "" });
     try {
-      await subscribe(email.trim(), website);
+      const placement = compact ? "popup" : "page";
+      const attribution = getSubscriberAttribution(placement);
+      await subscribe(email.trim(), website, placement);
       localStorage.setItem(POPUP_KEY, JSON.stringify({ subscribedAt: Date.now() }));
-      trackStorefront("Newsletter signup", { placement: compact ? "popup" : "page" });
+      trackStorefront("Newsletter signup", { placement, source: attribution.source });
       setState({ status: "success", message: "You’re on the list." });
       setEmail("");
       onSuccess?.();
@@ -281,6 +304,7 @@ function SubscribeForm({ compact = false, onSuccess }) {
         <input name="website" tabIndex="-1" autoComplete="off" value={website} onChange={(event) => setWebsite(event.target.value)} />
       </label>
       <button type="submit" disabled={state.status === "loading"}>{state.status === "loading" ? "Joining…" : "Join the list"}</button>
+      <small>By joining, you agree to receive TRST Studios updates. Unsubscribe anytime.</small>
       {state.message ? <small className={state.status} role={state.status === "error" ? "alert" : "status"}>{state.message}</small> : null}
     </form>
   );
@@ -296,8 +320,13 @@ function SubscriberPopup() {
     return () => window.clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (open) trackStorefront("Newsletter popup viewed", { placement: "popup" });
+  }, [open]);
+
   function dismiss() {
     localStorage.setItem(POPUP_KEY, JSON.stringify({ dismissedAt: Date.now() }));
+    trackStorefront("Newsletter popup dismissed", { placement: "popup" });
     setOpen(false);
   }
 
@@ -312,6 +341,36 @@ function SubscriberPopup() {
       <SubscribeForm compact onSuccess={() => window.setTimeout(() => setOpen(false), 900)} />
     </aside>
   );
+}
+
+function StorefrontSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "TRST Studios DE.LA.COSTA Edition 001",
+    numberOfItems: products.length,
+    itemListElement: products.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Product",
+        name: product.name,
+        description: product.story,
+        image: product.image,
+        url: `${SITE_URL}/#shop`,
+        brand: { "@type": "Brand", name: "TRST Studios" },
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "USD",
+          price: Number(product.price.replace("$", "")),
+          availability: "https://schema.org/InStock",
+          url: `${SITE_URL}/#shop`,
+        },
+      },
+    })),
+  };
+
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
 }
 
 export default function Storefront() {
@@ -330,6 +389,7 @@ export default function Storefront() {
 
   return (
     <div className="trst-site">
+      <StorefrontSchema />
       <a className="skip-link" href="#main">Skip to content</a>
       <div className="announcement">Edition 001 is live · Independent art and apparel</div>
       <header className="site-header">
@@ -343,6 +403,7 @@ export default function Storefront() {
         <nav id="primary-nav" className={menuOpen ? "open" : ""} aria-label="Primary navigation">
           <a href="#shop" onClick={closeMenu}>Shop</a>
           <a href="#story" onClick={closeMenu}>Our Story</a>
+          <a href="/open-thread" onClick={() => { closeMenu(); trackStorefront("Open Thread navigation click", { placement: "header" }); }}>Open Thread</a>
           <a href="#journal" onClick={closeMenu}>Journal</a>
           <a href="#customer-care" onClick={closeMenu}>Customer Care</a>
           <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackStorefront("Instagram outbound", { placement: "header" })}>Instagram</a>
@@ -359,7 +420,7 @@ export default function Storefront() {
             <p>Independent apparel and visual stories rooted in community, memory, and the places that shape us.</p>
             <div className="hero-actions">
               <a className="button light" href="#shop" onClick={() => trackStorefront("Hero shop click")}>Shop Edition 001</a>
-              <a className="button outline" href="#story">Discover the story</a>
+              <a className="button outline" href="/open-thread" onClick={() => trackStorefront("Open Thread navigation click", { placement: "hero" })}>Enter Open Thread</a>
             </div>
           </div>
           <div className="hero-edition" aria-hidden="true">001</div>
@@ -393,6 +454,20 @@ export default function Storefront() {
           </div>
         </section>
 
+        <section className="open-thread-entry" aria-labelledby="open-thread-title">
+          <div className="open-thread-entry-copy">
+            <span>TRST Open Thread</span>
+            <h2 id="open-thread-title">Every place leaves a mark.</h2>
+            <p>A living record of the places that shape us. Add a line, help build a chapter, and see what a city chooses to carry forward.</p>
+            <a href="/open-thread" onClick={() => trackStorefront("Open Thread navigation click", { placement: "homepage" })}>Enter Open Thread</a>
+          </div>
+          <div className="open-thread-entry-image"><img src="/instagram/black-and-white.jpg" alt="TRST community gathering outdoors" loading="lazy" decoding="async" /></div>
+          <div className="open-thread-entry-chapters" aria-label="Open Thread city chapters">
+            <a href="/open-thread/santa-ana" onClick={() => trackStorefront("Open Thread chapter click", { chapter: "santa-ana", placement: "homepage" })}><span>Chapter 01</span><strong>Santa Ana</strong><small>Enter the thread</small></a>
+            <a href="/open-thread/san-juan-capistrano" onClick={() => trackStorefront("Open Thread chapter click", { chapter: "san-juan-capistrano", placement: "homepage" })}><span>Chapter 02</span><strong>San Juan Capistrano</strong><small>Enter the thread</small></a>
+          </div>
+        </section>
+
         <section className="journal-section" id="journal">
           <header className="section-heading">
             <div><span>Journal</span><h2>Stories behind the work.</h2></div>
@@ -414,9 +489,9 @@ export default function Storefront() {
         </section>
 
         <section className="care-section" id="customer-care">
-          <article><span>Shipping</span><h3>Made after you order.</h3><p>Production and estimated delivery are shown in the secure store before payment.</p></article>
+          <article><span>Shipping</span><h3>Made after you order.</h3><p>Production and estimated delivery are shown in the secure store before payment. <a href="/fulfillment-policy">Read the policy</a>.</p></article>
           <article><span>Sizing</span><h3>Check the final measurements.</h3><p>Use the garment measurements on the Printify product page before choosing your size.</p></article>
-          <article><span>Returns</span><h3>Review before checkout.</h3><p>Replacement and return terms are displayed by the fulfillment store before purchase.</p></article>
+          <article><span>Returns</span><h3>Made-to-order care.</h3><p>Review our <a href="/fulfillment-policy">Shipping &amp; Returns Policy</a> before checkout.</p></article>
           <article><span>Support</span><h3>Talk to the studio.</h3><p><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Message DE.LA.COSTA on Instagram</a> with product or order questions.</p></article>
         </section>
 
@@ -432,6 +507,9 @@ export default function Storefront() {
         <div><strong>TRST STUDIOS</strong><span>Independent art, apparel, and visual storytelling.</span></div>
         <nav aria-label="Footer navigation">
           <a href="#shop">Shop</a><a href="#story">Our Story</a><a href="#journal">Journal</a><a href="#customer-care">Customer Care</a>
+          <a href="/open-thread">Open Thread</a>
+          <a href="/partners">Partner With TRST</a>
+          <a href="/fulfillment-policy">Shipping &amp; Returns</a>
           <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Instagram</a>
         </nav>
         <small>DE.LA.COSTA / Edition 001 · Pride In My Community</small>
