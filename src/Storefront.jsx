@@ -112,6 +112,33 @@ const journal = [
   },
 ];
 
+const selectedWorks = [
+  {
+    id: "DLC-001",
+    title: "Coming Back Home",
+    series: "Coming Back Home",
+    image: "/instagram/coming-back-home.jpg",
+    alt: "DE.LA.COSTA visual work about returning home",
+    note: "Place, return, memory, and the people who keep shaping the work.",
+  },
+  {
+    id: "DLC-008",
+    title: "Cheo's World",
+    series: "Haloed Youth",
+    image: "/instagram/cheos-world.jpg",
+    alt: "Illustrated DE.LA.COSTA street scene",
+    note: "Neighborhood identity, friendship, innocence, and the language of the block.",
+  },
+  {
+    id: "DLC-009",
+    title: "Black and White",
+    series: "What We Carry",
+    image: "/instagram/black-and-white.jpg",
+    alt: "Black-and-white DE.LA.COSTA community photograph",
+    note: "Community memory, protection, and the emotional weight inside everyday moments.",
+  },
+];
+
 const sizes = ["S", "M", "L", "XL", "2XL"];
 
 function priceFor(product, size) {
@@ -175,6 +202,87 @@ function ProductCard({ product, onOpen }) {
         <strong>From {product.price}</strong>
       </div>
     </article>
+  );
+}
+
+function ArtworkCard({ artwork, onInquire }) {
+  return (
+    <article className="artwork-card">
+      <button type="button" className="artwork-media" onClick={() => onInquire(artwork)} aria-label={`Ask about ${artwork.title}`}>
+        <img src={artwork.image} alt={artwork.alt} loading="lazy" decoding="async" />
+        <span>Ask about this work</span>
+      </button>
+      <div className="artwork-copy">
+        <div><small>{artwork.series}</small><h3>{artwork.title}</h3></div>
+        <p>{artwork.note}</p>
+        <small>{artwork.id} · Full artwork record in progress</small>
+      </div>
+    </article>
+  );
+}
+
+function ArtworkInquiryModal({ artwork, onClose }) {
+  const [form, setForm] = useState({ name: "", email: "", inquiryType: "original", message: "", updates: false, website: "" });
+  const [state, setState] = useState({ status: "idle", message: "" });
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event) => event.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKeyDown);
+    trackStorefront("Artwork inquiry opened", { artwork: artwork.id });
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [artwork.id, onClose]);
+
+  function updateField(event) {
+    const { name, value, type, checked } = event.target;
+    setForm((current) => ({ ...current, [name]: type === "checkbox" ? checked : value }));
+  }
+
+  async function submit(event) {
+    event.preventDefault();
+    setState({ status: "loading", message: "" });
+    try {
+      const response = await fetch("/api/artwork-inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...form, artworkId: artwork.id, artworkTitle: artwork.title, source: window.location.pathname }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || "Your inquiry could not be saved.");
+      trackStorefront("Artwork inquiry submitted", { artwork: artwork.id, inquiryType: form.inquiryType, updates: form.updates });
+      setState({ status: "success", message: "Your note is with the studio. We will reply personally." });
+      setForm({ name: "", email: "", inquiryType: "original", message: "", updates: false, website: "" });
+    } catch (error) {
+      setState({ status: "error", message: error.message || "Your inquiry could not be saved." });
+    }
+  }
+
+  return (
+    <div className="modal-shell" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <section className="artwork-dialog" role="dialog" aria-modal="true" aria-labelledby="artwork-inquiry-title">
+        <button className="modal-close" type="button" onClick={onClose} aria-label="Close artwork inquiry">Close</button>
+        <div className="artwork-dialog-image"><img src={artwork.image} alt={artwork.alt} /></div>
+        <div className="artwork-inquiry-copy">
+          <span>{artwork.series} / {artwork.id}</span>
+          <h2 id="artwork-inquiry-title">Ask about {artwork.title}</h2>
+          <p>Availability, dimensions, medium, editions, exhibition, and licensing are confirmed personally by the studio.</p>
+          <form onSubmit={submit}>
+            <label>Name<input name="name" value={form.name} onChange={updateField} autoComplete="name" required /></label>
+            <label>Email<input type="email" name="email" value={form.email} onChange={updateField} autoComplete="email" required /></label>
+            <label>What are you interested in?<select name="inquiryType" value={form.inquiryType} onChange={updateField}><option value="original">Original work</option><option value="edition">Edition or print</option><option value="exhibition">Exhibition</option><option value="licensing">Licensing</option><option value="collaboration">Collaboration</option></select></label>
+            <label>Your note<textarea name="message" value={form.message} onChange={updateField} rows="4" required /></label>
+            <label className="artwork-consent"><input type="checkbox" name="updates" checked={form.updates} onChange={updateField} /><span>Also send me TRST Dispatch. This is optional and separate from this inquiry.</span></label>
+            <label className="honeypot" aria-hidden="true">Website<input name="website" value={form.website} onChange={updateField} tabIndex="-1" autoComplete="off" /></label>
+            <button type="submit" disabled={state.status === "loading"}>{state.status === "loading" ? "Sending…" : "Send inquiry"}</button>
+            {state.message ? <p className={state.status} role={state.status === "error" ? "alert" : "status"}>{state.message}</p> : null}
+          </form>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -376,6 +484,7 @@ function StorefrontSchema() {
 export default function Storefront() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
+  const [activeArtwork, setActiveArtwork] = useState(null);
   const featuredProducts = useMemo(() => products.filter((p) => 
     ["young-boyz", "no-bad-days", "sin-miedo"].includes(p.id)
   ), []);
@@ -403,6 +512,7 @@ export default function Storefront() {
           {menuOpen ? "Close" : "Menu"}
         </button>
         <nav id="primary-nav" className={menuOpen ? "open" : ""} aria-label="Primary navigation">
+          <a href="#work" onClick={closeMenu}>Work</a>
           <a href="#shop" onClick={closeMenu}>Shop</a>
           <a href="#story" onClick={closeMenu}>Our Story</a>
           <a href="/open-thread" onClick={() => { closeMenu(); trackStorefront("Open Thread navigation click", { placement: "header" }); }}>Open Thread</a>
@@ -435,6 +545,16 @@ export default function Storefront() {
           <span>Limited edition work</span>
         </section>
 
+        <section className="work-section" id="work">
+          <header className="section-heading">
+            <div><span>Selected work</span><h2>The work before the product.</h2></div>
+            <p>Original images and drawings rooted in community, memory, protection, and the places that keep shaping us.</p>
+          </header>
+          <div className="artwork-grid">
+            {selectedWorks.map((artwork) => <ArtworkCard key={artwork.id} artwork={artwork} onInquire={setActiveArtwork} />)}
+          </div>
+        </section>
+
         <section className="shop-section" id="shop">
           <header className="section-heading">
             <div><span>Edition 001</span><h2>Wear the archive.</h2></div>
@@ -452,7 +572,7 @@ export default function Storefront() {
             <h2>The work starts with place.</h2>
             <p>TRST Studios is an independent platform for art, apparel, and visual storytelling. DE.LA.COSTA / Edition 001 carries the first public chapter: images shaped by urban life, cultural identity, community memory, strength, vulnerability, and the emotional weight inside everyday moments.</p>
             <p>The goal is not to flatten the culture into a trend. It is to create work with enough care that the people, symbols, and places behind it remain visible.</p>
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Follow the living archive</a>
+            <div className="story-links"><a href="#work">View selected work</a><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Follow the living archive</a></div>
           </div>
         </section>
 
@@ -508,7 +628,7 @@ export default function Storefront() {
       <footer className="site-footer">
         <div><strong>TRST STUDIOS</strong><span>Independent art, apparel, and visual storytelling.</span></div>
         <nav aria-label="Footer navigation">
-          <a href="#shop">Shop</a><a href="#story">Our Story</a><a href="#journal">Journal</a><a href="#customer-care">Customer Care</a>
+          <a href="#work">Work</a><a href="#shop">Shop</a><a href="#story">Our Story</a><a href="#journal">Journal</a><a href="#customer-care">Customer Care</a>
           <a href="/open-thread">Open Thread</a>
           <a href="/partners">Partner With TRST</a>
           <a href="/fulfillment-policy">Shipping &amp; Returns</a>
@@ -518,6 +638,7 @@ export default function Storefront() {
       </footer>
 
       {activeProduct ? <ProductModal product={activeProduct} onClose={() => setActiveProduct(null)} /> : null}
+      {activeArtwork ? <ArtworkInquiryModal artwork={activeArtwork} onClose={() => setActiveArtwork(null)} /> : null}
       <SubscriberPopup />
     </div>
   );

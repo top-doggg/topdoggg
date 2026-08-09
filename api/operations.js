@@ -74,8 +74,8 @@ export default async function handler(request, response) {
   if (!activeSession) return sendJson(response, 401, { ok: false, error: "Private access required." });
   if (request.method === "GET") {
     try {
-      const [signals, partners] = await Promise.all([recentRecords("open-thread/", "signal"), recentRecords("partnership-inquiries/", "partner")]);
-      return sendJson(response, 200, { ok: true, records: [...signals, ...partners].sort((a, b) => new Date(b.receivedAt) - new Date(a.receivedAt)) });
+      const [signals, partners, artworkInquiries] = await Promise.all([recentRecords("open-thread/", "signal"), recentRecords("partnership-inquiries/", "partner"), recentRecords("artwork-inquiries/", "artwork")]);
+      return sendJson(response, 200, { ok: true, records: [...signals, ...partners, ...artworkInquiries].sort((a, b) => new Date(b.receivedAt) - new Date(a.receivedAt)) });
     } catch { return sendJson(response, 500, { ok: false, error: "Could not load operations records." }); }
   }
   if (request.method !== "PATCH") return sendJson(response, 405, { ok: false, error: "Method not allowed." });
@@ -84,7 +84,7 @@ export default async function handler(request, response) {
     const pathname = String(body.pathname || "").trim();
     const reviewStatus = String(body.reviewStatus || "").trim();
     const reviewNote = String(body.reviewNote || "").trim().slice(0, 500);
-    if ((!pathname.startsWith("open-thread/") && !pathname.startsWith("partnership-inquiries/")) || !reviewStatuses.has(reviewStatus)) return sendJson(response, 400, { ok: false, error: "Choose a valid record and review status." });
+    if ((!pathname.startsWith("open-thread/") && !pathname.startsWith("partnership-inquiries/") && !pathname.startsWith("artwork-inquiries/")) || !reviewStatuses.has(reviewStatus)) return sendJson(response, 400, { ok: false, error: "Choose a valid record and review status." });
     const record = await readRecord(pathname);
     if (!record) return sendJson(response, 404, { ok: false, error: "Record not found." });
     Object.assign(record, { reviewStatus, reviewNote: reviewNote || undefined, reviewedAt: new Date().toISOString(), reviewedBy: activeSession.email });
