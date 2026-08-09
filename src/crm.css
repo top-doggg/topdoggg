@@ -1,0 +1,12 @@
+.ops-view-switch { width: min(100%, 1440px); display: flex; gap: 7px; margin: 20px auto 0; }
+.ops-view-switch button { background: transparent; color: #141414; font-size: .66rem; text-transform: uppercase; }
+.ops-view-switch button.active { border-color: #b21f24; background: #b21f24; color: #fff; }
+.ops-view-switch button:last-child:not(.active) { margin-left: auto; }
+.ops-contacts article { min-height: 300px; }
+.ops-contacts .ops-org { margin: 0 0 12px; font-size: .82rem; font-weight: 800; text-transform: uppercase; }
+.ops-contacts ul { display: grid; gap: 6px; margin: 0; padding: 14px 0 0 18px; border-top: 1px solid #bdb6aa; font-size: .72rem; line-height: 1.35; }
+
+@media (max-width: 860px) {
+  .ops-view-switch { flex-wrap: wrap; }
+  .ops-view-switch button:last-child:not(.active) { margin-left: 0; }
+}

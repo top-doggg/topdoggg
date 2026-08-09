@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import "./operations.css";
+import "./crm.css";
 
 const statuses = ["new", "approved", "follow-up", "declined", "published"];
+const contactTypes = ["collector", "curator", "gallery", "designer", "cultural organization", "collaborator", "warm contact"];
 
 function loadToken() {
   const token = new URLSearchParams(window.location.search).get("token");
@@ -33,6 +35,45 @@ function recordMeta(record) {
   return `${record.name} · ${record.email}`;
 }
 
+function inferContactType(record) {
+  const text = `${record.organization || ""} ${record.inquiryType || ""} ${record.idea || ""} ${record.message || ""}`.toLowerCase();
+  if (record.type === "artwork" && record.inquiryType === "original") return "collector";
+  if (text.includes("curator") || record.inquiryType === "exhibition") return "curator";
+  if (text.includes("gallery")) return "gallery";
+  if (text.includes("design") || record.inquiryType === "licensing") return "designer";
+  if (record.organization || text.includes("museum") || text.includes("center") || text.includes("community")) return "cultural organization";
+  if (record.inquiryType === "collaboration" || record.type === "partner") return "collaborator";
+  return "warm contact";
+}
+
+function buildContacts(records) {
+  const contacts = new Map();
+  records.forEach((record) => {
+    const email = String(record.email || "").trim().toLowerCase();
+    if (!email) return;
+    const existing = contacts.get(email) || { email, name: record.name || "", organization: record.organization || "", type: inferContactType(record), records: [], lastContact: record.receivedAt };
+    existing.records.push(record);
+    if (!existing.name && record.name) existing.name = record.name;
+    if (!existing.organization && record.organization) existing.organization = record.organization;
+    if (new Date(record.receivedAt) > new Date(existing.lastContact)) existing.lastContact = record.receivedAt;
+    if (existing.type === "warm contact") existing.type = inferContactType(record);
+    contacts.set(email, existing);
+  });
+  return [...contacts.values()].sort((a, b) => new Date(b.lastContact) - new Date(a.lastContact));
+}
+
+function downloadContacts(contacts) {
+  const quote = (value) => `"${String(value || "").replaceAll('"', '""')}"`;
+  const rows = [["name", "email", "organization", "relationship_type", "last_contact", "touchpoints", "stage"], ...contacts.map((contact) => [contact.name, contact.email, contact.organization, contact.type, contact.lastContact, contact.records.length, contact.records[0]?.reviewStatus || "new"])];
+  const blob = new Blob([rows.map((row) => row.map(quote).join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `trst-collector-crm-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function OperationsDesk() {
   const [token] = useState(loadToken);
   const [email, setEmail] = useState("");
@@ -40,7 +81,11 @@ export default function OperationsDesk() {
   const [state, setState] = useState(token ? "loading" : "idle");
   const [message, setMessage] = useState("");
   const [filter, setFilter] = useState("all");
+  const [view, setView] = useState("pipeline");
+  const [contactFilter, setContactFilter] = useState("all");
   const visibleRecords = useMemo(() => records.filter((record) => filter === "all" || (record.reviewStatus || "new") === filter), [records, filter]);
+  const contacts = useMemo(() => buildContacts(records), [records]);
+  const visibleContacts = useMemo(() => contacts.filter((contact) => contactFilter === "all" || contact.type === contactFilter), [contacts, contactFilter]);
 
   async function refresh() {
     setState("loading");
@@ -84,10 +129,21 @@ export default function OperationsDesk() {
 
   return (
     <main className="ops-desk">
-      <header><a href="/">TRST STUDIOS</a><div><p>TRST operations</p><h1>Review desk</h1></div><button onClick={refresh}>Refresh</button></header>
-      <nav>{["all", ...statuses].map((item) => <button className={filter === item ? "active" : ""} key={item} onClick={() => setFilter(item)}>{item}</button>)}</nav>
+      <header><a href="/">TRST STUDIOS</a><div><p>TRST operations</p><h1>{view === "pipeline" ? "Review desk" : "Collector CRM"}</h1></div><button onClick={refresh}>Refresh</button></header>
+      <div className="ops-view-switch"><button className={view === "pipeline" ? "active" : ""} onClick={() => setView("pipeline")}>Pipeline</button><button className={view === "contacts" ? "active" : ""} onClick={() => setView("contacts")}>Contacts</button>{view === "contacts" && <button onClick={() => downloadContacts(visibleContacts)}>Export CSV</button>}</div>
+      <nav>{view === "pipeline" ? ["all", ...statuses].map((item) => <button className={filter === item ? "active" : ""} key={item} onClick={() => setFilter(item)}>{item}</button>) : ["all", ...contactTypes].map((item) => <button className={contactFilter === item ? "active" : ""} key={item} onClick={() => setContactFilter(item)}>{item}</button>)}</nav>
       {message && <p>{message}</p>}
-      {state === "loading" ? <p>Loading private records...</p> : (
+      {state === "loading" ? <p>Loading private records...</p> : view === "contacts" ? (
+        <section className="ops-contacts">{visibleContacts.length ? visibleContacts.map((contact) => (
+          <article key={contact.email}>
+            <div><small>{contact.type}</small><strong>{contact.records[0]?.reviewStatus || "new"}</strong></div>
+            <h2>{contact.name || contact.email}</h2>
+            {contact.organization && <p className="ops-org">{contact.organization}</p>}
+            <p className="ops-meta">{contact.email}<br />Last contact {new Date(contact.lastContact).toLocaleDateString()} · {contact.records.length} touchpoint{contact.records.length === 1 ? "" : "s"}</p>
+            <ul>{contact.records.slice(0, 3).map((record) => <li key={record.pathname}>{recordLabel(record)} · {recordTitle(record)}</li>)}</ul>
+          </article>
+        )) : <p>No contacts in this view yet.</p>}</section>
+      ) : (
         <section>{visibleRecords.length ? visibleRecords.map((record) => (
           <article key={record.pathname}>
             <div><small>{recordLabel(record)}</small><strong>{record.reviewStatus || "new"}</strong></div>

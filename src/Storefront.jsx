@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { track } from "@vercel/analytics";
 import { getPrintifyCheckoutUrl, isPrintifyConfigured } from "./printify";
+import { artworkInventory, artworkSeries, missingArtworkFields } from "./artworkInventory";
 import "./storefront.css";
 
 const SUBSCRIBE_ENDPOINT = (import.meta.env.VITE_SUBSCRIBE_ENDPOINT || "/api/subscribe").trim();
@@ -112,33 +113,6 @@ const journal = [
   },
 ];
 
-const selectedWorks = [
-  {
-    id: "DLC-001",
-    title: "Coming Back Home",
-    series: "Coming Back Home",
-    image: "/instagram/coming-back-home.jpg",
-    alt: "DE.LA.COSTA visual work about returning home",
-    note: "Place, return, memory, and the people who keep shaping the work.",
-  },
-  {
-    id: "DLC-008",
-    title: "Cheo's World",
-    series: "Haloed Youth",
-    image: "/instagram/cheos-world.jpg",
-    alt: "Illustrated DE.LA.COSTA street scene",
-    note: "Neighborhood identity, friendship, innocence, and the language of the block.",
-  },
-  {
-    id: "DLC-009",
-    title: "Black and White",
-    series: "What We Carry",
-    image: "/instagram/black-and-white.jpg",
-    alt: "Black-and-white DE.LA.COSTA community photograph",
-    note: "Community memory, protection, and the emotional weight inside everyday moments.",
-  },
-];
-
 const sizes = ["S", "M", "L", "XL", "2XL"];
 
 function priceFor(product, size) {
@@ -210,12 +184,12 @@ function ArtworkCard({ artwork, onInquire }) {
     <article className="artwork-card">
       <button type="button" className="artwork-media" onClick={() => onInquire(artwork)} aria-label={`Ask about ${artwork.title}`}>
         <img src={artwork.image} alt={artwork.alt} loading="lazy" decoding="async" />
-        <span>Ask about this work</span>
+        <span>View work</span>
       </button>
       <div className="artwork-copy">
         <div><small>{artwork.series}</small><h3>{artwork.title}</h3></div>
-        <p>{artwork.note}</p>
-        <small>{artwork.id} · Full artwork record in progress</small>
+        <p>{artwork.statement}</p>
+        <small>{artwork.id} · {artwork.availability}</small>
       </div>
     </article>
   );
@@ -268,8 +242,20 @@ function ArtworkInquiryModal({ artwork, onClose }) {
         <div className="artwork-dialog-image"><img src={artwork.image} alt={artwork.alt} /></div>
         <div className="artwork-inquiry-copy">
           <span>{artwork.series} / {artwork.id}</span>
-          <h2 id="artwork-inquiry-title">Ask about {artwork.title}</h2>
-          <p>Availability, dimensions, medium, editions, exhibition, and licensing are confirmed personally by the studio.</p>
+          <h2 id="artwork-inquiry-title">{artwork.title}</h2>
+          <p className="artwork-statement">{artwork.statement}</p>
+          <p>{artwork.story}</p>
+          <dl className="artwork-record">
+            <div><dt>Series</dt><dd>{artwork.series}</dd></div>
+            <div><dt>Availability</dt><dd>{artwork.availability}</dd></div>
+            <div><dt>Year</dt><dd>{artwork.year || "Studio confirmation pending"}</dd></div>
+            <div><dt>Medium</dt><dd>{artwork.medium || "Studio confirmation pending"}</dd></div>
+            <div><dt>Dimensions</dt><dd>{artwork.dimensions || "Studio confirmation pending"}</dd></div>
+            <div><dt>Edition</dt><dd>{artwork.edition || "Studio confirmation pending"}</dd></div>
+          </dl>
+          <small className="record-note">{artwork.titleStatus}. Missing fields: {missingArtworkFields(artwork).join(", ")}.</small>
+          <div className="artwork-source"><a href={artwork.sourceUrl} target="_blank" rel="noopener noreferrer">View published source</a></div>
+          <h3>Ask the studio</h3>
           <form onSubmit={submit}>
             <label>Name<input name="name" value={form.name} onChange={updateField} autoComplete="name" required /></label>
             <label>Email<input type="email" name="email" value={form.email} onChange={updateField} autoComplete="email" required /></label>
@@ -485,6 +471,8 @@ export default function Storefront() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
   const [activeArtwork, setActiveArtwork] = useState(null);
+  const [workFilter, setWorkFilter] = useState("All");
+  const visibleWorks = useMemo(() => workFilter === "All" ? artworkInventory : artworkInventory.filter((artwork) => artwork.series === workFilter), [workFilter]);
   const featuredProducts = useMemo(() => products.filter((p) => 
     ["young-boyz", "no-bad-days", "sin-miedo"].includes(p.id)
   ), []);
@@ -513,6 +501,8 @@ export default function Storefront() {
         </button>
         <nav id="primary-nav" className={menuOpen ? "open" : ""} aria-label="Primary navigation">
           <a href="#work" onClick={closeMenu}>Work</a>
+          <a href="#artist" onClick={closeMenu}>Artist</a>
+          <a href="#available-work" onClick={closeMenu}>Available Work</a>
           <a href="#shop" onClick={closeMenu}>Shop</a>
           <a href="#story" onClick={closeMenu}>Our Story</a>
           <a href="/open-thread" onClick={() => { closeMenu(); trackStorefront("Open Thread navigation click", { placement: "header" }); }}>Open Thread</a>
@@ -547,11 +537,14 @@ export default function Storefront() {
 
         <section className="work-section" id="work">
           <header className="section-heading">
-            <div><span>Selected work</span><h2>The work before the product.</h2></div>
-            <p>Original images and drawings rooted in community, memory, protection, and the places that keep shaping us.</p>
+            <div><span>Portfolio / 10 works</span><h2>The work before the product.</h2></div>
+            <p>A working inventory of original images and drawings rooted in community, memory, protection, and the places that keep shaping us.</p>
           </header>
+          <nav className="series-filter" aria-label="Filter portfolio by series">
+            {artworkSeries.map((series) => <button type="button" className={workFilter === series ? "active" : ""} key={series} onClick={() => setWorkFilter(series)}>{series}</button>)}
+          </nav>
           <div className="artwork-grid">
-            {selectedWorks.map((artwork) => <ArtworkCard key={artwork.id} artwork={artwork} onInquire={setActiveArtwork} />)}
+            {visibleWorks.map((artwork) => <ArtworkCard key={artwork.id} artwork={artwork} onInquire={setActiveArtwork} />)}
           </div>
         </section>
 
@@ -574,6 +567,35 @@ export default function Storefront() {
             <p>The goal is not to flatten the culture into a trend. It is to create work with enough care that the people, symbols, and places behind it remain visible.</p>
             <div className="story-links"><a href="#work">View selected work</a><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Follow the living archive</a></div>
           </div>
+        </section>
+
+        <section className="artist-section" id="artist">
+          <div className="artist-mark" aria-hidden="true">DLC</div>
+          <div className="artist-copy">
+            <span>The artist</span>
+            <h2>DE.LA.COSTA records what a place asks its people to carry.</h2>
+            <p>Working across photography, illustration, apparel, publishing, and public collaboration, DE.LA.COSTA builds a living archive from community memory rather than observing it from outside.</p>
+            <p>The practice moves between intimate moments and civic questions: home, youth, faith, protection, grief, friendship, cultural identity, and the systems that shape neighborhood life.</p>
+            <blockquote>“Pride In My Community” is not a campaign line. It is the position the work begins from.</blockquote>
+            <div className="story-links"><a href="#available-work">Available work</a><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Follow DE.LA.COSTA</a></div>
+          </div>
+        </section>
+
+        <section className="available-section" id="available-work">
+          <header>
+            <span>Available work / studio inquiries</span>
+            <h2>Collect the work. Carry the story forward.</h2>
+            <p>Original availability, print editions, dimensions, medium, pricing, exhibition loans, and licensing are confirmed directly by the studio. Every inquiry receives a personal response.</p>
+          </header>
+          <div className="available-grid">
+            {artworkInventory.slice(0, 4).map((artwork) => (
+              <button type="button" key={artwork.id} onClick={() => setActiveArtwork(artwork)}>
+                <img src={artwork.image} alt="" loading="lazy" />
+                <span><small>{artwork.id} / {artwork.series}</small><strong>{artwork.title}</strong><em>{artwork.availability}</em></span>
+              </button>
+            ))}
+          </div>
+          <div className="collector-path"><span>01 View the work</span><span>02 Read its story</span><span>03 Meet the artist</span><span>04 Ask the studio</span></div>
         </section>
 
         <section className="open-thread-entry" aria-labelledby="open-thread-title">
@@ -628,7 +650,7 @@ export default function Storefront() {
       <footer className="site-footer">
         <div><strong>TRST STUDIOS</strong><span>Independent art, apparel, and visual storytelling.</span></div>
         <nav aria-label="Footer navigation">
-          <a href="#work">Work</a><a href="#shop">Shop</a><a href="#story">Our Story</a><a href="#journal">Journal</a><a href="#customer-care">Customer Care</a>
+          <a href="#work">Work</a><a href="#artist">Artist</a><a href="#available-work">Available Work</a><a href="#shop">Shop</a><a href="#story">Our Story</a><a href="#journal">Journal</a><a href="#customer-care">Customer Care</a>
           <a href="/open-thread">Open Thread</a>
           <a href="/partners">Partner With TRST</a>
           <a href="/fulfillment-policy">Shipping &amp; Returns</a>
