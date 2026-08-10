@@ -6,7 +6,7 @@ function normalizeUrl(value) {
   return /^https?:\/\//i.test(url) ? url : `https://${url}`;
 }
 
-const storeUrl = normalizeUrl(import.meta.env.VITE_PRINTIFY_STORE_URL);
+const storeUrl = normalizeUrl(import.meta.env.VITE_PRINTIFY_STORE_URL || "https://delacosta.printify.me");
 
 function productUrl(path, override) {
   const configuredUrl = normalizeUrl(override);
@@ -20,12 +20,9 @@ function productUrl(path, override) {
 }
 
 const productUrls = {
-  "bandana-inspired-corner-print": productUrl("/product/30328896", import.meta.env.VITE_PRINTIFY_BANDANA_INSPIRED_CORNER_PRINT_URL),
-  "raises-en-la-tierra": productUrl("/product/30327409", import.meta.env.VITE_PRINTIFY_RAISES_EN_LA_TIERRA_URL),
-  "tribal-geometry": productUrl("/product/30323655", import.meta.env.VITE_PRINTIFY_TRIBAL_GEOMETRY_URL),
-  "young-boyz": productUrl("/product/30290809", import.meta.env.VITE_PRINTIFY_YOUNG_BOYZ_URL),
+  "capistrano-love": productUrl("/product/30805178", import.meta.env.VITE_PRINTIFY_CAPISTRANO_LOVE_URL),
+  "cheos-world": productUrl("/product/30804231", import.meta.env.VITE_PRINTIFY_CHEOS_WORLD_URL),
   "no-bad-days": productUrl("/product/30290414", import.meta.env.VITE_PRINTIFY_NO_BAD_DAYS_URL),
-  "watching-me-closely": productUrl("/product/30215179", import.meta.env.VITE_PRINTIFY_WATCHING_ME_CLOSELY_URL),
   "sin-miedo": productUrl("/product/30190484", import.meta.env.VITE_PRINTIFY_SIN_MIEDO_URL),
 };
 
