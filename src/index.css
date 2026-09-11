@@ -24,3 +24,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+/* Product retired from the public storefront. */
+.product-card:has(button[aria-label="View Cheo's World Blue Portrait Tee"]) {
+  display: none;
+}
