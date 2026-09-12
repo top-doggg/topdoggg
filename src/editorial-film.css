@@ -1,0 +1,55 @@
+/* Cinematic film insert for the DE.LA.COSTA homepage */
+.editorial-film {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 clamp(22px, 5vw, 78px) clamp(90px, 10vw, 145px);
+}
+.editorial-film-frame {
+  position: relative;
+  background: #090909;
+  overflow: hidden;
+}
+.editorial-film-frame video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #090909;
+}
+.editorial-film-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 11px;
+  font-size: .62rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--artist-muted);
+}
+.editorial-film-copy {
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: clamp(28px, 6vw, 90px);
+  align-items: start;
+  padding: 24px 0 0;
+}
+.editorial-film-copy h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 4.3rem);
+  line-height: .96;
+  font-weight: 400;
+  letter-spacing: -.04em;
+}
+.editorial-film-copy p {
+  margin: 0;
+  max-width: 620px;
+  line-height: 1.65;
+  color: #45423d;
+}
+@media (max-width: 700px) {
+  .editorial-film { padding-bottom: 72px; }
+  .editorial-film-frame video { aspect-ratio: 4 / 5; object-fit: cover; }
+  .editorial-film-meta { flex-direction: column; gap: 5px; }
+  .editorial-film-copy { grid-template-columns: 1fr; }
+}
