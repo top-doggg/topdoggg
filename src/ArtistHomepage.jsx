@@ -6,30 +6,45 @@ import "./artist-homepage.css";
 const INSTAGRAM_URL = "https://www.instagram.com/_de.la.costa_/";
 const SUBSCRIBE_ENDPOINT = (import.meta.env.VITE_SUBSCRIBE_ENDPOINT || "/api/subscribe").trim();
 
+const editorial = {
+  grace: "https://at.adobe.com/pKO92xtifSMlR6Ei",
+  memorial: "https://at.adobe.com/Gj2CbbucRr10CA75",
+  mural: "https://at.adobe.com/RZgEO5UquCJkQZ1x",
+  mark: "https://at.adobe.com/rsUNIRdoVO7JIUQK",
+  bandana: "https://at.adobe.com/MwwW6TmVWWd5LxYx",
+  jaguar: "https://at.adobe.com/Z1UbN0Z2LGkDcNB9",
+  warrior: "https://at.adobe.com/i7oV4sl2EbcHf6X2",
+  vaqurito: "https://at.adobe.com/mWruWYtY6r4KSE1N",
+};
+
 const projects = [
   {
-    eyebrow: "Featured project",
+    number: "01",
+    eyebrow: "Photography / film / community",
     title: "West of the Tracks",
     copy: "A continuing visual archive of community, memory, belonging, and everyday life in Southern California.",
-    image: "/instagram/black-and-white.jpg",
+    image: editorial.grace,
     href: "#west-of-the-tracks",
   },
   {
-    eyebrow: "Memory / portraiture",
+    number: "02",
+    eyebrow: "Memory / portraiture / tribute",
     title: "Cheo's World",
-    copy: "Neighborhood identity, friendship, tribute, and imagination held inside a lived visual world.",
+    copy: "Neighborhood identity, friendship, innocence, and memory held inside a lived visual world.",
     image: "/instagram/cheos-world.jpg",
-    href: "#selected-work",
+    href: "#projects",
   },
   {
-    eyebrow: "Place / wearable art",
+    number: "03",
+    eyebrow: "Place / visual identity / wearable art",
     title: "Capistrano Love",
     copy: "A visual language built from home, town, coast, memory, and the feeling of carrying place with you.",
     image: "/instagram/coming-back-home.jpg",
     href: "/shop#shop",
   },
   {
-    eyebrow: "Participatory / civic",
+    number: "04",
+    eyebrow: "Participatory / civic / public archive",
     title: "Open Thread",
     copy: "A living record of the places that shape us, built through public memory and community participation.",
     image: "/instagram/old-town-boogie.jpg",
@@ -128,7 +143,7 @@ function SubscribeForm() {
 
 export default function ArtistHomepage() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const selectedWorks = artworkInventory.slice(0, 6);
+  const selectedWorks = artworkInventory.slice(6, 10);
 
   useEffect(() => {
     document.title = "Jorge S. Ruiz / DE.LA.COSTA | TRST Studios";
@@ -161,10 +176,6 @@ export default function ArtistHomepage() {
 
       <main id="main">
         <section className="artist-hero">
-          <div className="artist-hero-image">
-            <img src="/instagram/black-and-white.jpg" alt="DE.LA.COSTA community photograph" fetchPriority="high" decoding="async" />
-            <span className="archive-caption">SOUTHERN CALIFORNIA / VISUAL ARCHIVE / 2026</span>
-          </div>
           <div className="artist-hero-copy">
             <span className="artist-kicker">Jorge S. Ruiz / working as DE.LA.COSTA</span>
             <h1>Art, memory, place, and the people who carry it.</h1>
@@ -173,47 +184,66 @@ export default function ArtistHomepage() {
               <a href="#selected-work" onClick={() => trackHome("Hero work click")}>View the work</a>
               <a className="secondary" href="#west-of-the-tracks" onClick={() => trackHome("Hero project click")}>Featured project</a>
             </div>
-            <div className="hand-note" aria-hidden="true">de.la.costa / field note 001</div>
           </div>
         </section>
 
-        <section className="featured-project" id="west-of-the-tracks">
-          <header className="editorial-heading">
-            <div>
-              <span>Featured project / ongoing</span>
-              <h2>West of the Tracks</h2>
-            </div>
-            <p>A continuing visual archive of community, memory, belonging, and everyday life in Southern California. The tracks operate as both a physical landmark and a symbolic boundary—between visibility and erasure, movement and staying, outside narratives and lived experience.</p>
-          </header>
-          <div className="featured-spread">
-            <figure className="featured-large">
-              <img src="/instagram/black-and-white.jpg" alt="Black-and-white community photograph from the DE.LA.COSTA archive" loading="lazy" decoding="async" />
-              <figcaption>FRAME 004 / COMMUNITY MEMORY</figcaption>
+        <section className="visual-prologue" id="west-of-the-tracks">
+          <figure className="prologue-main">
+            <img src={editorial.grace} alt="Black-and-white DE.LA.COSTA visual work titled Full of Grace" fetchPriority="high" decoding="async" />
+            <figcaption><span>WEST OF THE TRACKS / SOUTHERN CALIFORNIA</span><span>FRAME 001 / FULL OF GRACE</span></figcaption>
+          </figure>
+
+          <div className="prologue-copy">
+            <span>Featured project / ongoing</span>
+            <h2>West of the Tracks</h2>
+            <p>A continuing visual archive of community, memory, belonging, and everyday life in Southern California. The work moves between documentation and invention, treating the neighborhood not as backdrop but as a living record.</p>
+          </div>
+
+          <div className="editorial-duo">
+            <figure className="duo-wide">
+              <img src={editorial.memorial} alt="Memorial painting with flowers, angel, and family imagery" loading="lazy" decoding="async" />
+              <figcaption>MEMORY / FAMILY / CONTINUITY</figcaption>
             </figure>
-            <figure className="featured-small">
-              <img src="/instagram/coming-back-home.jpg" alt="DE.LA.COSTA visual work about returning home" loading="lazy" decoding="async" />
-              <figcaption>FRAME 001 / COMING BACK HOME</figcaption>
+            <figure className="duo-tall">
+              <img src={editorial.mural} alt="Detail of a colorful painted mural" loading="lazy" decoding="async" />
+              <figcaption>PUBLIC WALL / COLOR / PLACE</figcaption>
             </figure>
+          </div>
+
+          <div className="identity-break" aria-label="TRST Studios visual mark">
+            <img src={editorial.mark} alt="TRST Studio Gallery graffiti-style mark" loading="lazy" decoding="async" />
+            <p>Field notes, studio work, memory, street-level observation, and visual culture held inside one evolving archive.</p>
           </div>
         </section>
 
         <section className="selected-work" id="selected-work">
-          <header className="editorial-heading">
-            <div><span>Selected work</span><h2>The image before the product.</h2></div>
-            <p>Six works from a larger evolving archive—photographs, drawings, and visual narratives concerned with community, memory, protection, faith, identity, and the emotional weight inside ordinary moments.</p>
+          <header className="editorial-heading compact-heading">
+            <div><span>Selected work</span><h2>Image first. Explanation second.</h2></div>
+            <p>The upper half of the site now behaves like a visual sequence rather than a catalog: fewer works, larger scale, more breathing room.</p>
           </header>
-          <div className="selected-grid">
-            {selectedWorks.map((work, index) => (
-              <article className={`selected-card selected-card-${(index % 3) + 1}`} key={work.id}>
-                <a href={work.sourceUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackHome("Artwork source click", { artwork: work.id })}>
-                  <img src={work.image} alt={work.alt} loading="lazy" decoding="async" />
-                </a>
-                <div>
-                  <small>{work.id} / {work.series}</small>
-                  <h3>{work.title}</h3>
-                  <p>{work.statement}</p>
-                </div>
-              </article>
+
+          <div className="statement-gallery">
+            <figure className="statement-piece statement-blue">
+              <img src={editorial.bandana} alt="Blue ballpoint-style portrait with Lakers cap and bandana" loading="lazy" decoding="async" />
+              <figcaption><span>PORTRAIT / BALLPOINT / BLUE</span><strong>Bandana Portrait</strong></figcaption>
+            </figure>
+            <figure className="statement-piece statement-warrior">
+              <img src={editorial.jaguar} alt="Illustrated jaguar warrior figure" loading="lazy" decoding="async" />
+              <figcaption><span>ANCESTRAL CONTINUUM</span><strong>Warrior Study</strong></figcaption>
+            </figure>
+            <figure className="statement-piece statement-linework">
+              <img src={editorial.warrior} alt="Line drawing of a warrior profile with feathered headdress" loading="lazy" decoding="async" />
+              <figcaption><span>DRAWING / SYMBOL / MEMORY</span><strong>Warrior Profile</strong></figcaption>
+            </figure>
+          </div>
+
+          <div className="archive-strip">
+            {selectedWorks.map((work) => (
+              <a href={work.sourceUrl} target="_blank" rel="noopener noreferrer" key={work.id} onClick={() => trackHome("Artwork source click", { artwork: work.id })}>
+                <img src={work.image} alt={work.alt} loading="lazy" decoding="async" />
+                <small>{work.id} / {work.series}</small>
+                <strong>{work.title}</strong>
+              </a>
             ))}
           </div>
         </section>
@@ -221,25 +251,29 @@ export default function ArtistHomepage() {
         <section className="projects-section" id="projects">
           <header className="editorial-heading">
             <div><span>Projects</span><h2>Bodies of work, not isolated images.</h2></div>
-            <p>Each project carries its own visual language while remaining part of the same archive: people, place, memory, loss, resilience, community, and what survives when somebody chooses to record it.</p>
+            <p>Photography, drawing, tribute, civic memory, and wearable work all sit inside the same larger practice.</p>
           </header>
           <div className="projects-grid">
-            {projects.map((project, index) => (
-              <a className="project-card" href={project.href} key={project.title} onClick={() => trackHome("Project click", { project: project.title })}>
+            {projects.map((project) => (
+              <a className="project-row" href={project.href} key={project.title} onClick={() => trackHome("Project click", { project: project.title })}>
+                <span className="project-number">{project.number}</span>
                 <div className="project-image"><img src={project.image} alt="" loading="lazy" decoding="async" /></div>
                 <div className="project-copy">
-                  <small>{String(index + 1).padStart(2, "0")} / {project.eyebrow}</small>
+                  <small>{project.eyebrow}</small>
                   <h3>{project.title}</h3>
                   <p>{project.copy}</p>
-                  <span>Explore →</span>
                 </div>
+                <span className="project-arrow">↗</span>
               </a>
             ))}
           </div>
         </section>
 
         <section className="about-section" id="about">
-          <div className="about-mark" aria-hidden="true">DLC</div>
+          <figure className="about-image">
+            <img src={editorial.vaqurito} alt="Child in cowboy hat at a family birthday gathering" loading="lazy" decoding="async" />
+            <figcaption>PERSONAL ARCHIVE / FAMILY / PLACE</figcaption>
+          </figure>
           <div className="about-copy">
             <span>Artist</span>
             <h2>Jorge S. Ruiz</h2>
@@ -247,10 +281,6 @@ export default function ArtistHomepage() {
             <p>Jorge S. Ruiz, formerly exhibiting as Cokeys Ruiz, is a Southern California–based multidisciplinary artist working under the artist identity DE.LA.COSTA. His practice spans painting, photography, mixed media, film, drawing, design, and wearable forms.</p>
             <p>The work examines how identity, memory, place, and lived experience become embedded in images. People, neighborhoods, photographs, gestures, and everyday objects become layered visual records—part document, part memory, part invention.</p>
             <blockquote>“I make work about the places and people that stay with us—the things we carry, the stories we inherit, and what disappears when nobody records it.”</blockquote>
-            <div className="about-links">
-              <a href="#exhibitions">Selected exhibitions</a>
-              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Instagram</a>
-            </div>
           </div>
         </section>
 
@@ -258,10 +288,7 @@ export default function ArtistHomepage() {
           <article className="collect-panel">
             <span>Collect</span>
             <h2>Original work and editions.</h2>
-            <p>For original work, print editions, exhibition loans, licensing, or collaboration inquiries, start with the work and contact the studio directly.</p>
-            <div className="collect-preview">
-              {artworkInventory.slice(6, 9).map((work) => <img src={work.image} alt={work.alt} key={work.id} loading="lazy" />)}
-            </div>
+            <p>For original work, print editions, exhibition loans, licensing, or collaboration inquiries, contact the studio directly.</p>
             <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Ask the studio →</a>
           </article>
 
@@ -304,55 +331,41 @@ export default function ArtistHomepage() {
           </div>
         </section>
 
-        <section className="exhibitions-section" id="exhibitions">
+        <section className="exhibitions" id="exhibitions">
           <header className="editorial-heading">
-            <div><span>Selected exhibitions & press</span><h2>A practice with a public record.</h2></div>
-            <p>Selected presentations and editorial recognition from the developing exhibition history of Jorge S. Ruiz / DE.LA.COSTA.</p>
+            <div><span>Selected exhibitions & press</span><h2>Public record.</h2></div>
           </header>
           <div className="exhibition-list">
             {exhibitions.map(([year, title, venue]) => (
-              <div key={`${year}-${title}`}><small>{year}</small><strong>{title}</strong><span>{venue}</span></div>
+              <div key={`${year}-${title}`}><span>{year}</span><strong>{title}</strong><em>{venue}</em></div>
             ))}
           </div>
         </section>
 
-        <section className="trst-section">
-          <div>
-            <span>Platform</span>
-            <h2>TRST Studios</h2>
-          </div>
-          <div>
-            <p>TRST Studios is the platform around the practice: a place for publishing, exhibitions, apparel, collaboration, community projects, visual storytelling, and whatever form the work needs next.</p>
-            <p>DE.LA.COSTA is the artist identity. Jorge S. Ruiz is the artist. TRST Studios is the structure built to carry the work further.</p>
-            <a href="/open-thread">Explore Open Thread →</a>
-          </div>
+        <section className="studio-section">
+          <span>TRST Studios</span>
+          <h2>The platform around the practice.</h2>
+          <p>TRST Studios publishes, produces, documents, and extends the world around DE.LA.COSTA—from original artwork and photography to releases, public projects, collaborations, and community storytelling.</p>
         </section>
 
-        <section className="dispatch-section" id="contact">
-          <span>TRST Dispatch</span>
-          <h2>Follow the work, not the noise.</h2>
-          <p>New projects, exhibitions, visual essays, limited releases, and studio updates—sent when there is something worth opening.</p>
+        <section className="dispatch-section">
+          <div>
+            <span>TRST Dispatch</span>
+            <h2>New work, field notes, releases, and opportunities.</h2>
+          </div>
           <SubscribeForm />
         </section>
       </main>
 
       <footer className="artist-footer">
-        <div className="footer-identity">
-          <strong>JORGE S. RUIZ / DE.LA.COSTA</strong>
-          <span>Multidisciplinary artist / Founder, TRST Studios</span>
-          <small>Southern California</small>
-        </div>
-        <nav aria-label="Footer navigation">
-          <a href="#selected-work">Work</a>
-          <a href="#projects">Projects</a>
-          <a href="/shop#shop">Shop</a>
-          <a href="#about">About</a>
-          <a href="#exhibitions">Exhibitions</a>
-          <a href="/open-thread">Open Thread</a>
-          <a href="/fulfillment-policy">Customer care</a>
+        <div><strong>DE.LA.COSTA</strong><small>Jorge S. Ruiz / TRST Studios</small></div>
+        <div className="footer-links">
           <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Instagram</a>
-        </nav>
-        <div className="footer-sign">DE.LA.COSTA / TRST STUDIOS / PRIDE IN MY COMMUNITY</div>
+          <a href="/shop#shop">Shop</a>
+          <a href="/fulfillment-policy">Customer care</a>
+          <a href="mailto:trststudiogallery@gmail.com">Collector inquiries</a>
+        </div>
+        <small>Southern California / independent visual practice.</small>
       </footer>
     </div>
   );
