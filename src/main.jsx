@@ -25,6 +25,16 @@ const openThreadChapter = openThreadChapters.find((chapter) => path === `/open-t
 const openThreadHubMode = path === "/open-thread";
 const operationsMode = path === "/operations";
 
+if (studioMode) {
+  document.title = "TRST Studio | Internal Workspace";
+  document
+    .querySelector('meta[name="robots"]')
+    ?.setAttribute("content", "noindex, nofollow");
+  document
+    .querySelector('link[rel="canonical"]')
+    ?.setAttribute("href", "https://trststudios.online/");
+}
+
 inject({ framework: "vite" });
 
 createRoot(document.getElementById("root")).render(
