@@ -1,11 +1,65 @@
 {
   "rewrites": [
     {
+      "source": "/shop",
+      "destination": "/shop.html"
+    },
+    {
+      "source": "/fulfillment-policy",
+      "destination": "/fulfillment-policy.html"
+    },
+    {
+      "source": "/partners",
+      "destination": "/partners.html"
+    },
+    {
+      "source": "/partner-a-drop",
+      "destination": "/partners.html"
+    },
+    {
+      "source": "/open-thread",
+      "destination": "/open-thread.html"
+    },
+    {
+      "source": "/open-thread/santa-ana",
+      "destination": "/open-thread-santa-ana.html"
+    },
+    {
+      "source": "/open-thread/san-juan-capistrano",
+      "destination": "/open-thread-san-juan-capistrano.html"
+    },
+    {
+      "source": "/wholesale",
+      "destination": "/wholesale.html"
+    },
+    {
+      "source": "/operations",
+      "destination": "/operations.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/wholesale",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/operations",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
