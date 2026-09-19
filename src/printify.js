@@ -21,7 +21,6 @@ function productUrl(path, override) {
 
 const productUrls = {
   "capistrano-love": productUrl("/product/30805178", import.meta.env.VITE_PRINTIFY_CAPISTRANO_LOVE_URL),
-  "cheos-world": productUrl("/product/30804231", import.meta.env.VITE_PRINTIFY_CHEOS_WORLD_URL),
   "no-bad-days": productUrl("/product/30290414", import.meta.env.VITE_PRINTIFY_NO_BAD_DAYS_URL),
   "sin-miedo": productUrl("/product/30190484", import.meta.env.VITE_PRINTIFY_SIN_MIEDO_URL),
 };
