@@ -9,14 +9,16 @@ const INSTAGRAM_URL = "https://www.instagram.com/_de.la.costa_/";
 const SUBSCRIBE_ENDPOINT = (import.meta.env.VITE_SUBSCRIBE_ENDPOINT || "/api/subscribe").trim();
 const FILM_URL = "/api/film";
 
+const homepageImage = (key) => `/api/homepage-image?key=${encodeURIComponent(key)}`;
+
 const editorial = {
-  grace: "https://at.adobe.com/pKO92xtifSMlR6Ei",
-  memorial: "https://at.adobe.com/Gj2CbbucRr10CA75",
-  mural: "https://at.adobe.com/RZgEO5UquCJkQZ1x",
-  mark: "https://at.adobe.com/rsUNIRdoVO7JIUQK",
-  bandana: "https://at.adobe.com/MwwW6TmVWWd5LxYx",
-  jaguar: "https://at.adobe.com/Z1UbN0Z2LGkDcNB9",
-  warrior: "https://at.adobe.com/i7oV4sl2EbcHf6X2",
+  grace: homepageImage("grace"),
+  memorial: homepageImage("memorial"),
+  mural: homepageImage("mural"),
+  mark: homepageImage("mark"),
+  bandana: homepageImage("bandana"),
+  jaguar: homepageImage("jaguar"),
+  warrior: homepageImage("warrior"),
   vaqurito: "/api/profile-image",
 };
 
