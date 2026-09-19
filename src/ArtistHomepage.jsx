@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 import { artworkInventory } from "./artworkInventory";
+import { primaryNavigation } from "./app/site-navigation.js";
 import "./artist-homepage.css";
 import "./editorial-film.css";
 import "./inquiry-section.css";
@@ -23,8 +24,8 @@ const editorial = {
 };
 
 const projects = [
-  { number: "01", eyebrow: "Photography / film / community", title: "West of the Tracks", copy: "A continuing visual archive of community, memory, belonging, and everyday life in Southern California.", image: editorial.grace, href: "#west-of-the-tracks" },
-  { number: "02", eyebrow: "Memory / portraiture / tribute", title: "Cheo's World", copy: "Neighborhood identity, friendship, innocence, and memory held inside a lived visual world.", image: "/instagram/cheos-world.jpg", href: "#projects" },
+  { number: "01", eyebrow: "Photography / film / community", title: "West of the Tracks", copy: "A continuing visual archive of community, memory, belonging, and everyday life in Southern California.", image: editorial.grace, href: "/work/west-of-the-tracks" },
+  { number: "02", eyebrow: "Memory / portraiture / tribute", title: "Cheo's World", copy: "Neighborhood identity, friendship, innocence, and memory held inside a lived visual world.", image: "/instagram/cheos-world.jpg", href: "/work/cheos-world" },
   { number: "03", eyebrow: "Place / visual identity / wearable art", title: "Capistrano Love", copy: "A visual language built from home, town, coast, memory, and the feeling of carrying place with you.", image: "/instagram/coming-back-home.jpg", href: "/shop#shop" },
   { number: "04", eyebrow: "Participatory / civic / public archive", title: "Open Thread", copy: "A living record of the places that shape us, built through public memory and community participation.", image: "/instagram/old-town-boogie.jpg", href: "/open-thread" },
 ];
@@ -70,9 +71,9 @@ export default function ArtistHomepage() {
   return (
     <div className="artist-home" id="top">
       <a className="artist-skip" href="#main">Skip to content</a>
-      <header className="artist-header"><a className="artist-brand" href="#top" onClick={closeMenu}><strong>DE.LA.COSTA</strong><small>Jorge S. Ruiz / TRST Studios</small></a><button className="artist-menu" type="button" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen} aria-controls="artist-nav">{menuOpen ? "Close" : "Menu"}</button><nav id="artist-nav" className={menuOpen ? "open" : ""} aria-label="Primary navigation"><a href="#selected-work" onClick={closeMenu}>Work</a><a href="#projects" onClick={closeMenu}>Projects</a><a href="/shop#shop" onClick={() => trackHome("Shop navigation click")}>Shop</a><a href="#about" onClick={closeMenu}>About</a><a href="#journal" onClick={closeMenu}>Journal</a><a href="#inquire" onClick={closeMenu}>Inquire</a></nav></header>
+      <header className="artist-header"><a className="artist-brand" href="/" onClick={closeMenu}><strong>DE.LA.COSTA</strong><small>Jorge S. Ruiz / TRST Studios</small></a><button className="artist-menu" type="button" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen} aria-controls="artist-nav">{menuOpen ? "Close" : "Menu"}</button><nav id="artist-nav" className={menuOpen ? "open" : ""} aria-label="Primary navigation">{primaryNavigation.map((item) => <a href={item.href} key={item.href} onClick={closeMenu}>{item.label}</a>)}<a href="#about" onClick={closeMenu}>Artist</a></nav></header>
       <main id="main">
-        <section className="artist-hero"><div className="artist-hero-copy"><span className="artist-kicker">Jorge S. Ruiz / working as DE.LA.COSTA</span><h1>Art, memory, place, and the people who carry it.</h1><p>Multidisciplinary work across photography, painting, drawing, film, mixed media, design, and wearable art—rooted in Southern California communities and lived experience.</p><div className="artist-actions"><a href="#selected-work" onClick={() => trackHome("Hero work click")}>View the work</a><a className="secondary" href="#west-of-the-tracks" onClick={() => trackHome("Hero project click")}>Featured project</a></div></div></section>
+        <section className="artist-hero"><div className="artist-hero-copy"><span className="artist-kicker">Jorge S. Ruiz / working as DE.LA.COSTA</span><h1>Art, memory, place, and the people who carry it.</h1><p>Multidisciplinary work across photography, painting, drawing, film, mixed media, design, and wearable art—rooted in Southern California communities and lived experience.</p><div className="artist-actions"><a href="/work" onClick={() => trackHome("Hero work click")}>View the work</a><a className="secondary" href="/work/west-of-the-tracks" onClick={() => trackHome("Hero project click")}>Featured project</a></div></div></section>
         <section className="visual-prologue" id="west-of-the-tracks">
           <figure className="prologue-main"><img src={editorial.grace} alt="Black-and-white DE.LA.COSTA visual work titled Full of Grace" fetchPriority="high" decoding="async" /><figcaption><span>WEST OF THE TRACKS / SOUTHERN CALIFORNIA</span><span>FRAME 001 / FULL OF GRACE</span></figcaption></figure>
           <div className="prologue-copy"><span>Featured project / ongoing</span><h2>West of the Tracks</h2><p>A continuing visual archive of community, memory, belonging, and everyday life in Southern California. The work moves between documentation and invention, treating the neighborhood not as backdrop but as a living record.</p></div>
