@@ -113,7 +113,7 @@ const journal = [
   },
 ];
 
-export const products = [
+const allProducts = [
   {
     id: "capistrano-love",
     name: "Capistrano Love Tee",
@@ -155,6 +155,8 @@ export const products = [
     backImage: "https://images-api.printify.com/mockup/6a5eeeab91d18ea0270d1d03/12100/92571/sin-miedo-graphic-tee-urban-street-art-t-shirt.jpg?camera_label=back",
   },
 ];
+
+export const products = allProducts.filter((product) => product.id !== "cheos-world");
 
 const sizes = ["S", "M", "L", "XL", "2XL"];
 
@@ -494,14 +496,14 @@ function StorefrontSchema() {
         name: product.name,
         description: product.story,
         image: product.image,
-        url: `${SITE_URL}/#shop`,
+        url: `${SITE_URL}/shop#shop`,
         brand: { "@type": "Brand", name: "TRST Studios" },
         offers: {
           "@type": "Offer",
           priceCurrency: "USD",
           price: Number(product.price.replace("$", "")),
           availability: "https://schema.org/InStock",
-          url: `${SITE_URL}/#shop`,
+          url: `${SITE_URL}/shop#shop`,
         },
       },
     })),

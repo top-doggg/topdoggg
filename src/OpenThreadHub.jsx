@@ -26,7 +26,7 @@ export default function OpenThreadHub() {
       <a className="skip-link" href="#thread-main">Skip to chapters</a>
       <header className="thread-header">
         <a className="wordmark" href="/" aria-label="TRST Studios home"><strong>TRST STUDIOS</strong><small>Open Thread</small></a>
-        <a className="thread-shop-link" href="/#shop">Shop the collection</a>
+        <a className="thread-shop-link" href="/shop#shop">Shop the collection</a>
       </header>
       <main id="thread-main">
         <section className="thread-hub-hero">
