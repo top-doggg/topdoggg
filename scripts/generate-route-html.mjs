@@ -7,6 +7,20 @@ const base = readFileSync(resolve(dist, "index.html"), "utf8");
 
 const routes = [
   {
+    file: "about.html",
+    title: "About | DE.LA.COSTA and TRST Studios",
+    description: "The artist practice of Jorge S. Ruiz, working as DE.LA.COSTA, and the TRST Studios platform around it.",
+    canonical: "https://trststudios.online/about",
+    robots: "index, follow",
+  },
+  {
+    file: "journal.html",
+    title: "Journal | TRST Studios",
+    description: "TRST Dispatch: field notes, releases, studio process, and images from the living archive.",
+    canonical: "https://trststudios.online/journal",
+    robots: "index, follow",
+  },
+  {
     file: "work.html",
     title: "Work | DE.LA.COSTA and TRST Studios",
     description: "A living visual archive of photography, illustration, and public work by DE.LA.COSTA.",

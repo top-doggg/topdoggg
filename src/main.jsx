@@ -12,6 +12,8 @@ import OpenThreadHub from "./OpenThreadHub.jsx";
 import OperationsDesk from "./OperationsDesk.jsx";
 import Work from "./Work.jsx";
 import ProjectDetail from "./ProjectDetail.jsx";
+import About from "./About.jsx";
+import Journal from "./Journal.jsx";
 import { resolveRoute } from "./app/routes.js";
 import "./index.css";
 
@@ -55,6 +57,10 @@ createRoot(document.getElementById("root")).render(
       <OperationsDesk />
     ) : route.id === "work" ? (
       <Work />
+    ) : route.id === "about" ? (
+      <About />
+    ) : route.id === "journal" ? (
+      <Journal />
     ) : route.id === "project" ? (
       <ProjectDetail projectId={route.params.projectId} />
     ) : route.id === "shop" ? (

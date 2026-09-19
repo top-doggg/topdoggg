@@ -6,6 +6,8 @@ export const publicRoutes = [
   { id: "shop", path: "/shop", title: "Shop | TRST Studios", indexable: true },
   { id: "openThread", path: "/open-thread", title: "Open Thread | TRST Studios", indexable: true },
   { id: "partners", path: "/partners", title: "Partners | TRST Studios", indexable: true },
+  { id: "journal", path: "/journal", title: "Journal | TRST Studios", indexable: true },
+  { id: "about", path: "/about", title: "About | DE.LA.COSTA and TRST Studios", indexable: true },
   { id: "fulfillment", path: "/fulfillment-policy", title: "Fulfillment | TRST Studios", indexable: true },
 ];
 
