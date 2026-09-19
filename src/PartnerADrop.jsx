@@ -65,7 +65,7 @@ export default function PartnerADrop() {
       <a className="skip-link" href="#partner-main">Skip to collaboration details</a>
       <header className="partner-header">
         <a className="wordmark" href="/" aria-label="TRST Studios home"><strong>TRST STUDIOS</strong><small>Partner With TRST</small></a>
-        <a className="partner-shop-link" href="/#shop">Shop the collection</a>
+        <a className="partner-shop-link" href="/shop#shop">Shop the collection</a>
       </header>
       <main id="partner-main">
         <section className="partner-hero">
