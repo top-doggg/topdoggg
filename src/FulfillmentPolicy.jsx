@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import SiteShell from "./app/SiteShell.jsx";
 import "./storefront.css";
 
 const INSTAGRAM_URL = "https://www.instagram.com/_de.la.costa_/";
@@ -43,17 +44,8 @@ export default function FulfillmentPolicy() {
   }, []);
 
   return (
-    <div className="policy-page">
+    <SiteShell mainId="policy-main">
       <PolicySchema />
-      <a className="skip-link" href="#policy-main">Skip to policy</a>
-      <header className="policy-header">
-        <a className="wordmark" href="/" aria-label="TRST Studios home">
-          <strong>TRST STUDIOS</strong>
-          <small>DE.LA.COSTA / Edition 001</small>
-        </a>
-        <a className="policy-shop-link" href="/shop#shop">Shop the collection</a>
-      </header>
-
       <main id="policy-main">
         <section className="policy-hero">
           <span>Customer care</span>
@@ -61,7 +53,6 @@ export default function FulfillmentPolicy() {
           <p>Clear expectations for made-to-order work. Please read this policy before placing an order.</p>
           <small>Last updated August 1, 2026</small>
         </section>
-
         <section className="policy-content" aria-label="Shipping and returns policy">
           <article>
             <span>01</span>
@@ -111,11 +102,6 @@ export default function FulfillmentPolicy() {
           </article>
         </section>
       </main>
-
-      <footer className="policy-footer">
-        <strong>TRST STUDIOS</strong>
-        <a href="/">Return to the collection</a>
-      </footer>
-    </div>
+    </SiteShell>
   );
 }

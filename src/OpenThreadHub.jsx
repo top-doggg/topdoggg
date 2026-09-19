@@ -1,10 +1,25 @@
 import { useEffect } from "react";
 import { track } from "@vercel/analytics";
+import SiteShell from "./app/SiteShell.jsx";
 import "./storefront.css";
 
 const chapters = [
-  { number: "01", city: "Santa Ana", copy: "A shared record of what Santa Ana gives its people.", href: "/open-thread/santa-ana", image: "/instagram/black-and-white.jpg" },
-  { number: "02", city: "San Juan Capistrano", copy: "A shared record of what San Juan Capistrano gives its people.", href: "/open-thread/san-juan-capistrano", image: "/instagram/cheos-world.jpg" },
+  {
+    number: "01",
+    city: "Santa Ana",
+    copy: "A shared record of what Santa Ana gives its people.",
+    href: "/open-thread/santa-ana",
+    image: "/instagram/black-and-white.jpg",
+    imageAlt: "TRST community gathering outdoors",
+  },
+  {
+    number: "02",
+    city: "San Juan Capistrano",
+    copy: "A shared record of what San Juan Capistrano gives its people.",
+    href: "/open-thread/san-juan-capistrano",
+    image: "/instagram/cheos-world.jpg",
+    imageAlt: "TRST illustrated street scene",
+  },
 ];
 
 export default function OpenThreadHub() {
@@ -22,12 +37,7 @@ export default function OpenThreadHub() {
   }, []);
 
   return (
-    <div className="thread-page thread-hub">
-      <a className="skip-link" href="#thread-main">Skip to chapters</a>
-      <header className="thread-header">
-        <a className="wordmark" href="/" aria-label="TRST Studios home"><strong>TRST STUDIOS</strong><small>Open Thread</small></a>
-        <a className="thread-shop-link" href="/shop#shop">Shop the collection</a>
-      </header>
+    <SiteShell mainId="thread-main">
       <main id="thread-main">
         <section className="thread-hub-hero">
           <span>TRST Open Thread</span>
@@ -37,7 +47,7 @@ export default function OpenThreadHub() {
         <section className="thread-chapter-list" aria-label="Open Thread chapters">
           {chapters.map((chapter) => (
             <a href={chapter.href} key={chapter.href}>
-              <img src={chapter.image} alt="" loading="lazy" decoding="async" />
+              <img src={chapter.image} alt={chapter.imageAlt} loading="lazy" decoding="async" width="800" height="450" />
               <span>Chapter {chapter.number}</span>
               <h2>{chapter.city}</h2>
               <p>{chapter.copy}</p>
@@ -46,12 +56,14 @@ export default function OpenThreadHub() {
           ))}
         </section>
         <section className="thread-next">
-          <div><span>Bring Open Thread to your place</span><h2>Become an anchor.</h2></div>
+          <div>
+            <span>Bring Open Thread to your place</span>
+            <h2>Become an anchor.</h2>
+          </div>
           <p>For venues, artists, organizations, and local businesses that want to hold a real corner of a future chapter.</p>
           <a href="/partners">Start a conversation</a>
         </section>
       </main>
-      <footer className="thread-footer"><strong>TRST STUDIOS</strong><a href="/">Return to the collection</a></footer>
-    </div>
+    </SiteShell>
   );
 }

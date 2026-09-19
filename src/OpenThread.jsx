@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
+import SiteShell from "./app/SiteShell.jsx";
 import "./storefront.css";
 
 const SIGNAL_ENDPOINT = "/api/thread-signal";
@@ -132,41 +133,45 @@ export default function OpenThread({ chapterKey }) {
   }
 
   return (
-    <div className="thread-page">
+    <SiteShell mainId="thread-main">
       <OpenThreadSchema chapter={chapter} />
-      <a className="skip-link" href="#thread-main">Skip to the chapter prompt</a>
-      <header className="thread-header">
-        <a className="wordmark" href="/" aria-label="TRST Studios home"><strong>TRST STUDIOS</strong><small>Open Thread</small></a>
-        <a className="thread-shop-link" href="/open-thread">All chapters</a>
-      </header>
       <main id="thread-main">
+        <a className="skip-link" href="#thread-main">Skip to the chapter prompt</a>
         <section className="thread-hero">
-          <img className="thread-hero-image" src={chapter.image} alt={chapter.imageAlt} fetchPriority="high" decoding="async" />
+          <img className="thread-hero-image" src={chapter.image} alt={chapter.imageAlt} fetchPriority="high" loading="eager" decoding="async" />
           <div>
             <span>Chapter {chapter.number} / {chapter.city}, {chapter.region}</span>
-            <h1 className={chapter.city.length > 14 ? "thread-long-title" : ""}>{chapter.prompt.replace("...", "").split(" gave ").map((line, index) => <span key={line}>{index === 0 ? line : `gave ${line}`}</span>)}</h1>
+            <h1 className={chapter.city.length > 14 ? "thread-long-title" : ""}>
+              {chapter.prompt.replace("...", "").split(" gave ").map((line, index) => (
+                <span key={line}>{index === 0 ? line : `gave ${line}`}</span>
+              ))}
+            </h1>
           </div>
           <p>Open Thread is a living record of the places that shape us. Add one line. Help build this chapter.</p>
           <a href="#add-your-line">Add your line</a>
           <strong aria-hidden="true">{chapter.number}</strong>
         </section>
-
         <section className="thread-manifesto">
           <p>Not a survey. Not a slogan. A shared record of what a city gives its people - carried by the people who know it.</p>
-          <div><span>How it works</span><strong>Your line stays private unless you choose to let TRST consider it for a future public creative record.</strong></div>
+          <div>
+            <span>How it works</span>
+            <strong>Your line stays private unless you choose to let TRST consider it for a future public creative record.</strong>
+          </div>
         </section>
-
         <section className="thread-steps" aria-label="How Open Thread works">
           <article><span>01</span><h2>Leave a signal.</h2><p>One sentence, one memory, one piece of the place you carry with you.</p></article>
           <article><span>02</span><h2>Build the thread.</h2><p>TRST gathers permissioned signals into a living {chapter.city} composition.</p></article>
           <article><span>03</span><h2>Return it to the city.</h2><p>The chapter becomes a public creative record, then informs a limited TRST artifact.</p></article>
         </section>
-
         <section className="thread-form-section" id="add-your-line">
+          <div className="thread-form-trust">
+            <span>Your privacy</span>
+            <p>Your signal stays between you and the studio until you give explicit permission. We never publish your name, email, or response without your choice.</p>
+          </div>
           <div className="thread-form-copy">
             <span>{chapter.city}, write back</span>
             <h2>What did this city give you?</h2>
-            <p>Finish the sentence in your own words. We will never publish your response, name, or contact information without your clear permission.</p>
+            <p>Finish the sentence in your own words — a memory, an image, a moment the city didn't let you forget. We will never publish your name or email without your permission.</p>
             <p className="thread-note">A public chapter is still forming. The first signals are being collected now.</p>
           </div>
           <form className="thread-form" onSubmit={submit}>
@@ -181,14 +186,15 @@ export default function OpenThread({ chapterKey }) {
             {state.message ? <p className={state.status} role={state.status === "error" ? "alert" : "status"}>{state.message}</p> : null}
           </form>
         </section>
-
         <section className="thread-next">
-          <div><span>Open Thread is looking for anchors</span><h2>Hold a corner of this chapter.</h2></div>
+          <div>
+            <span>Open Thread is looking for anchors</span>
+            <h2>Hold a corner of this chapter.</h2>
+          </div>
           <p>{chapter.city} spaces, artists, and community organizations: help us create a small, respectful place for people to add their line.</p>
           <a href="/partners">Become an anchor</a>
         </section>
       </main>
-      <footer className="thread-footer"><strong>TRST STUDIOS</strong><a href="/open-thread">View all chapters</a></footer>
-    </div>
+    </SiteShell>
   );
 }

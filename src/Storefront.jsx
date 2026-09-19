@@ -2,161 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import { track } from "@vercel/analytics";
 import { getPrintifyCheckoutUrl, isPrintifyConfigured } from "./printify";
 import { artworkInventory, artworkSeries, missingArtworkFields } from "./artworkInventory";
+import { products } from "./content/products.js";
+import { dispatchEntries } from "./content/dispatches.js";
+import SiteShell from "./app/SiteShell.jsx";
 import "./storefront.css";
 
 const SUBSCRIBE_ENDPOINT = (import.meta.env.VITE_SUBSCRIBE_ENDPOINT || "/api/subscribe").trim();
 const POPUP_KEY = "trst-subscriber-popup-v2";
 const INSTAGRAM_URL = "https://www.instagram.com/_de.la.costa_/";
 const SITE_URL = "https://trststudios.online";
-
-const legacyProducts = [
-  {
-    id: "bandana-inspired-corner-print",
-    name: "Bandana Corner Tee",
-    price: "$31.01",
-    sizePrices: { "2XL": "$32.26" },
-    badge: "Artist Edition",
-    story: "Ornamental corner work translated into a clean black tee built for everyday rotation.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a63d7da4442ce52140a4f8d/73207/98445/bandana-inspired-graphic-t-shirt-black-ornamental-corner-print.jpg?camera_label=front&revision=1784930297570",
-    backImage: "https://images-api.printify.com/mockup/6a63d7da4442ce52140a4f8d/73207/98446/bandana-inspired-graphic-t-shirt-black-ornamental-corner-print.jpg?camera_label=back&revision=1784930297588",
-  },
-  {
-    id: "raises-en-la-tierra",
-    name: "Raíces En La Tierra Tee",
-    price: "$31.01",
-    sizePrices: { "2XL": "$32.26" },
-    badge: "Edition 001",
-    story: "A roots-forward graphic about land, ancestry, memory, and carrying home with you.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a63ca59719b931bfe05a193/79018/98445/raises-en-la-tierra-graphic-t-shirt-black-aztec-back-print.jpg?camera_label=front&revision=1784930173914",
-    backImage: "https://images-api.printify.com/mockup/6a63ca59719b931bfe05a193/79018/98446/raises-en-la-tierra-graphic-t-shirt-black-aztec-back-print.jpg?camera_label=back&revision=1784930174031",
-  },
-  {
-    id: "tribal-geometry",
-    name: "Nahuatl Geometry Tee",
-    price: "$31.01",
-    sizePrices: { "2XL": "$32.26" },
-    badge: "Artist Edition",
-    story: "Geometric forms arranged as a balanced chest-and-back artwork system.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a63ad939afcd66a3c07601b/73207/98445/tribal-geometry-t-shirt-nahuatl-inspired-chest-back-graphic.jpg?camera_label=front&revision=1784930066910",
-    backImage: "https://images-api.printify.com/mockup/6a63ad939afcd66a3c07601b/73207/98446/tribal-geometry-t-shirt-nahuatl-inspired-chest-back-graphic.jpg?camera_label=back&revision=1784930066928",
-  },
-  {
-    id: "young-boyz",
-    name: "Better Together Tee",
-    price: "$31.01",
-    sizePrices: { "2XL": "$32.26" },
-    badge: "Community Piece",
-    story: "A crew portrait and community statement centered on connection over isolation.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a6247b039295caab900c2c7/73207/98445/street-crew-graphic-tshirt-better-together-floating-heads-backprint.jpg?camera_label=front&revision=1784930256662",
-    backImage: "https://images-api.printify.com/mockup/6a6247b039295caab900c2c7/73207/98446/street-crew-graphic-tshirt-better-together-floating-heads-backprint.jpg?camera_label=back&revision=1784930256687",
-  },
-  {
-    id: "no-bad-days",
-    name: "No Bad Days Tee",
-    price: "$29.05",
-    sizePrices: { "2XL": "$31.06" },
-    badge: "Daily Uniform",
-    story: "A direct graphic made for everyday wear with a darker hand-drawn edge.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a62444306936faf06051c77/78973/98445/no-bad-days-skull-tee.jpg?camera_label=front&revision=1784929657944",
-    backImage: "https://images-api.printify.com/mockup/6a62444306936faf06051c77/78973/98446/no-bad-days-skull-tee.jpg?camera_label=back&revision=1784929657952",
-  },
-  {
-    id: "watching-me-closely",
-    name: "Rose From Concrete Boxy Tee",
-    price: "$36.15",
-    sizePrices: { "2XL": "$36.92" },
-    badge: "Studio Cut",
-    story: "The rose, the concrete, and the angels—resilience carried across front and back.",
-    fit: "Relaxed boxy fit",
-    image: "https://pfy-prod-products-mockup-media.s3.us-east-2.amazonaws.com/files/2026/07/20260723153027-1f186ab6-e694-650e-b98a-6e2d9bbeff50.png?revision=1784928763066",
-    backImage: "https://pfy-prod-products-mockup-media.s3.us-east-2.amazonaws.com/files/2026/07/20260723153031-1f186ab7-0aaf-6c5e-8a0a-0ae0e1a35098.png?revision=1784928763086",
-  },
-  {
-    id: "sin-miedo",
-    name: "Sin Miedo Tee",
-    price: "$29.45",
-    sizePrices: { "2XL": "$31.80" },
-    badge: "Edition 001",
-    story: "A fearless street-art statement made to carry the message without explanation.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a5eeeab91d18ea0270d1d03/12100/92570/sin-miedo-graphic-tee-urban-street-art-t-shirt.jpg?camera_label=front&revision=1784929988524",
-    backImage: "https://images-api.printify.com/mockup/6a5eeeab91d18ea0270d1d03/12100/92571/sin-miedo-graphic-tee-urban-street-art-t-shirt.jpg?camera_label=back&revision=1784929988558",
-  },
-];
-
-const journal = [
-  {
-    kicker: "Home rhythm",
-    title: "Coming Back Home",
-    copy: "No matter where the work travels, the story keeps returning to the people and places that formed it.",
-    image: "/instagram/coming-back-home.jpg",
-    href: "https://www.instagram.com/_de.la.costa_/p/DVC3Li9jL7a/",
-  },
-  {
-    kicker: "Community memory",
-    title: "Old Town Boogie",
-    copy: "Live printing, music, painting, and a public response built through community and truth.",
-    image: "/instagram/old-town-boogie.jpg",
-    href: "https://www.instagram.com/_de.la.costa_/reel/DQlHUW7kcuP/",
-  },
-  {
-    kicker: "Street notes",
-    title: "The Realest Feeling",
-    copy: "A release rooted in local pickup, direct connection, and the energy behind the work.",
-    image: "/instagram/realest-feeling.jpg",
-    href: "https://www.instagram.com/_de.la.costa_/p/DOO5-YwEmlE/",
-  },
-];
-
-const allProducts = [
-  {
-    id: "capistrano-love",
-    name: "Capistrano Love Tee",
-    price: "$31.01",
-    badge: "New release",
-    story: "A vintage surf and tropical graphic built around the town, its coast, and the feeling of carrying Capistrano with you.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a78fdf747d9c5b8a60c79d7/78973/98445/capistrano-love-t-shirt-vintage-surf-tropical-graphic-tee.jpg?camera_label=front",
-    backImage: "https://images-api.printify.com/mockup/6a78fdf747d9c5b8a60c79d7/78973/98446/capistrano-love-t-shirt-vintage-surf-tropical-graphic-tee.jpg?camera_label=back",
-  },
-  {
-    id: "cheos-world",
-    name: "Cheo's World Blue Portrait Tee",
-    price: "$31.01",
-    badge: "Community portrait",
-    story: "A blue vintage portrait drawn from Cheo's World—neighborhood memory held as an image meant to stay in motion.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a78f8fd6c30b14e8401411f/73207/98445/cheos-world-blue-vintage-portrait-t-shirt.jpg?camera_label=front",
-    backImage: "https://images-api.printify.com/mockup/6a78f8fd6c30b14e8401411f/73207/98446/cheos-world-blue-vintage-portrait-t-shirt.jpg?camera_label=back",
-  },
-  {
-    id: "no-bad-days",
-    name: "No Bad Days For A Warrior Tee",
-    price: "$29.05",
-    badge: "Daily uniform",
-    story: "A direct reminder made for everyday wear: resilience is a practice, not a mood.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a62444306936faf06051c77/79083/98445/no-bad-days-for-a-warrior-tee.jpg?camera_label=front",
-    backImage: "https://images-api.printify.com/mockup/6a62444306936faf06051c77/79083/98446/no-bad-days-for-a-warrior-tee.jpg?camera_label=back",
-  },
-  {
-    id: "sin-miedo",
-    name: "Sin Miedo Tee",
-    price: "$29.45",
-    badge: "Edition 001",
-    story: "A fearless street-art statement made to carry the message without explanation.",
-    fit: "Classic unisex fit",
-    image: "https://images-api.printify.com/mockup/6a5eeeab91d18ea0270d1d03/12100/92570/sin-miedo-graphic-tee-urban-street-art-t-shirt.jpg?camera_label=front",
-    backImage: "https://images-api.printify.com/mockup/6a5eeeab91d18ea0270d1d03/12100/92571/sin-miedo-graphic-tee-urban-street-art-t-shirt.jpg?camera_label=back",
-  },
-];
-
-export const products = allProducts.filter((product) => product.id !== "cheos-world");
 
 const sizes = ["S", "M", "L", "XL", "2XL"];
 
@@ -284,21 +138,23 @@ function ArtworkInquiryModal({ artwork, onClose }) {
     <div className="modal-shell" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <section className="artwork-dialog" role="dialog" aria-modal="true" aria-labelledby="artwork-inquiry-title">
         <button className="modal-close" type="button" onClick={onClose} aria-label="Close artwork inquiry">Close</button>
-        <div className="artwork-dialog-image"><img src={artwork.image} alt={artwork.alt} /></div>
+        <div className="artwork-dialog-image"><img src={artwork.image} alt={artwork.alt} loading="lazy" decoding="async" /></div>
         <div className="artwork-inquiry-copy">
           <span>{artwork.series} / {artwork.id}</span>
           <h2 id="artwork-inquiry-title">{artwork.title}</h2>
           <p className="artwork-statement">{artwork.statement}</p>
           <p>{artwork.story}</p>
-          <dl className="artwork-record">
-            <div><dt>Series</dt><dd>{artwork.series}</dd></div>
-            <div><dt>Availability</dt><dd>{artwork.availability}</dd></div>
-            <div><dt>Year</dt><dd>{artwork.year || "Studio confirmation pending"}</dd></div>
-            <div><dt>Medium</dt><dd>{artwork.medium || "Studio confirmation pending"}</dd></div>
-            <div><dt>Dimensions</dt><dd>{artwork.dimensions || "Studio confirmation pending"}</dd></div>
-            <div><dt>Edition</dt><dd>{artwork.edition || "Studio confirmation pending"}</dd></div>
-          </dl>
-          <small className="record-note">{artwork.titleStatus}. Missing fields: {missingArtworkFields(artwork).join(", ")}.</small>
+          <div className="artwork-meta-strip">
+            <dl className="artwork-record">
+              <div><dt>Series</dt><dd>{artwork.series}</dd></div>
+              <div><dt>Availability</dt><dd>{artwork.availability}</dd></div>
+              <div><dt>Year</dt><dd>{artwork.year || "Studio confirmation pending"}</dd></div>
+              <div><dt>Medium</dt><dd>{artwork.medium || "Studio confirmation pending"}</dd></div>
+              <div><dt>Dimensions</dt><dd>{artwork.dimensions || "Studio confirmation pending"}</dd></div>
+              <div><dt>Edition</dt><dd>{artwork.edition || "Studio confirmation pending"}</dd></div>
+            </dl>
+            <small className="record-note">{artwork.titleStatus}. Missing fields: {missingArtworkFields(artwork).join(", ")}.</small>
+          </div>
           <div className="artwork-source"><a href={artwork.sourceUrl} target="_blank" rel="noopener noreferrer">View published source</a></div>
           <h3>Ask the studio</h3>
           <form onSubmit={submit}>
@@ -360,7 +216,7 @@ function ProductModal({ product, onClose }) {
       <section className="product-dialog" role="dialog" aria-modal="true" aria-labelledby="product-title">
         <button className="modal-close" type="button" onClick={onClose} aria-label="Close product details">Close</button>
         <div className="product-gallery">
-          <img src={view === "front" ? product.image : product.backImage} alt={`${product.name}, ${view} view`} />
+          <img src={view === "front" ? product.image : product.backImage} alt={`${product.name}, ${view} view`} loading="lazy" decoding="async" />
           <div className="gallery-controls" aria-label="Product views">
             <button className={view === "front" ? "active" : ""} type="button" onClick={() => { setView("front"); trackStorefront("Product view changed", { product: product.id, view: "front" }); }}>Front</button>
             <button className={view === "back" ? "active" : ""} type="button" onClick={() => { setView("back"); trackStorefront("Product view changed", { product: product.id, view: "back" }); }}>Back</button>
@@ -370,14 +226,12 @@ function ProductModal({ product, onClose }) {
           <span>{product.badge} / DE.LA.COSTA</span>
           <h2 id="product-title">{product.name}</h2>
           <p className="product-story">{product.story}</p>
-
           <div className="detail-grid">
             <div><small>Fit</small><strong>{product.fit}</strong></div>
             <div><small>Production</small><strong>Made after you order</strong></div>
             <div><small>Care</small><strong>Wash cold, inside out</strong></div>
             <div><small>Checkout</small><strong>Securely through Printify</strong></div>
           </div>
-
           <fieldset className="size-picker">
             <legend>Choose size</legend>
             <div>
@@ -388,14 +242,12 @@ function ProductModal({ product, onClose }) {
               ))}
             </div>
           </fieldset>
-
           <div className="checkout-row">
             <div><small>Selected</small><strong>{size} / {priceFor(product, size)}</strong></div>
             <button type="button" onClick={openStore} disabled={storeState.loading || !isPrintifyConfigured()}>
               {storeState.loading ? "Opening store…" : "View in secure store"}
             </button>
           </div>
-
           {!isPrintifyConfigured() ? <p className="store-message">The Printify storefront URL still needs to be configured.</p> : null}
           {storeState.error ? <p className="store-message error" role="alert">{storeState.error}</p> : null}
           <small className="checkout-note">Final size details, quantity, shipping, taxes, and payment are confirmed on Printify.</small>
@@ -424,7 +276,7 @@ function SubscribeForm({ compact = false, onSuccess }) {
       await subscribe(email.trim(), website, placement);
       localStorage.setItem(POPUP_KEY, JSON.stringify({ subscribedAt: Date.now() }));
       trackStorefront("Newsletter signup", { placement, source: attribution.source });
-      setState({ status: "success", message: "You’re on the list." });
+      setState({ status: "success", message: "You're on the list." });
       setEmail("");
       onSuccess?.();
     } catch (error) {
@@ -530,34 +382,12 @@ export default function Storefront() {
   }
 
   return (
-    <div className="trst-site">
+    <SiteShell mainId="main">
       <StorefrontSchema />
-      <a className="skip-link" href="#main">Skip to content</a>
-      <div className="announcement">Edition 001 is live · Independent art and apparel</div>
-      <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="TRST Studios home" onClick={closeMenu}>
-          <strong>TRST STUDIOS</strong>
-          <small>DE.LA.COSTA / Edition 001</small>
-        </a>
-        <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="primary-nav" onClick={() => setMenuOpen((current) => !current)}>
-          {menuOpen ? "Close" : "Menu"}
-        </button>
-        <nav id="primary-nav" className={menuOpen ? "open" : ""} aria-label="Primary navigation">
-          <a href="#work" onClick={closeMenu}>Work</a>
-          <a href="#artist" onClick={closeMenu}>Artist</a>
-          <a href="#available-work" onClick={closeMenu}>Available Work</a>
-          <a href="#shop" onClick={closeMenu}>Shop</a>
-          <a href="#story" onClick={closeMenu}>Our Story</a>
-          <a href="/open-thread" onClick={() => { closeMenu(); trackStorefront("Open Thread navigation click", { placement: "header" }); }}>Open Thread</a>
-          <a href="#journal" onClick={closeMenu}>Journal</a>
-          <a href="#customer-care" onClick={closeMenu}>Customer Care</a>
-          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackStorefront("Instagram outbound", { placement: "header" })}>Instagram</a>
-        </nav>
-      </header>
-
       <main id="main">
+        <div className="announcement">Edition 001 is live · Independent art and apparel</div>
         <section className="hero" id="top">
-          <img src="/instagram/realest-feeling.jpg" alt="TRST Studios DE.LA.COSTA campaign artwork" fetchPriority="high" decoding="async" />
+          <img src="/instagram/realest-feeling.jpg" alt="TRST Studios DE.LA.COSTA campaign artwork" fetchPriority="high" loading="eager" decoding="async" />
           <div className="hero-shade" />
           <div className="hero-copy">
             <span>TRST Studios presents DE.LA.COSTA</span>
@@ -570,14 +400,12 @@ export default function Storefront() {
           </div>
           <div className="hero-edition" aria-hidden="true">001</div>
         </section>
-
         <section className="trust-strip" aria-label="Store benefits">
           <span>Independent artist</span>
           <span>Made after order</span>
           <span>Secure Printify checkout</span>
           <span>Limited edition work</span>
         </section>
-
         <section className="work-section" id="work">
           <header className="section-heading">
             <div><span>Portfolio / 10 works</span><h2>The work before the product.</h2></div>
@@ -590,7 +418,6 @@ export default function Storefront() {
             {visibleWorks.map((artwork) => <ArtworkCard key={artwork.id} artwork={artwork} onInquire={setActiveArtwork} />)}
           </div>
         </section>
-
         <section className="shop-section" id="shop">
           <header className="section-heading">
             <div><span>Edition 001</span><h2>Wear the archive.</h2></div>
@@ -600,18 +427,19 @@ export default function Storefront() {
             {featuredProducts.map((product) => <ProductCard key={product.id} product={product} onOpen={openProduct} />)}
           </div>
         </section>
-
         <section className="story-section" id="story">
-          <div className="story-image"><img src="/instagram/coming-back-home.jpg" alt="DE.LA.COSTA visual story about returning home" loading="lazy" decoding="async" /></div>
+          <div className="story-image"><img src="/instagram/coming-back-home.jpg" alt="DE.LA.COSTA visual story about a limo on mission boulevard" loading="lazy" decoding="async" width="480" height="540" /></div>
           <div className="story-copy">
             <span>Our story</span>
-            <h2>The work starts with place.</h2>
-            <p>TRST Studios is an independent platform for art, apparel, and visual storytelling. DE.LA.COSTA / Edition 001 carries the first public chapter: images shaped by urban life, cultural identity, community memory, strength, vulnerability, and the emotional weight inside everyday moments.</p>
-            <p>The goal is not to flatten the culture into a trend. It is to create work with enough care that the people, symbols, and places behind it remain visible.</p>
-            <div className="story-links"><a href="#work">View selected work</a><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Follow the living archive</a></div>
+            <h2>On Mission Boulevard, a limo rolls past.</h2>
+            <p>DE.LA.COSTA is a visual practice rooted in California, LA culture, and the places where everyday life asks you to hold two things at once. The work begins as a record, then an experiment in what can be carried with you.</p>
+            <p>It moves between the private and the public, the quiet and the loud. The goal is not to flatten a culture into a trend, but to create work you can keep living with.</p>
+            <div className="story-links">
+              <a href="#available-work">View available work</a>
+              <a href="https://www.instagram.com/_de.la.costa_/" target="_blank" rel="noopener noreferrer">Follow the living archive</a>
+            </div>
           </div>
         </section>
-
         <section className="artist-section" id="artist">
           <div className="artist-mark" aria-hidden="true">DLC</div>
           <div className="artist-copy">
@@ -619,11 +447,10 @@ export default function Storefront() {
             <h2>DE.LA.COSTA records what a place asks its people to carry.</h2>
             <p>Working across photography, illustration, apparel, publishing, and public collaboration, DE.LA.COSTA builds a living archive from community memory rather than observing it from outside.</p>
             <p>The practice moves between intimate moments and civic questions: home, youth, faith, protection, grief, friendship, cultural identity, and the systems that shape neighborhood life.</p>
-            <blockquote>“Pride In My Community” is not a campaign line. It is the position the work begins from.</blockquote>
+            <blockquote>"Pride In My Community" is not a campaign line. It is the position the work begins from.</blockquote>
             <div className="story-links"><a href="#available-work">Available work</a><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Follow DE.LA.COSTA</a></div>
           </div>
         </section>
-
         <section className="available-section" id="available-work">
           <header>
             <span>Available work / studio inquiries</span>
@@ -640,7 +467,6 @@ export default function Storefront() {
           </div>
           <div className="collector-path"><span>01 View the work</span><span>02 Read its story</span><span>03 Meet the artist</span><span>04 Ask the studio</span></div>
         </section>
-
         <section className="open-thread-entry" aria-labelledby="open-thread-title">
           <div className="open-thread-entry-copy">
             <span>TRST Open Thread</span>
@@ -648,20 +474,19 @@ export default function Storefront() {
             <p>A living record of the places that shape us. Add a line, help build a chapter, and see what a city chooses to carry forward.</p>
             <a href="/open-thread" onClick={() => trackStorefront("Open Thread navigation click", { placement: "homepage" })}>Enter Open Thread</a>
           </div>
-          <div className="open-thread-entry-image"><img src="/instagram/black-and-white.jpg" alt="TRST community gathering outdoors" loading="lazy" decoding="async" /></div>
+          <div className="open-thread-entry-image"><img src="/instagram/black-and-white.jpg" alt="TRST community gathering outdoors" loading="lazy" decoding="async" width="800" height="450" /></div>
           <div className="open-thread-entry-chapters" aria-label="Open Thread city chapters">
             <a href="/open-thread/santa-ana" onClick={() => trackStorefront("Open Thread chapter click", { chapter: "santa-ana", placement: "homepage" })}><span>Chapter 01</span><strong>Santa Ana</strong><small>Enter the thread</small></a>
             <a href="/open-thread/san-juan-capistrano" onClick={() => trackStorefront("Open Thread chapter click", { chapter: "san-juan-capistrano", placement: "homepage" })}><span>Chapter 02</span><strong>San Juan Capistrano</strong><small>Enter the thread</small></a>
           </div>
         </section>
-
         <section className="journal-section" id="journal">
           <header className="section-heading">
             <div><span>Journal</span><h2>Stories behind the work.</h2></div>
             <p>Notes from the studio, the street, and the people carrying the story forward.</p>
           </header>
           <div className="journal-grid">
-            {journal.map((item) => (
+            {dispatchEntries.map((item) => (
               <article className="journal-card" key={item.title}>
                 <a href={item.href} target="_blank" rel="noopener noreferrer">
                   <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
@@ -674,14 +499,12 @@ export default function Storefront() {
             ))}
           </div>
         </section>
-
         <section className="care-section" id="customer-care">
           <article><span>Shipping</span><h3>Made after you order.</h3><p>Production and estimated delivery are shown in the secure store before payment. <a href="/fulfillment-policy">Read the policy</a>.</p></article>
           <article><span>Sizing</span><h3>Check the final measurements.</h3><p>Use the garment measurements on the Printify product page before choosing your size.</p></article>
           <article><span>Returns</span><h3>Made-to-order care.</h3><p>Review our <a href="/fulfillment-policy">Shipping &amp; Returns Policy</a> before checkout.</p></article>
           <article><span>Support</span><h3>Talk to the studio.</h3><p><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Message DE.LA.COSTA on Instagram</a> with product or order questions.</p></article>
         </section>
-
         <section className="newsletter-section">
           <span>TRST Dispatch</span>
           <h2>First access to limited drops, print releases, and studio stories.</h2>
@@ -689,22 +512,9 @@ export default function Storefront() {
           <SubscribeForm />
         </section>
       </main>
-
-      <footer className="site-footer">
-        <div><strong>TRST STUDIOS</strong><span>Independent art, apparel, and visual storytelling.</span></div>
-        <nav aria-label="Footer navigation">
-          <a href="#work">Work</a><a href="#artist">Artist</a><a href="#available-work">Available Work</a><a href="#shop">Shop</a><a href="#story">Our Story</a><a href="#journal">Journal</a><a href="#customer-care">Customer Care</a>
-          <a href="/open-thread">Open Thread</a>
-          <a href="/partners">Partner With TRST</a>
-          <a href="/fulfillment-policy">Shipping &amp; Returns</a>
-          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Instagram</a>
-        </nav>
-        <small>DE.LA.COSTA / Edition 001 · Pride In My Community</small>
-      </footer>
-
       {activeProduct ? <ProductModal product={activeProduct} onClose={() => setActiveProduct(null)} /> : null}
       {activeArtwork ? <ArtworkInquiryModal artwork={activeArtwork} onClose={() => setActiveArtwork(null)} /> : null}
       <SubscriberPopup />
-    </div>
+    </SiteShell>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
+import SiteShell from "./app/SiteShell.jsx";
 import "./storefront.css";
 
 const PARTNER_ENDPOINT = "/api/partner-inquiry";
@@ -60,35 +61,31 @@ export default function PartnerADrop() {
   }
 
   return (
-    <div className="partner-page">
+    <SiteShell mainId="partner-main">
       <PartnerSchema />
-      <a className="skip-link" href="#partner-main">Skip to collaboration details</a>
-      <header className="partner-header">
-        <a className="wordmark" href="/" aria-label="TRST Studios home"><strong>TRST STUDIOS</strong><small>Partner With TRST</small></a>
-        <a className="partner-shop-link" href="/shop#shop">Shop the collection</a>
-      </header>
       <main id="partner-main">
+        <a className="skip-link" href="#partner-main">Skip to collaboration details</a>
         <section className="partner-hero">
           <span>Partner with TRST</span>
           <h1>Back the story,<br />not just the shirt.</h1>
           <p>TRST Studios makes artist-led apparel, visual stories, and community-facing releases. We partner with organizations and businesses that want to help meaningful culture travel further.</p>
           <a href="#partner-inquiry">Start a conversation</a>
         </section>
-
         <section className="partner-intro">
           <p>A good partnership is not a logo placement. It creates a real moment: a story people can see, wear, share, and remember.</p>
           <div><span>Built for</span><strong>Community. Culture. Independent business.</strong></div>
         </section>
-
         <section className="partner-steps" aria-label="How a TRST partnership works">
           <article><span>01</span><h2>Sponsor a story.</h2><p>Underwrite a community portrait, artist release, short film, or public creative moment with a clear and respectful role in the story.</p></article>
           <article><span>02</span><h2>Build the moment.</h2><p>TRST develops the visual direction, launch assets, apparel concept, and a documented activation plan around the work.</p></article>
           <article><span>03</span><h2>Reach real people.</h2><p>Campaigns live through the TRST storefront, social channels, partner networks, and made-to-order releases with no inventory gamble.</p></article>
           <article><span>04</span><h2>Show the result.</h2><p>Partners receive a clear recap of the work, launch activity, and the agreed outcomes for their support.</p></article>
         </section>
-
         <section className="partner-fit">
-          <div><span>Partnership formats</span><h2>More than a logo placement.</h2></div>
+          <div>
+            <span>Partnership formats</span>
+            <h2>More than a logo placement.</h2>
+          </div>
           <div className="partner-fit-grid">
             <article><strong>Story sponsor</strong><p>Back an original visual story, release, or local activation with a natural connection to the people involved.</p></article>
             <article><strong>Community partner</strong><p>Support a transparent fundraiser, youth-art moment, or shared release without an inventory commitment.</p></article>
@@ -96,9 +93,17 @@ export default function PartnerADrop() {
             <article><strong>Strategic partner</strong><p>Bring production, distribution, retail, or creative expertise to help turn early demand into durable growth.</p></article>
           </div>
         </section>
-
         <section className="partner-inquiry" id="partner-inquiry">
-          <div><span>Start here</span><h2>What could we build together?</h2><p>Tell us what you want to support, who it serves, and what you bring to the table. We keep the first conversation focused and practical.</p><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Or message DE.LA.COSTA on Instagram</a></div>
+          <div className="trust-note">
+            <span>How we use this</span>
+            <p>Your inquiry is read by the studio. We reply personally and only use your information to continue this conversation. No automated follow-up is sent.</p>
+          </div>
+          <div>
+            <span>Start here</span>
+            <h2>What could we build together?</h2>
+            <p>Tell us what you want to support, who it serves, and what you bring to the table. We keep the first conversation focused and practical.</p>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Or message DE.LA.COSTA on Instagram</a>
+          </div>
           <form onSubmit={submit}>
             <label>Name<input name="name" value={form.name} onChange={updateField} autoComplete="name" required /></label>
             <label>Email<input type="email" name="email" value={form.email} onChange={updateField} autoComplete="email" required /></label>
@@ -113,7 +118,6 @@ export default function PartnerADrop() {
           </form>
         </section>
       </main>
-      <footer className="partner-footer"><strong>TRST STUDIOS</strong><a href="/">Return to the collection</a></footer>
-    </div>
+    </SiteShell>
   );
 }

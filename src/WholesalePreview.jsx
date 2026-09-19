@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { products } from "./Storefront.jsx";
+import { products } from "./content/products.js";
 import "./storefront.css";
 
 const INSTAGRAM_URL = "https://www.instagram.com/_de.la.costa_/";

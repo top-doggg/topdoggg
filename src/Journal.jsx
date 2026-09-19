@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import SiteShell from "./app/SiteShell.jsx";
 import "./editorial-pages.css";
 
 const dispatches = [
@@ -8,6 +9,33 @@ const dispatches = [
 ];
 
 export default function Journal() {
-  useEffect(() => { document.title = "Journal | TRST Studios"; }, []);
-  return <main className="editorial-page"><a className="skip-link" href="#journal-main">Skip to content</a><header className="editorial-page-header"><a href="/"><strong>DE.LA.COSTA</strong><small>TRST Studios</small></a><nav aria-label="Primary navigation"><a href="/work">Work</a><a href="/shop">Shop</a><a href="/open-thread">Open Thread</a><a href="/partners">Partners</a></nav></header><section id="journal-main" className="editorial-page-intro"><span>TRST Dispatch</span><h1>The archive while it is still happening.</h1><p>Field notes, releases, studio process, and images that sit between finished work and lived record.</p></section><section className="dispatch-grid">{dispatches.map((entry, index) => <article key={entry.title} className={index === 0 ? "dispatch-featured" : ""}><img src={entry.image} alt={entry.title} loading={index === 0 ? "eager" : "lazy"} /><small>{entry.kind}</small><h2>{entry.title}</h2><p>{entry.copy}</p></article>)}</section></main>;
+  useEffect(() => {
+    document.title = "Journal | TRST Studios";
+  }, []);
+
+  return (
+    <SiteShell mainId="journal-main">
+      <main id="journal-main" className="editorial-page">
+        <a className="skip-link" href="#journal-main">Skip to content</a>
+        <header className="editorial-page-header">
+          <a href="/"><strong>DE.LA.COSTA</strong><small>TRST Studios</small></a>
+        </header>
+        <section id="journal-main" className="editorial-page-intro">
+          <span>TRST Dispatch</span>
+          <h1>The archive while it is still happening.</h1>
+          <p>Field notes, releases, studio process, and images that sit between finished work and lived record.</p>
+        </section>
+        <section className="dispatch-grid">
+          {dispatches.map((entry, index) => (
+            <article key={entry.title} className={index === 0 ? "dispatch-featured" : ""}>
+              <img src={entry.image} alt={entry.title} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+              <small>{entry.kind}</small>
+              <h2>{entry.title}</h2>
+              <p>{entry.copy}</p>
+            </article>
+          ))}
+        </section>
+      </main>
+    </SiteShell>
+  );
 }

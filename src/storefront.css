@@ -402,7 +402,8 @@ a { color: inherit; }
 .artwork-inquiry-copy form > p.error { color: #a3211a; }
 .modal-close { position: absolute; top: 14px; right: 14px; z-index: 4; min-height: 38px; padding: 0 12px; border: 1px solid #111; background: rgba(255,255,255,.94); font-size: .68rem; font-weight: 950; text-transform: uppercase; }
 .product-gallery { position: relative; min-height: 700px; background: #ece8e1; }
-.product-gallery > img { width: 100%; height: 100%; object-fit: cover; }
+.product-gallery > img { width: 100%; height: 100%; object-fit: cover; loading: lazy; }
+.artwork-dialog-image img { width: 100%; height: 100%; object-fit: cover; loading: lazy; }
 .gallery-controls { position: absolute; bottom: 14px; left: 14px; display: flex; gap: 6px; }
 .gallery-controls button { min-height: 38px; padding: 0 14px; border: 1px solid #111; background: #fff; font-size: .68rem; font-weight: 950; text-transform: uppercase; }
 .gallery-controls button.active { background: #111; color: #fff; }
