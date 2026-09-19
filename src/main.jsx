@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { inject } from "@vercel/analytics";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import ArtistHomepage from "./ArtistHomepage.jsx";
+import HomeCover from "./HomeCover.jsx";
 import Storefront from "./Storefront.jsx";
 import FulfillmentPolicy from "./FulfillmentPolicy.jsx";
 import WholesalePreview from "./WholesalePreview.jsx";
@@ -66,7 +67,7 @@ createRoot(document.getElementById("root")).render(
     ) : route.id === "shop" ? (
       <Storefront />
     ) : (
-      <ArtistHomepage />
+      <HomeCover />
     )}
 
     <SpeedInsights />
