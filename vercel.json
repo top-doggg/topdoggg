@@ -7,24 +7,6 @@
   ],
   "headers": [
     {
-      "source": "/operations",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
-    },
-    {
-      "source": "/wholesale",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
-    },
-    {
       "source": "/(.*)",
       "headers": [
         {
