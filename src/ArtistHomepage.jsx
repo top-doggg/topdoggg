@@ -7,7 +7,7 @@ import "./inquiry-section.css";
 
 const INSTAGRAM_URL = "https://www.instagram.com/_de.la.costa_/";
 const SUBSCRIBE_ENDPOINT = (import.meta.env.VITE_SUBSCRIBE_ENDPOINT || "/api/subscribe").trim();
-const FILM_URL = "https://at.adobe.com/0uG1Sq7K9HziocHr";
+const FILM_URL = "/api/film";
 
 const editorial = {
   grace: "https://at.adobe.com/pKO92xtifSMlR6Ei",
@@ -17,7 +17,7 @@ const editorial = {
   bandana: "https://at.adobe.com/MwwW6TmVWWd5LxYx",
   jaguar: "https://at.adobe.com/Z1UbN0Z2LGkDcNB9",
   warrior: "https://at.adobe.com/i7oV4sl2EbcHf6X2",
-  vaqurito: "https://at.adobe.com/mWruWYtY6r4KSE1N",
+  vaqurito: "/api/profile-image",
 };
 
 const projects = [
