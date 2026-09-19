@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/work",
+      "destination": "/work.html"
+    },
+    {
+      "source": "/work/(.*)",
+      "destination": "/work/$1.html"
+    },
+    {
       "source": "/shop",
       "destination": "/shop.html"
     },

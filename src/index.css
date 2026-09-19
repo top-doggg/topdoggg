@@ -1,3 +1,5 @@
+@import "./styles/tokens.css";
+
 html {
   scroll-behavior: smooth;
   color-scheme: light;
@@ -23,6 +25,11 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: var(--trst-focus);
+  outline-offset: 3px;
 }
 
 /* Product retired from the public storefront. */

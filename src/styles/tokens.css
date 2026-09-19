@@ -1,0 +1,15 @@
+:root {
+  --trst-ink: #0b0b0b;
+  --trst-paper: #fffdf8;
+  --trst-signal: #c72d26;
+  --trst-muted: #6b645b;
+  --trst-line: rgb(11 11 11 / 15%);
+  --trst-space-1: .5rem;
+  --trst-space-2: 1rem;
+  --trst-space-3: 1.5rem;
+  --trst-space-4: 2rem;
+  --trst-space-section: clamp(4rem, 9vw, 9rem);
+  --trst-page-gutter: clamp(1rem, 5vw, 5rem);
+  --trst-content-width: 90rem;
+  --trst-focus: 3px solid var(--trst-signal);
+}

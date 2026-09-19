@@ -12,23 +12,14 @@ import OpenThreadHub from "./OpenThreadHub.jsx";
 import OperationsDesk from "./OperationsDesk.jsx";
 import Work from "./Work.jsx";
 import ProjectDetail from "./ProjectDetail.jsx";
+import { resolveRoute } from "./app/routes.js";
 import "./index.css";
 
 const StudioApp = lazy(() => import("./App.jsx"));
 // Studio is an internal authoring surface and is never exposed in production.
 const studioMode =
   import.meta.env.DEV && new URLSearchParams(window.location.search).get("studio") === "open";
-const path = window.location.pathname.replace(/\/+$/, "") || "/";
-const policyMode = path === "/fulfillment-policy";
-const wholesaleMode = path === "/wholesale";
-const shopMode = path === "/shop";
-const partnerMode = path === "/partner-a-drop" || path === "/partners";
-const openThreadChapters = ["santa-ana", "san-juan-capistrano"];
-const openThreadChapter = openThreadChapters.find((chapter) => path === `/open-thread/${chapter}`);
-const openThreadHubMode = path === "/open-thread";
-const operationsMode = path === "/operations";
-const workMode = path === "/work";
-const projectMatch = path.match(/^\/work\/([^/]+)$/);
+const route = resolveRoute(window.location.pathname);
 
 if (studioMode) {
   document.title = "TRST Studio | Internal Workspace";
@@ -50,23 +41,23 @@ createRoot(document.getElementById("root")).render(
       >
         <StudioApp />
       </Suspense>
-    ) : policyMode ? (
+    ) : route.id === "fulfillment" ? (
       <FulfillmentPolicy />
-    ) : wholesaleMode ? (
+    ) : route.id === "wholesale" ? (
       <WholesalePreview />
-    ) : partnerMode ? (
+    ) : route.id === "partners" ? (
       <PartnerADrop />
-    ) : openThreadChapter ? (
-      <OpenThread chapterKey={openThreadChapter} />
-    ) : openThreadHubMode ? (
+    ) : route.id === "openThreadChapter" ? (
+      <OpenThread chapterKey={route.params.chapter} />
+    ) : route.id === "openThread" ? (
       <OpenThreadHub />
-    ) : operationsMode ? (
+    ) : route.id === "operations" ? (
       <OperationsDesk />
-    ) : workMode ? (
+    ) : route.id === "work" ? (
       <Work />
-    ) : projectMatch ? (
-      <ProjectDetail projectId={projectMatch[1]} />
-    ) : shopMode ? (
+    ) : route.id === "project" ? (
+      <ProjectDetail projectId={route.params.projectId} />
+    ) : route.id === "shop" ? (
       <Storefront />
     ) : (
       <ArtistHomepage />

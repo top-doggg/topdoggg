@@ -1,10 +1,18 @@
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { archiveWorks } from "../src/archiveData.js";
 
 const dist = resolve("dist");
 const base = readFileSync(resolve(dist, "index.html"), "utf8");
 
 const routes = [
+  {
+    file: "work.html",
+    title: "Work | DE.LA.COSTA and TRST Studios",
+    description: "A living visual archive of photography, illustration, and public work by DE.LA.COSTA.",
+    canonical: "https://trststudios.online/work",
+    robots: "index, follow",
+  },
   {
     file: "shop.html",
     title: "Shop DE.LA.COSTA Edition 001 | TRST Studios",
@@ -12,6 +20,13 @@ const routes = [
     canonical: "https://trststudios.online/shop",
     robots: "index, follow",
   },
+  ...archiveWorks.map((work) => ({
+    file: `work/${work.id}.html`,
+    title: `${work.title} | DE.LA.COSTA`,
+    description: work.copy,
+    canonical: `https://trststudios.online/work/${work.id}`,
+    robots: "index, follow",
+  })),
   {
     file: "fulfillment-policy.html",
     title: "Shipping & Returns Policy | TRST Studios",
@@ -77,5 +92,7 @@ function replaceMeta(html, route) {
 }
 
 for (const route of routes) {
-  writeFileSync(resolve(dist, route.file), replaceMeta(base, route));
+  const target = resolve(dist, route.file);
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(target, replaceMeta(base, route));
 }
