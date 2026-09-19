@@ -250,7 +250,7 @@ export async function sendOperationsAccessLink({ email, accessUrl }) {
   return { status: "sent", emailId: delivery.body.id || null };
 }
 
-export async function syncSubscriberToResend({ email, emailHash }) {
+export async function syncSubscriberToResend({ email, emailHash, interests = [] }) {
   const config = configuredResend();
   if (!config) return { status: "not_configured" };
   const unsubscribeUrl = createUnsubscribeUrl(email);
@@ -258,6 +258,7 @@ export async function syncSubscriberToResend({ email, emailHash }) {
   const contact = await resendRequest(config, "/contacts", {
     email,
     unsubscribed: false,
+    properties: { trst_interests: interests.join(",") },
   });
 
   if (!contact.ok && contact.status !== 409) {

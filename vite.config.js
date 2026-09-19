@@ -11,9 +11,9 @@ function removeRetiredProducts() {
       const retiredCheosWorld = /\n  \{\n    id: "cheos-world",[\s\S]*?\n  \},\n(?=  \{\n    id: "no-bad-days")/;
       const transformed = code.replace(retiredCheosWorld, "\n");
 
-      if (transformed === code) {
-        throw new Error("Retired Cheo's World product block was not found in Storefront.jsx");
-      }
+      // The product was removed from the source after this migration guard was
+      // introduced. Treat its absence as the intended, already-clean state.
+      if (transformed === code) return null;
 
       return { code: transformed, map: null };
     },

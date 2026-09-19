@@ -71,6 +71,12 @@ function cleanUtm(value) {
   );
 }
 
+function cleanInterests(value) {
+  const allowed = new Set(["artwork", "apparel", "community", "collaboration"]);
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.map((item) => cleanText(item, 40)).filter((item) => allowed.has(item)))];
+}
+
 export default async function handler(request, response) {
   const origin = getOrigin(request);
   if (origin) {
@@ -145,6 +151,7 @@ export default async function handler(request, response) {
       path: cleanText(body.path, 240),
       referrer: cleanText(body.referrer, 500),
       utm: cleanUtm(body.utm),
+      interests: cleanInterests(body.interests),
       subscribedAt: now.toISOString(),
       userAgent: String(request.headers["user-agent"] || "").slice(0, 240),
     };
@@ -163,7 +170,7 @@ export default async function handler(request, response) {
 
     let emailDelivery = { status: "not_configured" };
     try {
-      emailDelivery = await syncSubscriberToResend({ email, emailHash });
+      emailDelivery = await syncSubscriberToResend({ email, emailHash, interests: record.interests });
     } catch (error) {
       emailDelivery = { status: "failed" };
       console.error("Resend subscriber sync failed", {

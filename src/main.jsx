@@ -10,11 +10,14 @@ import PartnerADrop from "./PartnerADrop.jsx";
 import OpenThread from "./OpenThread.jsx";
 import OpenThreadHub from "./OpenThreadHub.jsx";
 import OperationsDesk from "./OperationsDesk.jsx";
+import Work from "./Work.jsx";
+import ProjectDetail from "./ProjectDetail.jsx";
 import "./index.css";
 
 const StudioApp = lazy(() => import("./App.jsx"));
+// Studio is an internal authoring surface and is never exposed in production.
 const studioMode =
-  new URLSearchParams(window.location.search).get("studio") === "open";
+  import.meta.env.DEV && new URLSearchParams(window.location.search).get("studio") === "open";
 const path = window.location.pathname.replace(/\/+$/, "") || "/";
 const policyMode = path === "/fulfillment-policy";
 const wholesaleMode = path === "/wholesale";
@@ -24,6 +27,8 @@ const openThreadChapters = ["santa-ana", "san-juan-capistrano"];
 const openThreadChapter = openThreadChapters.find((chapter) => path === `/open-thread/${chapter}`);
 const openThreadHubMode = path === "/open-thread";
 const operationsMode = path === "/operations";
+const workMode = path === "/work";
+const projectMatch = path.match(/^\/work\/([^/]+)$/);
 
 if (studioMode) {
   document.title = "TRST Studio | Internal Workspace";
@@ -57,6 +62,10 @@ createRoot(document.getElementById("root")).render(
       <OpenThreadHub />
     ) : operationsMode ? (
       <OperationsDesk />
+    ) : workMode ? (
+      <Work />
+    ) : projectMatch ? (
+      <ProjectDetail projectId={projectMatch[1]} />
     ) : shopMode ? (
       <Storefront />
     ) : (
