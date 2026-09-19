@@ -44,7 +44,7 @@ export default function WholesalePreview() {
           <strong>TRST STUDIOS</strong>
           <small>Retail Partner Preview</small>
         </a>
-        <a href="/" className="wholesale-home-link">Public storefront</a>
+        <a href="/shop" className="wholesale-home-link">Public storefront</a>
       </header>
 
       <main id="wholesale-main">

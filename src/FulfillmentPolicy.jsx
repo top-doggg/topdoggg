@@ -51,7 +51,7 @@ export default function FulfillmentPolicy() {
           <strong>TRST STUDIOS</strong>
           <small>DE.LA.COSTA / Edition 001</small>
         </a>
-        <a className="policy-shop-link" href="/#shop">Shop the collection</a>
+        <a className="policy-shop-link" href="/shop#shop">Shop the collection</a>
       </header>
 
       <main id="policy-main">
@@ -114,7 +114,7 @@ export default function FulfillmentPolicy() {
 
       <footer className="policy-footer">
         <strong>TRST STUDIOS</strong>
-        <a href="/">Return to the collection</a>
+        <a href="/shop#shop">Return to the collection</a>
       </footer>
     </div>
   );
