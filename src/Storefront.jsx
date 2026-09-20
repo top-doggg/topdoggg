@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { track } from "@vercel/analytics";
+import { getDiscoveryContext } from "./lib/discovery-telemetry.js";
 import { getPrintifyCheckoutUrl, isPrintifyConfigured } from "./printify";
 import { artworkInventory, artworkSeries, missingArtworkFields } from "./artworkInventory";
 import { products } from "./content/products.js";
@@ -19,7 +20,7 @@ function priceFor(product, size) {
 
 function trackStorefront(name, properties = {}) {
   try {
-    track(name, properties);
+    track(name, { ...getDiscoveryContext(), ...properties });
   } catch {
     // Analytics should never block shopping or navigation.
   }
