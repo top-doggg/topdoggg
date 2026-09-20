@@ -2,6 +2,7 @@ import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { works } from "../src/content/works.js";
 import { dispatchEntries } from "../src/content/dispatches.js";
+import { products } from "../src/content/products.js";
 
 const SITE = "https://trststudios.online";
 const staticUrls = [
@@ -29,6 +30,7 @@ function esc(value) {
 const urls = [
   ...staticUrls.map(([path, changefreq, priority]) => ({ path, changefreq, priority })),
   ...works.map((work) => ({ path: "/work/" + work.id, changefreq: "monthly", priority: "0.8" })),
+  ...products.map((product) => ({ path: "/shop/" + product.id, changefreq: "weekly", priority: "0.8" })),
   ...dispatchEntries.map((entry) => ({ path: entry.href, changefreq: "monthly", priority: "0.7" })),
 ];
 
