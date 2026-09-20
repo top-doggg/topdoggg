@@ -6,7 +6,12 @@ function breadcrumbSchema(route) {
   const path = new URL(route.canonical).pathname;
   const parts = [{ name: "TRST Studios", item: SITE_URL + "/" }];
 
-  if (route.work) {
+  if (route.product) {
+    parts.push(
+      { name: "Shop", item: SITE_URL + "/shop" },
+      { name: route.product.name, item: route.canonical },
+    );
+  } else if (route.work) {
     parts.push(
       { name: "Work", item: SITE_URL + "/work" },
       { name: route.work.title, item: route.canonical },
