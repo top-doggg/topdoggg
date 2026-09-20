@@ -13,6 +13,7 @@ export function normalizePathname(pathname){return pathname.replace(/\/+$/,"")||
 export function resolveRoute(pathname){
  const path=normalizePathname(pathname);
  const journalMatch=path.match(/^\/journal\/([^/]+)$/); if(journalMatch)return{id:"journalEntry",params:{slug:journalMatch[1]}};
+ const productMatch=path.match(/^\/shop\/([^/]+)$/); if(productMatch)return{id:"product",params:{productId:productMatch[1]}};
  const projectMatch=path.match(/^\/work\/([^/]+)$/); if(projectMatch)return{id:"project",params:{projectId:projectMatch[1]}};
  const chapterMatch=path.match(/^\/open-thread\/(santa-ana|san-juan-capistrano)$/); if(chapterMatch)return{id:"openThreadChapter",params:{chapter:chapterMatch[1]}};
  if(path==="/partner-a-drop")return{id:"partners",params:{}}; if(path==="/wholesale")return{id:"wholesale",params:{}}; if(path==="/operations")return{id:"operations",params:{}};
