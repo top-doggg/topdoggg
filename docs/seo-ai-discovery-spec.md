@@ -10,13 +10,13 @@ Build a durable discovery system for TRST Studios / DE.LA.COSTA that helps searc
 - CollectionPage: work archive, journal index, shop collection, Open Thread hub.
 - ProfilePage: /about, focused on Jorge S. Ruiz / DE.LA.COSTA.
 - Place: use only where the work actually documents a real location.
-- VideoObject: add only when required factual fields such as first publication date and a crawlable thumbnail are verified.
+- VideoObject: add only when required factual fields such as first publication date and a stable crawlable thumbnail are verified; the video file itself must remain fetchable at a stable URL.
 - Product: add on individual product pages when a dedicated crawlable page accurately represents the purchasable item.
 
 ## Phase 1 — Discovery foundation
 1. Every indexable route ships route-specific title, description, canonical, robots directives, Open Graph data, Twitter data, and JSON-LD in the initial HTML.
 2. /operations and /wholesale remain noindex at HTML and response-header levels.
-3. robots.txt explicitly permits OAI-SearchBot and publishes the sitemap.
+3. robots.txt explicitly permits OAI-SearchBot and publishes the sitemap. Public pages also allow large image previews, unrestricted video previews, and unrestricted text snippets unless a route later needs a narrower policy.
 4. Homepage identity graph connects Jorge S. Ruiz / DE.LA.COSTA, TRST Studios, WebSite, and WebPage with stable @id values.
 5. Project routes expose CreativeWork JSON-LD connected to the artist and website.
 6. /about exposes ProfilePage JSON-LD centered on the artist.
