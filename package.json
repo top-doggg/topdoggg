@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build && node scripts/generate-route-html.mjs && node scripts/generate-discovery-assets.mjs",
+    "build": "node scripts/validate-discovery-facts.mjs && vite build && node scripts/generate-route-html.mjs && node scripts/generate-discovery-assets.mjs",
     "preview": "vite preview --host 0.0.0.0",
-    "verify:deployment": "node scripts/verify-deployment.mjs"
+    "verify:deployment": "node scripts/verify-deployment.mjs",
+    "validate:discovery": "node scripts/validate-discovery-facts.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
