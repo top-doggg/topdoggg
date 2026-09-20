@@ -36,7 +36,6 @@ export function routeSchema(route) {
       headline: route.journal.title,
       abstract: route.journal.copy,
       image: new URL(route.journal.image, SITE_URL).href,
-      dateModified: route.journal.lastModified,
       author: { "@id": PERSON_ID },
       publisher: { "@id": SITE_URL + "/#organization" },
       mainEntityOfPage: route.canonical,
