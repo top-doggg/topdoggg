@@ -36,7 +36,6 @@ export function routeSchema(route) {
       headline: route.work.title,
       creator: { "@id": PERSON_ID },
       image: new URL(route.work.image, SITE_URL).href,
-      dateCreated: route.work.year,
       spatialCoverage: route.work.location ? { "@type": "Place", name: route.work.location } : undefined,
       genre: route.work.medium,
       abstract: route.work.copy,
