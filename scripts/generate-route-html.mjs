@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { archiveWorks } from "../src/archiveData.js";
+import { works } from "../src/content/works.js";
+import { dispatchEntries } from "../src/content/dispatches.js";
 import { injectRouteSchema, routeSchema } from "./seo-schema.mjs";
 
 const dist = resolve("dist");
@@ -35,7 +36,7 @@ const routes = [
     canonical: "https://trststudios.online/shop",
     robots: "index, follow, max-image-preview:large, max-video-preview:-1, max-snippet:-1",
   },
-  ...archiveWorks.map((work) => ({
+  ...works.map((work) => ({
     file: `work/${work.id}.html`,
     title: `${work.title} | DE.LA.COSTA`,
     description: work.copy,

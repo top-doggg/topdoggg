@@ -1,7 +1,17 @@
 {
   "rewrites": [
-    { "source": "/about", "destination": "/about.html" },
-    { "source": "/journal", "destination": "/journal.html" },
+    {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/journal",
+      "destination": "/journal.html"
+    },
+    {
+      "source": "/journal/(.*)",
+      "destination": "/journal/$1.html"
+    },
     {
       "source": "/work",
       "destination": "/work.html"
@@ -146,5 +156,11 @@
     }
   },
   "installCommand": "bun install --frozen-lockfile --linker hoisted --backend=copyfile",
-  "buildCommand": "bun run build"
-}
+  "buildCommand": "bun run build",
+  "crons": [
+    {
+      "path": "/api/indexnow-sync",
+      "schedule": "17 8 * * *"
+    }
+  ]
+}\n
