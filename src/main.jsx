@@ -15,6 +15,7 @@ import ProjectDetail from "./ProjectDetail.jsx";
 import About from "./About.jsx";
 import Journal from "./Journal.jsx";
 import JournalEntry from "./JournalEntry.jsx";
+import ProductDetail from "./ProductDetail.jsx";
 import {resolveRoute} from "./app/routes.js";
 import {trackDiscoveryLanding} from "./lib/discovery-telemetry.js";
 import "./index.css";
@@ -36,6 +37,7 @@ createRoot(document.getElementById("root")).render(<React.StrictMode>
 :route.id==="journalEntry"?<JournalEntry slug={route.params.slug} />
 :route.id==="journal"?<Journal />
 :route.id==="project"?<ProjectDetail projectId={route.params.projectId} />
+:route.id==="product"?<ProductDetail productId={route.params.productId} />
 :route.id==="shop"?<Storefront />
 :<HomeCover />}
 <SpeedInsights /></React.StrictMode>);
