@@ -10,7 +10,6 @@ import "./storefront.css";
 const SUBSCRIBE_ENDPOINT = (import.meta.env.VITE_SUBSCRIBE_ENDPOINT || "/api/subscribe").trim();
 const POPUP_KEY = "trst-subscriber-popup-v2";
 const INSTAGRAM_URL = "https://www.instagram.com/_de.la.costa_/";
-const SITE_URL = "https://trststudios.online";
 
 const sizes = ["S", "M", "L", "XL", "2XL"];
 
@@ -334,36 +333,6 @@ function SubscriberPopup() {
   );
 }
 
-function StorefrontSchema() {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "TRST Studios DE.LA.COSTA Edition 001",
-    numberOfItems: products.length,
-    itemListElement: products.map((product, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      item: {
-        "@type": "Product",
-        name: product.name,
-        description: product.story,
-        image: product.image,
-        url: `${SITE_URL}/shop#shop`,
-        brand: { "@type": "Brand", name: "TRST Studios" },
-        offers: {
-          "@type": "Offer",
-          priceCurrency: "USD",
-          price: Number(product.price.replace("$", "")),
-          availability: "https://schema.org/InStock",
-          url: `${SITE_URL}/shop#shop`,
-        },
-      },
-    })),
-  };
-
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
-}
-
 export default function Storefront() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
@@ -383,7 +352,6 @@ export default function Storefront() {
 
   return (
     <SiteShell mainId="main">
-      <StorefrontSchema />
       <main id="main">
         <div className="announcement">Edition 001 is live · Independent art and apparel</div>
         <section className="hero" id="top">
@@ -488,13 +456,13 @@ export default function Storefront() {
           <div className="journal-grid">
             {dispatchEntries.map((item) => (
               <article className="journal-card" key={item.title}>
-                <a href={item.href} target="_blank" rel="noopener noreferrer">
+                <a href={item.href}>
                   <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
                 </a>
                 <span>{item.kicker}</span>
                 <h3>{item.title}</h3>
                 <p>{item.copy}</p>
-                <a href={item.href} target="_blank" rel="noopener noreferrer">Read on Instagram</a>
+                <a href={item.href}>Read dispatch</a>
               </article>
             ))}
           </div>
