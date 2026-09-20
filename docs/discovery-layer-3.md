@@ -174,3 +174,7 @@ https://developers.google.com/search/apis/indexing-api/v3/quickstart
 8. connect read-only Search Console performance feedback
 9. compare Search Console data with Vercel acquisition/events
 10. iterate metadata/internal linking from observed performance, never by fabricating structured-data facts
+
+## Staging status
+
+Canonical product-route scaffolding and BreadcrumbList/acquisition telemetry are staged on the storefront branch. Product rich-result markup and VideoObject remain intentionally gated by factual verification.
