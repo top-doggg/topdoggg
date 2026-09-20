@@ -70,7 +70,7 @@ function ProductCard({ product, onOpen }) {
       <div className="product-copy">
         <div>
           <small>{product.badge}</small>
-          <h3>{product.name}</h3>
+          <h3><a href={`/shop/${product.id}`}>{product.name}</a></h3>
         </div>
         <strong>From {product.price}</strong>
       </div>
