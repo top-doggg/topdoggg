@@ -25,6 +25,10 @@
       "destination": "/shop.html"
     },
     {
+      "source": "/shop/(.*)",
+      "destination": "/shop/$1.html"
+    },
+    {
       "source": "/fulfillment-policy",
       "destination": "/fulfillment-policy.html"
     },
