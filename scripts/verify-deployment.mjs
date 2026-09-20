@@ -1,5 +1,6 @@
 const BASE = (process.env.DEPLOYMENT_URL || "").replace(/\/$/, "");
 const BYPASS = process.env.VERCEL_AUTOMATION_BYPASS_SECRET || "";
+const OIDC = process.env.VERCEL_TRUSTED_OIDC_TOKEN || "";
 if (!BASE) {
   console.error("DEPLOYMENT_URL is required");
   process.exit(2);
@@ -16,10 +17,14 @@ const checks = [
   { path: "/9db50a3983c44815e0a030a0c2def0da.txt", type: "text", contains: ["9db50a3983c44815e0a030a0c2def0da"] },
 ];
 
-const headers = BYPASS ? {
-  "x-vercel-protection-bypass": BYPASS,
-  "x-vercel-set-bypass-cookie": "true",
-} : {};
+const headers = OIDC
+  ? { "x-vercel-trusted-oidc-idp-token": OIDC }
+  : BYPASS
+    ? {
+        "x-vercel-protection-bypass": BYPASS,
+        "x-vercel-set-bypass-cookie": "true",
+      }
+    : {};
 
 let failures = 0;
 for (const check of checks) {
