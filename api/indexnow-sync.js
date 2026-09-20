@@ -5,7 +5,7 @@ async function previous(){try{const r=await get(STATE_PATH,{access:"private"});i
 export default async function handler(request,response){
  if(request.method!=="GET"){response.setHeader("Allow","GET");return response.status(405).json({ok:false,error:"Method not allowed"});}
  const secret=process.env.CRON_SECRET;
- if(!secret)return response.status(200).json({ok:true,active:false,reason:"CRON_SECRET not configured"});
+ if(!secret)return response.status(401).json({ok:false,active:false,error:"CRON_SECRET not configured"});
  if(request.headers.authorization!=="Bearer "+secret)return response.status(401).json({ok:false,error:"Unauthorized"});
  try{
   const sr=await fetch(SITE+"/sitemap.xml",{cache:"no-store"}); if(!sr.ok)throw new Error("Sitemap returned "+sr.status);
