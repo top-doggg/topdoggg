@@ -178,3 +178,29 @@ https://developers.google.com/search/apis/indexing-api/v3/quickstart
 ## Staging status
 
 Canonical product-route scaffolding and BreadcrumbList/acquisition telemetry are staged on the storefront branch. Product rich-result markup and VideoObject remain intentionally gated by factual verification.
+
+
+## 2026-09-20 vetting update
+
+### Product rich-result distinction
+
+Google currently separates Product snippet and Merchant listing requirements.
+
+- A Product snippet can describe a product page that is not itself a merchant checkout, but rich-result eligibility requires `name` plus at least one of `offers`, `review`, or `aggregateRating`.
+- Merchant listing experiences are stricter: Google says the page must be one where a shopper can purchase the product, not merely a page that links to another site selling it.
+- TRST dedicated product pages therefore launch first as canonical editorial/product-detail pages with BreadcrumbList only. Product/Offer rich-result markup remains gated until live offer price, currency, availability, seller relationship, and purchase-page eligibility are verified.
+- Never fabricate reviews or ratings to satisfy Product snippet requirements.
+
+### Video verification registry
+
+`src/content/videos.js` is now the canonical factual gate for video discovery metadata. The existing delivery facts are recorded, while `name`, `thumbnailUrl`, `uploadDate`, `duration`, and `watchPath` remain unset until verified. The build must not emit VideoObject while required fields are absent.
+
+`scripts/validate-discovery-facts.mjs` runs before production builds and fails on malformed verified metadata while reporting intentionally gated VideoObject records.
+
+Google's current VideoObject requirements make `name`, `thumbnailUrl`, and `uploadDate` required. A VideoObject must be placed on a page where the video is actually watchable. `contentUrl` is recommended when Google can fetch the actual video bytes.
+
+### Search-performance feedback boundary
+
+Search Console Search Analytics remains the preferred external search-performance source. Use the read-only OAuth scope `webmasters.readonly`. Treat returned rows as top performance rows rather than complete raw search logs because the API documents internal row limits.
+
+Vercel Web Analytics remains the first-party on-site acquisition/event source. Search Console answers discovery/impression/click questions; Vercel answers landing and on-site behavior questions. Keep the two datasets logically separate and join only on non-personal dimensions such as date and canonical page.
