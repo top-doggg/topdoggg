@@ -22,6 +22,14 @@ const routes = [
     canonical: "https://trststudios.online/journal",
     robots: "index, follow, max-image-preview:large, max-video-preview:-1, max-snippet:-1",
   },
+  ...dispatchEntries.map((journal) => ({
+    file: `journal/${journal.slug}.html`,
+    title: `${journal.title} | TRST Dispatch`,
+    description: journal.copy,
+    canonical: `https://trststudios.online/journal/${journal.slug}`,
+    robots: "index, follow, max-image-preview:large, max-video-preview:-1, max-snippet:-1",
+    journal,
+  })),
   {
     file: "work.html",
     title: "Work | DE.LA.COSTA and TRST Studios",
