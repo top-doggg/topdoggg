@@ -16,6 +16,7 @@ import ProjectDetail from "./ProjectDetail.jsx";
 import About from "./About.jsx";
 import Journal from "./Journal.jsx";
 import { resolveRoute } from "./app/routes.js";
+import { trackDiscoveryLanding } from "./lib/discovery-telemetry.js";
 import "./index.css";
 
 const StudioApp = lazy(() => import("./App.jsx"));
@@ -35,6 +36,7 @@ if (studioMode) {
 }
 
 inject({ framework: "vite" });
+trackDiscoveryLanding({ routeId: studioMode ? "studio" : route.id, pathname: window.location.pathname });
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>

@@ -1,3 +1,10 @@
+# Public discovery policy for TRST Studios.
+# Public search and AI-search crawlers may access indexable pages.
+# Internal routes use noindex HTML/response headers so crawlers can see the directive.
+
+User-agent: OAI-SearchBot
+Allow: /
+
 User-agent: *
 Allow: /
 

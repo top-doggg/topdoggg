@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { archiveWorks } from "../src/archiveData.js";
+import { injectRouteSchema, routeSchema } from "./seo-schema.mjs";
 
 const dist = resolve("dist");
 const base = readFileSync(resolve(dist, "index.html"), "utf8");
@@ -40,6 +41,7 @@ const routes = [
     description: work.copy,
     canonical: `https://trststudios.online/work/${work.id}`,
     robots: "index, follow",
+    work,
   })),
   {
     file: "fulfillment-policy.html",
@@ -108,5 +110,5 @@ function replaceMeta(html, route) {
 for (const route of routes) {
   const target = resolve(dist, route.file);
   mkdirSync(dirname(target), { recursive: true });
-  writeFileSync(target, replaceMeta(base, route));
+  writeFileSync(target, injectRouteSchema(replaceMeta(base, route), routeSchema(route)));
 }

@@ -25,11 +25,22 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "Person",
+            "@id": "https://trststudios.online/#jorge-s-ruiz",
+            "name": "Jorge S. Ruiz",
+            "alternateName": ["DE.LA.COSTA", "Cokeys Ruiz"],
+            "url": "https://trststudios.online/about",
+            "image": "https://trststudios.online/api/profile-image",
+            "description": "Southern California multidisciplinary visual artist working across photography, painting, drawing, film, mixed media, design, and wearable art.",
+            "sameAs": ["https://www.instagram.com/_de.la.costa_/"],
+            "knowsAbout": ["Photography", "Visual art", "Film", "Mixed media", "Drawing", "Design", "Wearable art"]
+          },
+          {
             "@type": "Organization",
             "@id": "https://trststudios.online/#organization",
             "name": "TRST Studios",
             "url": "https://trststudios.online/",
-            "description": "Independent art, apparel, and visual storytelling.",
+            "description": "Independent publishing, production, documentation, releases, collaborations, and community-rooted visual storytelling around the DE.LA.COSTA practice.",
             "sameAs": ["https://www.instagram.com/_de.la.costa_/"],
             "hasMerchantReturnPolicy": {
               "@type": "MerchantReturnPolicy",
@@ -41,7 +52,19 @@
             "@id": "https://trststudios.online/#website",
             "url": "https://trststudios.online/",
             "name": "TRST Studios",
-            "publisher": { "@id": "https://trststudios.online/#organization" }
+            "publisher": { "@id": "https://trststudios.online/#organization" },
+            "about": { "@id": "https://trststudios.online/#jorge-s-ruiz" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://trststudios.online/#webpage",
+            "url": "https://trststudios.online/",
+            "name": "Jorge S. Ruiz / DE.LA.COSTA | TRST Studios",
+            "isPartOf": { "@id": "https://trststudios.online/#website" },
+            "about": [
+              { "@id": "https://trststudios.online/#jorge-s-ruiz" },
+              { "@id": "https://trststudios.online/#organization" }
+            ]
           }
         ]
       }
