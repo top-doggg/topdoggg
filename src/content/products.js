@@ -47,3 +47,7 @@ export const allProducts = [
 ];
 
 export const products = allProducts.filter((product) => product.id !== "cheos-world");
+
+export function productById(id) {
+  return products.find((product) => product.id === id);
+}
