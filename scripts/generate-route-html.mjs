@@ -2,6 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { works } from "../src/content/works.js";
 import { dispatchEntries } from "../src/content/dispatches.js";
+import { products } from "../src/content/products.js";
 import { injectRouteSchema, routeSchema } from "./seo-schema.mjs";
 
 const dist = resolve("dist");
@@ -44,6 +45,14 @@ const routes = [
     canonical: "https://trststudios.online/shop",
     robots: "index, follow, max-image-preview:large, max-video-preview:-1, max-snippet:-1",
   },
+  ...products.map((product) => ({
+    file: `shop/${product.id}.html`,
+    title: `${product.name} | DE.LA.COSTA`,
+    description: product.story,
+    canonical: `https://trststudios.online/shop/${product.id}`,
+    robots: "index, follow, max-image-preview:large, max-video-preview:-1, max-snippet:-1",
+    product,
+  })),
   ...works.map((work) => ({
     file: `work/${work.id}.html`,
     title: `${work.title} | DE.LA.COSTA`,
