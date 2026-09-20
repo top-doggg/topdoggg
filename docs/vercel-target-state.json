@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "researchedAt": "2026-09-20",
+  "project": {
+    "teamId": "team_3ucEA2CqYmlQcdwNrEDXTSSn",
+    "projectId": "prj_Xw4luLyt6S4aETmvQ1JhZHzlhIUH",
+    "projectName": "trststudios-replacement",
+    "repository": "top-doggg/topdoggg",
+    "sourceBranch": "trststudios-storefront",
+    "productionDomains": [
+      "trststudios.online",
+      "www.trststudios.online"
+    ]
+  },
+  "observed": {
+    "production": {
+      "deploymentId": "dpl_Bg18xj5YNJMpGuGmzVPf5CXhLME8",
+      "commit": "c42b4264ceda03db3bbaef1c59fd4d7d68d85d6a",
+      "state": "READY"
+    },
+    "phase2Preview": {
+      "deploymentId": "dpl_HSGcHUqBFQWRPNiMyLZA4TRC3s9N",
+      "commit": "615aa0a04bfbb77a2063f55547736b0506398dd4",
+      "state": "READY",
+      "protected": true
+    },
+    "previewFetchIssue": "Vercel Authentication redirects stateless automated requests to SSO before application routing."
+  },
+  "target": {
+    "deploymentProtection": {
+      "scope": "standard",
+      "keepEnabled": true,
+      "preferredAutomationAccess": [
+        "trusted-sources-oidc",
+        "protection-bypass-for-automation"
+      ],
+      "humanAccess": "shareable-links"
+    },
+    "requiredProductionEnv": [
+      "CRON_SECRET"
+    ],
+    "systemEnvWhenConfigured": [
+      "VERCEL_AUTOMATION_BYPASS_SECRET"
+    ],
+    "promotionMode": "manual-after-preview-validation",
+    "indexNow": {
+      "cronPath": "/api/indexnow-sync",
+      "keyFile": "/9db50a3983c44815e0a030a0c2def0da.txt",
+      "requiresProduction": true
+    },
+    "runtimeDependencies": {
+      "supabase": false,
+      "huggingFace": false,
+      "hubspot": false,
+      "semrush": false
+    }
+  },
+  "verificationRoutes": [
+    "/",
+    "/journal",
+    "/journal/coming-back-home",
+    "/journal/old-town-boogie",
+    "/journal/the-realest-feeling",
+    "/rss.xml",
+    "/sitemap.xml",
+    "/9db50a3983c44815e0a030a0c2def0da.txt",
+    "/api/indexnow-sync"
+  ],
+  "pendingConfiguration": [
+    "Create or confirm automation access: Trusted Sources/OIDC where supported, otherwise Protection Bypass for Automation.",
+    "Create or confirm CRON_SECRET in Production.",
+    "Redeploy after protection-bypass changes.",
+    "Run authenticated preview verification.",
+    "Promote Phase 2 only after verification passes.",
+    "Verify production cron and IndexNow after promotion."
+  ]
+}
