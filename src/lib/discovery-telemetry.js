@@ -55,3 +55,16 @@ export function trackDiscoveryLanding({ routeId, pathname }) {
     // Analytics must never interfere with rendering or navigation.
   }
 }
+
+export function trackDiscoveryEvent(name, properties = {}) {
+  if (typeof window === "undefined") return;
+  try {
+    track(clean(name, 80), {
+      ...getDiscoveryContext(),
+      path: clean(window.location.pathname, 120) || "/",
+      ...properties,
+    });
+  } catch {
+    // Analytics must never interfere with the user experience.
+  }
+}
