@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "researchedAt": "2026-09-20",
+  "researchedAt": "2026-10-27",
   "project": {
     "teamId": "team_3ucEA2CqYmlQcdwNrEDXTSSn",
     "projectId": "prj_Xw4luLyt6S4aETmvQ1JhZHzlhIUH",
@@ -14,17 +14,61 @@
   },
   "observed": {
     "production": {
-      "deploymentId": "dpl_Bg18xj5YNJMpGuGmzVPf5CXhLME8",
-      "commit": "c42b4264ceda03db3bbaef1c59fd4d7d68d85d6a",
-      "state": "READY"
+      "deploymentId": "dpl_F2dU9nAwLhDQxAGTnB4eptdaVGyQ",
+      "commit": "c3d1d2826daa7c0c69479fd3a0d90d1495a1d258",
+      "branch": "trststudios-storefront",
+      "state": "READY",
+      "verifiedAt": "2026-10-27",
+      "aliases": [
+        "trststudios.online",
+        "www.trststudios.online"
+      ]
     },
     "phase2Preview": {
       "deploymentId": "dpl_HSGcHUqBFQWRPNiMyLZA4TRC3s9N",
       "commit": "615aa0a04bfbb77a2063f55547736b0506398dd4",
       "state": "READY",
-      "protected": true
+      "protected": true,
+      "historical": true,
+      "note": "September 2026 historical preview, not current active production baseline."
     },
-    "previewFetchIssue": "Vercel Authentication redirects stateless automated requests to SSO before application routing."
+    "previewFetchIssue": "Vercel Authentication redirects stateless automated requests to SSO before application routing.",
+    "deploymentConfiguration": {
+      "framework": "Vite/React/Bun",
+      "nodeVersion": "24.x",
+      "planFunctionCap": 12,
+      "publicFunctionHandlers": 12,
+      "source": "GitHub api/*.js",
+      "functionCapacityAvailable": 0,
+      "previewSSO": "enabled, except custom domains"
+    },
+    "environmentPresence": {
+      "PRINTIFY_API_TOKEN": [
+        "production",
+        "preview"
+      ],
+      "PRINTIFY_ADMIN_SECRET": [
+        "production",
+        "preview"
+      ],
+      "VITE_PRINTIFY_STORE_URL": [
+        "production",
+        "preview"
+      ],
+      "BLOB_READ_WRITE_TOKEN": [
+        "production",
+        "preview",
+        "development"
+      ],
+      "CRON_SECRET": [
+        "preview"
+      ]
+    },
+    "commerceRisk": {
+      "configuredCheckout": "DelaCosta Printify Pop-Up Store",
+      "apiIdentityVerified": "shop 28340085 My new store, disconnected sales_channel; not confirmed as DelaCosta",
+      "mustNotPublishToWrongShop": true
+    }
   },
   "target": {
     "deploymentProtection": {
@@ -67,11 +111,11 @@
     "/api/indexnow-sync"
   ],
   "pendingConfiguration": [
-    "Create or confirm automation access: Trusted Sources/OIDC where supported, otherwise Protection Bypass for Automation.",
-    "Create or confirm CRON_SECRET in Production.",
-    "Redeploy after protection-bypass changes.",
-    "Run authenticated preview verification.",
-    "Promote Phase 2 only after verification passes.",
-    "Verify production cron and IndexNow after promotion."
+    "Set CRON_SECRET in Production and validate scheduled IndexNow independently before treating cron as active.",
+    "Rotate previously chat-exposed Printify tokens and private operations credentials in a controlled window.",
+    "Verify account ownership/access for DelaCosta before new product publishing; do not assume shop 28340085 is DelaCosta.",
+    "Keep serverless handlers at or below 12. New designs and product records do not require new API handlers.",
+    "Keep trststudios-storefront as source of truth and promote only verified previews.",
+    "Design-v2 branch is documentation only; obtain visual approval and validate UX/accessibility before implementation."
   ]
 }
