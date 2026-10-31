@@ -72,6 +72,10 @@ export default function HomeCover() {
             <a href="/work/west-of-the-tracks">Enter the project</a>
           </div>
         </section>
+        <section className="cover-feature">
+          <img src="/portfolio/never-alone-artwork.webp" alt="Never Alone illustration of five people with their arms around one another" loading="lazy" decoding="async" style={{objectFit:"contain"}} />
+          <div><span>Portfolio & process</span><h2>Work. In the making.</h2><p>A closer look at sketches, color studies, photography, and the images they become.</p><a href="/process">Explore the process</a></div>
+        </section>
         <section className="cover-dispatch">
           <div>
             <span>TRST Dispatch</span>

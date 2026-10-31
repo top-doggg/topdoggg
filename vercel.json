@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/process",
+      "destination": "/process.html"
+    },
+    {
       "source": "/about",
       "destination": "/about.html"
     },

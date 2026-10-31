@@ -11,6 +11,7 @@ import OpenThread from "./OpenThread.jsx";
 import OpenThreadHub from "./OpenThreadHub.jsx";
 import OperationsDesk from "./OperationsDesk.jsx";
 import Work from "./Work.jsx";
+import Process from "./Process.jsx";
 import ProjectDetail from "./ProjectDetail.jsx";
 import About from "./About.jsx";
 import Journal from "./Journal.jsx";
@@ -32,6 +33,7 @@ createRoot(document.getElementById("root")).render(<React.StrictMode>
 :route.id==="openThreadChapter"?<OpenThread chapterKey={route.params.chapter} />
 :route.id==="openThread"?<OpenThreadHub />
 :route.id==="operations"?<OperationsDesk />
+:route.id==="process"?<Process />
 :route.id==="work"?<Work />
 :route.id==="about"?<About />
 :route.id==="journalEntry"?<JournalEntry slug={route.params.slug} />

@@ -11,6 +11,7 @@ const staticUrls = [
   ["/about", "monthly", "0.7"],
   ["/journal", "weekly", "0.8"],
   ["/work", "monthly", "0.9"],
+  ["/process", "monthly", "0.8"],
   ["/fulfillment-policy", "monthly", "0.4"],
   ["/partners", "monthly", "0.7"],
   ["/open-thread", "weekly", "0.8"],

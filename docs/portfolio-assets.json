@@ -1,0 +1,188 @@
+[
+  {
+    "asset": "public/portfolio/artist-portrait.webp",
+    "source": "6DE3E43E-2B04-40B0-8206-31B9D8B02E6D.png",
+    "width": 1086,
+    "height": 1448
+  },
+  {
+    "asset": "public/portfolio/vote-sketch.webp",
+    "source": "26C64AC5-39E2-4757-81D0-7CA40C22E013.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "asset": "public/portfolio/vote-artwork.webp",
+    "source": "AA670DA8-AB31-42CE-96AC-187CC2282F0F.png",
+    "width": 1254,
+    "height": 1254
+  },
+  {
+    "asset": "public/portfolio/vote-mockup.webp",
+    "source": "DE7288AD-94C0-4187-B2A6-5A35C43440D0.png",
+    "width": 1122,
+    "height": 1402
+  },
+  {
+    "asset": "public/portfolio/never-alone-sketch.webp",
+    "source": "5C57CF8F-15FC-42A5-88FB-1F411FE6DB12.png",
+    "width": 1145,
+    "height": 1374
+  },
+  {
+    "asset": "public/portfolio/never-alone-artwork.webp",
+    "source": "67EAD222-E1C1-4D5E-8081-B159AFCD04D9.png",
+    "width": 1145,
+    "height": 1374
+  },
+  {
+    "asset": "public/portfolio/blue-portrait.webp",
+    "source": "FA303D27-5BF0-459F-9602-C27DBD4CD22F.png",
+    "width": 1122,
+    "height": 1402
+  },
+  {
+    "asset": "public/portfolio/blue-canvas.webp",
+    "source": "5679061F-BABC-46BF-AC9B-EFAACF38E5A6.png",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "asset": "public/portfolio/blue-wide.webp",
+    "source": "AFBD374D-E5CE-490F-AAE0-1F68007CBA69.png",
+    "width": 1800,
+    "height": 599
+  },
+  {
+    "asset": "public/portfolio/blue-variations.webp",
+    "source": "429A61C8-21C5-4A7E-8F8C-32B8579C06FF.png",
+    "width": 1774,
+    "height": 887
+  },
+  {
+    "asset": "public/portfolio/blue-composition.webp",
+    "source": "IMG_3548.PNG",
+    "width": 1169,
+    "height": 858
+  },
+  {
+    "asset": "public/portfolio/neighborhood-scene.webp",
+    "source": "5D104B9D-F0B4-4CA2-B92D-F85E62EF4BC5.png",
+    "width": 1448,
+    "height": 1086
+  },
+  {
+    "asset": "public/portfolio/street-poster.webp",
+    "source": "949A0C68-D608-495F-9B0E-AFA6A4EE16E6.png",
+    "width": 1098,
+    "height": 1433
+  },
+  {
+    "asset": "public/portfolio/street-character.webp",
+    "source": "1B81BFD2-6A63-4E00-B769-EA02239AD110.png",
+    "width": 1122,
+    "height": 1402
+  },
+  {
+    "asset": "public/portfolio/trst-illustration.webp",
+    "source": "E26BB526-768A-47D1-97F4-7AB4B66D0AD8(1).png",
+    "width": 1122,
+    "height": 1402
+  },
+  {
+    "asset": "public/portfolio/capistrano-poster.webp",
+    "source": "IMG_4296.PNG",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "asset": "public/portfolio/delacosta-graphic.webp",
+    "source": "C92218A8-3FD4-4EA9-849B-1CBD4F8C783F.jpg",
+    "width": 1012,
+    "height": 1800
+  },
+  {
+    "asset": "public/portfolio/mask-sketch.webp",
+    "source": "C0DB8D45-E35D-48DA-95B5-60C7DB3DC73C.png",
+    "width": 1122,
+    "height": 1402
+  },
+  {
+    "asset": "public/portfolio/mask-drawing.webp",
+    "source": "A867223F-20E2-4021-8B63-E785B269D824.png",
+    "width": 941,
+    "height": 1672
+  },
+  {
+    "asset": "public/portfolio/mask-linework.webp",
+    "source": "5C05AD12-B5D4-4D9B-9593-B59FB8CD7A43.png",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "asset": "public/portfolio/mask-blue.webp",
+    "source": "IMG_4068.PNG",
+    "width": 1080,
+    "height": 1080
+  },
+  {
+    "asset": "public/portfolio/mask-study.webp",
+    "source": "IMG_4171.PNG",
+    "width": 1122,
+    "height": 1402
+  },
+  {
+    "asset": "public/portfolio/warrior-linework.webp",
+    "source": "FAA62F3D-DAC9-45E2-96C9-5F00A51D4ED3.png",
+    "width": 1122,
+    "height": 1402
+  },
+  {
+    "asset": "public/portfolio/photo-archive.webp",
+    "source": "IMG_1394.JPG",
+    "width": 1350,
+    "height": 1800
+  },
+  {
+    "asset": "public/portfolio/photo-layout-1.webp",
+    "source": "SCRL_0001.jpg",
+    "width": 1800,
+    "height": 1800
+  },
+  {
+    "asset": "public/portfolio/photo-layout-2.webp",
+    "source": "SCRL_0002.jpg",
+    "width": 1800,
+    "height": 1800
+  },
+  {
+    "asset": "public/portfolio/photo-layout-3.webp",
+    "source": "SCRL_0003.jpg",
+    "width": 1800,
+    "height": 1800
+  },
+  {
+    "asset": "public/portfolio/photo-layout-4.webp",
+    "source": "SCRL_0004.jpg",
+    "width": 1800,
+    "height": 1800
+  },
+  {
+    "asset": "public/portfolio/photo-layout-5.webp",
+    "source": "SCRL_0005.jpg",
+    "width": 1800,
+    "height": 1800
+  },
+  {
+    "asset": "public/portfolio/photo-layout-6.webp",
+    "source": "SCRL_0006.jpg",
+    "width": 1800,
+    "height": 1800
+  },
+  {
+    "asset": "public/portfolio/photo-layout-7.webp",
+    "source": "SCRL_0007.jpg",
+    "width": 1800,
+    "height": 1800
+  }
+]

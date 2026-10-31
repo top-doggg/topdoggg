@@ -28,6 +28,7 @@ export default function Work() {
           <p>These works move between documentation and invention. People, neighborhoods, photographs, gestures, and ordinary objects become layered records of memory, place, and lived experience.</p>
           <a href="mailto:trststudiogallery@gmail.com?subject=Artwork%20or%20licensing%20inquiry">Ask about original work, editions, licensing, or exhibitions</a>
         </section>
+        <p style={{padding:"0 var(--trst-page-gutter) 28px"}}><a href="/process" style={{color:"inherit",textUnderlineOffset:"5px"}}>Portfolio & process — sketches, studies, and applications →</a></p>
         <section className="archive-grid" aria-label="Selected work">
           {works.map((work, index) => (
             <article className={index === 0 ? "archive-card featured" : "archive-card"} key={work.id}>

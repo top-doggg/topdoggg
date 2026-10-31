@@ -1,6 +1,7 @@
 const SITE_URL="https://trststudios.online";
 export const publicRoutes=[
 {id:"home",path:"/",title:"TRST Studios | DE.LA.COSTA",indexable:true},
+{id:"process",path:"/process",title:"Portfolio & Process | TRST Studios",indexable:true},
 {id:"work",path:"/work",title:"Work | TRST Studios",indexable:true},
 {id:"shop",path:"/shop",title:"Shop | TRST Studios",indexable:true},
 {id:"openThread",path:"/open-thread",title:"Open Thread | TRST Studios",indexable:true},

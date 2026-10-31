@@ -9,6 +9,7 @@ const dist = resolve("dist");
 const base = readFileSync(resolve(dist, "index.html"), "utf8");
 
 const routes = [
+  { file: "process.html", title: "Portfolio & Process | DE.LA.COSTA / TRST Studios", description: "Explore selected illustration, photography, sketches, color studies, and apparel applications by DE.LA.COSTA and TRST Studios.", canonical: "https://trststudios.online/process", robots: "index, follow, max-image-preview:large" },
   {
     file: "about.html",
     title: "About | DE.LA.COSTA and TRST Studios",
