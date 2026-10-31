@@ -3,7 +3,28 @@
 // Source: approved Printify mockups pulled live in Storefront modal.
 // Do not invent products, pricing, or availability.
 
+export const catalogCheckedAt = "2026-10-31";
+
 export const allProducts = [
+  {
+    id: "de-los-cielos", name: "De Los Cielos Tee", price: "$29.58", badge: "New release",
+    story: "Aztec sun and warrior imagery inspired by Mexican heritage, memory, and the spirit of the corrido.",
+    fit: "Relaxed classic fit", sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+    care: "Wash cold. Do not bleach or tumble dry. Iron on low, away from the print.",
+    printifyProductId: "33676373",
+    image: "https://images-api.printify.com/mockup/6ae2f2516f50fa523607489d/247305/127573/de-los-cielos-aztec-sun-mexican-heritage-graphic-t-shirt.jpg?camera_label=front&revision=1793258617972",
+    backImage: "https://images-api.printify.com/mockup/6ae2f2516f50fa523607489d/247305/127574/de-los-cielos-aztec-sun-mexican-heritage-graphic-t-shirt.jpg?camera_label=back&revision=1793258617972",
+  },
+  {
+    id: "the-realest-feeling", name: "The Realest Feeling Tee", price: "$25.99", badge: "New release",
+    story: "An ornate warrior mask and expressive botanical forms on a heavyweight garment-dyed tee. A graphic about pain, resilience, and carrying on.",
+    fit: "Relaxed fit / garment-dyed cotton", sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], previewView: "back",
+    care: "Wash cold. Do not bleach. Tumble dry low. Iron on low, away from the print.",
+    printifyProductId: "33675910",
+    image: "https://images-api.printify.com/mockup/6ae2e94f8c0e53cc7b0d9b62/73204/98445/the-realest-feeling-graphic-t-shirt-enduring-pain-heartbreak-design.jpg?camera_label=front&revision=1793258653433",
+    backImage: "https://images-api.printify.com/mockup/6ae2e94f8c0e53cc7b0d9b62/73204/98446/the-realest-feeling-graphic-t-shirt-enduring-pain-heartbreak-design.jpg?camera_label=back&revision=1793258653433",
+  },
+
   {
     id: "capistrano-love",
     name: "Capistrano Love Tee",

@@ -63,8 +63,8 @@ function ProductCard({ product, onOpen }) {
   return (
     <article className="product-card">
       <button type="button" className="product-media" onClick={() => onOpen(product)} aria-label={`View ${product.name}`}>
-        <img className="product-front" src={product.image} alt={`${product.name}, front view`} loading="lazy" decoding="async" />
-        <img className="product-back" src={product.backImage} alt={`${product.name}, back view`} loading="lazy" decoding="async" />
+        <img className="product-front" src={product.previewView === "back" ? product.backImage : product.image} alt={`${product.name}, ${product.previewView || "front"} view`} loading="lazy" decoding="async" />
+        <img className="product-back" src={product.previewView === "back" ? product.image : product.backImage} alt={`${product.name}, ${product.previewView === "back" ? "front" : "back"} view`} loading="lazy" decoding="async" />
         <span>Quick view</span>
       </button>
       <div className="product-copy">
@@ -179,7 +179,7 @@ function ProductModal({ product, onClose }) {
   const [storeState, setStoreState] = useState({ loading: false, error: "" });
 
   useEffect(() => {
-    setView("front");
+    setView(product.previewView || "front");
     setSize("M");
     setStoreState({ loading: false, error: "" });
   }, [product]);
@@ -218,7 +218,7 @@ function ProductModal({ product, onClose }) {
         <div className="product-gallery">
           <img src={view === "front" ? product.image : product.backImage} alt={`${product.name}, ${view} view`} loading="lazy" decoding="async" />
           <div className="gallery-controls" aria-label="Product views">
-            <button className={view === "front" ? "active" : ""} type="button" onClick={() => { setView("front"); trackStorefront("Product view changed", { product: product.id, view: "front" }); }}>Front</button>
+            <button className={view === "front" ? "active" : ""} type="button" onClick={() => { setView(product.previewView || "front"); trackStorefront("Product view changed", { product: product.id, view: "front" }); }}>Front</button>
             <button className={view === "back" ? "active" : ""} type="button" onClick={() => { setView("back"); trackStorefront("Product view changed", { product: product.id, view: "back" }); }}>Back</button>
           </div>
         </div>
@@ -229,13 +229,13 @@ function ProductModal({ product, onClose }) {
           <div className="detail-grid">
             <div><small>Fit</small><strong>{product.fit}</strong></div>
             <div><small>Production</small><strong>Made after you order</strong></div>
-            <div><small>Care</small><strong>Wash cold, inside out</strong></div>
+            <div><small>Care</small><strong>{product.care || "Wash cold, inside out"}</strong></div>
             <div><small>Checkout</small><strong>Securely through Printify</strong></div>
           </div>
           <fieldset className="size-picker">
-            <legend>Choose size</legend>
+            <legend>Explore sizing</legend>
             <div>
-              {sizes.map((item) => (
+              {(product.sizes || sizes).map((item) => (
                 <button className={size === item ? "active" : ""} type="button" key={item} onClick={() => { setSize(item); trackStorefront("Product size selected", { product: product.id, size: item, price: priceFor(product, item) }); }}>
                   {item}
                 </button>
@@ -243,14 +243,14 @@ function ProductModal({ product, onClose }) {
             </div>
           </fieldset>
           <div className="checkout-row">
-            <div><small>Selected</small><strong>{size} / {priceFor(product, size)}</strong></div>
+            <div><small>Starting price</small><strong>From {product.price}</strong></div>
             <button type="button" onClick={openStore} disabled={storeState.loading || !isPrintifyConfigured()}>
               {storeState.loading ? "Opening store…" : "View in secure store"}
             </button>
           </div>
           {!isPrintifyConfigured() ? <p className="store-message">The Printify storefront URL still needs to be configured.</p> : null}
           {storeState.error ? <p className="store-message error" role="alert">{storeState.error}</p> : null}
-          <small className="checkout-note">Final size details, quantity, shipping, taxes, and payment are confirmed on Printify.</small>
+          <small className="checkout-note">Choose your size and color in Printify. The selection here is a sizing reference; final availability, price, shipping, taxes, and payment are confirmed there.</small>
         </div>
       </section>
     </div>
@@ -375,6 +375,15 @@ export default function Storefront() {
           <span>Secure Printify checkout</span>
           <span>Limited edition work</span>
         </section>
+        <section className="shop-section" id="shop">
+          <header className="section-heading">
+            <div><span>Available now / {featuredProducts.length} published designs</span><h2>Wear the archive.</h2></div>
+            <p>The latest published Printify releases. Made after you order; final size, color, and availability are confirmed in the secure store.</p>
+          </header>
+          <div className="product-grid">
+            {featuredProducts.map((product) => <ProductCard key={product.id} product={product} onOpen={openProduct} />)}
+          </div>
+        </section>
         <section className="work-section" id="work">
           <header className="section-heading">
             <div><span>Portfolio / 10 works</span><h2>The work before the product.</h2></div>
@@ -385,15 +394,6 @@ export default function Storefront() {
           </nav>
           <div className="artwork-grid">
             {visibleWorks.map((artwork) => <ArtworkCard key={artwork.id} artwork={artwork} onInquire={setActiveArtwork} />)}
-          </div>
-        </section>
-        <section className="shop-section" id="shop">
-          <header className="section-heading">
-            <div><span>Edition 001</span><h2>Wear the archive.</h2></div>
-            <p>Original artwork translated into pieces built around community, cultural memory, and everyday resilience.</p>
-          </header>
-          <div className="product-grid">
-            {featuredProducts.map((product) => <ProductCard key={product.id} product={product} onOpen={openProduct} />)}
           </div>
         </section>
         <section className="story-section" id="story">

@@ -20,6 +20,8 @@ function productUrl(path, override) {
 }
 
 const productUrls = {
+  "de-los-cielos": productUrl("/product/33676373"),
+  "the-realest-feeling": productUrl("/product/33675910"),
   "capistrano-love": productUrl("/product/30805178", import.meta.env.VITE_PRINTIFY_CAPISTRANO_LOVE_URL),
   "cheos-world": productUrl("/product/30804231", import.meta.env.VITE_PRINTIFY_CHEOS_WORLD_URL),
   "no-bad-days": productUrl("/product/30290414", import.meta.env.VITE_PRINTIFY_NO_BAD_DAYS_URL),
