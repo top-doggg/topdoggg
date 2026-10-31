@@ -1,9 +1,9 @@
 export const primaryNavigation = [
+  { label: "Shop", href: "/shop" },
   { label: "Work", href: "/work" },
   { label: "Process", href: "/process" },
-  { label: "Shop", href: "/shop" },
-  { label: "Open Thread", href: "/open-thread" },
   { label: "Partners", href: "/partners" },
+  { label: "Open Thread", href: "/open-thread" },
 ];
 
 export const footerNavigation = [

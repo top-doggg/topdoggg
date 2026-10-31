@@ -1,18 +1,20 @@
 import { useState } from "react";
 import SiteShell from "./app/SiteShell.jsx";
+import { trackDiscoveryEvent } from "./lib/discovery-telemetry.js";
 import "./home-cover.css";
 
 const SUBSCRIBE_ENDPOINT = (import.meta.env.VITE_SUBSCRIBE_ENDPOINT || "/api/subscribe").trim();
 const paths = [
-  ["01", "Work", "Original projects, images, and visual records.", "/work"],
-  ["02", "Shop", "Artist editions and wearable work.", "/shop"],
-  ["03", "Open Thread", "A public record built with community.", "/open-thread"],
-  ["04", "Partners", "Commissions, collaborations, and public projects.", "/partners"],
+  { number: "01", intent: "Shop", title: "Shop Edition 001", copy: "Current artist editions and wearable work.", href: "/shop" },
+  { number: "02", intent: "Collect", title: "Collect or license", copy: "Original work, editions, exhibitions, and licensing.", href: "/shop#available-work" },
+  { number: "03", intent: "Collaborate", title: "Bring a project", copy: "Commissions, partnerships, and public creative work.", href: "/partners" },
+  { number: "04", intent: "Participate", title: "Enter Open Thread", copy: "Add your voice to the community archive.", href: "/open-thread" },
 ];
 
 export default function HomeCover() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
+
   async function subscribe(event) {
     event.preventDefault();
     setStatus("Joining…");
@@ -29,6 +31,11 @@ export default function HomeCover() {
       setStatus("Please try again.");
     }
   }
+
+  function trackIntent(intent) {
+    trackDiscoveryEvent("Homepage intent selected", { intent });
+  }
+
   return (
     <SiteShell mainId="home-main">
       <main id="home-main" className="cover-home">
@@ -41,21 +48,31 @@ export default function HomeCover() {
             decoding="async"
           />
           <div>
-            <span>Current issue / Southern California</span>
+            <span>Artist studio / editions / collaborations</span>
             <h1>Art, memory, place, and the people who carry it.</h1>
-            <p>DE.LA.COSTA is the visual practice of Jorge S. Ruiz. TRST Studios is the platform around the work.</p>
-            <a href="/work">Explore the work</a>
+            <p>DE.LA.COSTA is the visual practice of Jorge S. Ruiz. TRST Studios is the platform for editions, original work, partnerships, and Open Thread.</p>
+            <div className="cover-hero-actions">
+              <a href="/shop" onClick={() => trackIntent("shop")}>Shop Edition 001</a>
+              <a className="cover-hero-secondary" href="/work" onClick={() => trackIntent("work")}>Explore the work</a>
+            </div>
           </div>
         </section>
-        <section className="cover-paths" aria-label="Explore TRST Studios">
-          {paths.map(([number, title, copy, href]) => (
-            <a href={href} key={title}>
-              <small>{number}</small>
-              <strong>{title}</strong>
-              <span>{copy}</span>
-              <b>→</b>
+        <section className="cover-paths" aria-label="Choose what you want to do">
+          {paths.map((path) => (
+            <a href={path.href} key={path.title} className={path.intent === "Shop" ? "cover-path-primary" : ""} onClick={() => trackIntent(path.intent.toLowerCase())}>
+              <small>{path.number} / {path.intent}</small>
+              <strong>{path.title}</strong>
+              <span>{path.copy}</span>
+              <b aria-hidden="true">→</b>
             </a>
           ))}
+        </section>
+        <section className="cover-proof" aria-label="What to expect from TRST">
+          <span>What to expect</span>
+          <strong>Independent artist</strong>
+          <strong>Made after order</strong>
+          <strong>Secure Printify checkout</strong>
+          <strong>Studio inquiries welcome</strong>
         </section>
         <section className="cover-feature">
           <img
@@ -73,8 +90,8 @@ export default function HomeCover() {
           </div>
         </section>
         <section className="cover-feature">
-          <img src="/portfolio/never-alone-artwork.webp" alt="Never Alone illustration of five people with their arms around one another" loading="lazy" decoding="async" style={{objectFit:"contain"}} />
-          <div><span>Portfolio & process</span><h2>Work. In the making.</h2><p>A closer look at sketches, color studies, photography, and the images they become.</p><a href="/process">Explore the process</a></div>
+          <img src="/portfolio/never-alone-artwork.webp" alt="Never Alone illustration of five people with their arms around one another" loading="lazy" decoding="async" style={{ objectFit: "contain" }} />
+          <div><span>Portfolio &amp; process</span><h2>Work. In the making.</h2><p>A closer look at sketches, color studies, photography, and the images they become.</p><a href="/process">Explore the process</a></div>
         </section>
         <section className="cover-dispatch">
           <div>

@@ -87,6 +87,24 @@ export function routeSchema(route) {
     });
   }
 
+  if (route.product) {
+    return withBreadcrumb(route, {
+      "@type": "Product",
+      "@id": route.canonical + "#product",
+      url: route.canonical,
+      name: route.product.name,
+      description: route.product.story,
+      image: [route.product.image, route.product.backImage],
+      brand: { "@type": "Brand", name: "DE.LA.COSTA" },
+      offers: {
+        "@type": "Offer",
+        url: route.canonical,
+        priceCurrency: "USD",
+        price: route.product.price.replace(/[^0-9.]/g, ""),
+      },
+    });
+  }
+
   if (route.work) {
     return withBreadcrumb(route, {
       "@type": "CreativeWork",

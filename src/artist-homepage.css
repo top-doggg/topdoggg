@@ -16,7 +16,7 @@ body { margin: 0; }
   min-height: 100vh;
   background: var(--artist-paper);
   color: var(--artist-ink);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--trst-sans);
 }
 
 .artist-home img { display: block; width: 100%; }
