@@ -31,7 +31,12 @@ export default function ProductDetail({ productId }) {
         <h1>{product.name}</h1>
         <p>{product.story}</p>
         <p><strong>From {product.price}</strong></p>
-        <p>{product.fit}. Final sizes, current availability, shipping, taxes, and payment are confirmed in the secure Printify store.</p>
+        <ul className="product-trust-list" aria-label="Purchase details">
+          <li>{product.fit}</li>
+          <li>Made after you order</li>
+          <li>Secure checkout through Printify</li>
+          <li>Final size, availability, shipping, taxes, and payment are confirmed before purchase</li>
+        </ul>
         <p><a href={checkoutUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackDiscoveryEvent("shop_outbound", { contentType: "product", contentId: product.id, destination: "printify" })}>View in secure store</a></p>
         <p><a href="/fulfillment-policy">Shipping &amp; returns policy</a></p>
       </div>

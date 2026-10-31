@@ -11,5 +11,7 @@
   --trst-space-section: clamp(4rem, 9vw, 9rem);
   --trst-page-gutter: clamp(1rem, 5vw, 5rem);
   --trst-content-width: 90rem;
+  --trst-sans: Arial, Helvetica, sans-serif;
+  --trst-display: Georgia, "Times New Roman", serif;
   --trst-focus: 3px solid var(--trst-signal);
 }
