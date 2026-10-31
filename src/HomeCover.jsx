@@ -76,7 +76,7 @@ export default function HomeCover() {
         </section>
         <section className="cover-feature">
           <img
-            src="/api/homepage-image?key=grace"
+            src="/editorial/full-of-grace.webp"
             alt="Full of Grace, a DE.LA.COSTA visual work"
             fetchPriority="high"
             loading="eager"
