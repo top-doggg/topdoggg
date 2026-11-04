@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { works } from '../src/content/works.js';
 import { processProjects } from '../src/content/processProjects.js';
 import { products } from '../src/content/products.js';
@@ -91,5 +91,18 @@ test('film ranges cover bounded, open, suffix, and unsatisfiable requests', () =
   assert.deepEqual(parseRange('bytes=90-999', 100), { start: 90, end: 99 });
   for (const value of ['bytes=100-', 'bytes=2-1', 'bytes=-0', 'bytes=-', 'bytes=0-1,3-4', 'bytes=9007199254740992-']) {
     assert.equal(parseRange(value, 100), null, value);
+  }
+});
+
+
+test('public image files contain image bytes rather than text or encoded payloads', () => {
+  const root = new URL('../public/', import.meta.url);
+  for (const path of readdirSync(root, { recursive: true }).filter(path => /\.(png|jpe?g|webp|gif)$/i.test(path))) {
+    const data = readFileSync(new URL(path, root));
+    const valid = /\.png$/i.test(path) ? data.subarray(0, 8).toString('hex') === '89504e470d0a1a0a'
+      : /\.jpe?g$/i.test(path) ? data[0] === 255 && data[1] === 216
+      : /\.webp$/i.test(path) ? data.subarray(0, 4).toString() === 'RIFF' && data.subarray(8, 12).toString() === 'WEBP'
+      : /^GIF8[79]a$/.test(data.subarray(0, 6).toString());
+    assert.ok(valid, 'invalid image container: ' + path);
   }
 });

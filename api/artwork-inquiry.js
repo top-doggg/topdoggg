@@ -87,8 +87,8 @@ export default async function handler(request, response) {
     if (body.updates === true) {
       try {
         const emailHash = createHash("sha256").update(email).digest("hex");
-        await syncSubscriberToResend({ email, emailHash });
-        record.subscriberSync = { provider: "resend", status: "synced", attemptedAt: new Date().toISOString() };
+        const delivery = await syncSubscriberToResend({ email, emailHash });
+        record.subscriberSync = { provider: "resend", status: delivery.status, attemptedAt: new Date().toISOString() };
       } catch (error) {
         record.subscriberSync = { provider: "resend", status: "failed", attemptedAt: new Date().toISOString() };
         console.error("Artwork inquiry subscriber sync failed", { status: error.status || 500 });

@@ -481,7 +481,7 @@ a { color: inherit; }
   .available-grid { grid-template-columns: 1fr 1fr; }
   .available-grid button { grid-template-rows: 52vw 1fr; }
   .collector-path { grid-template-columns: 1fr 1fr; gap: 18px 0; }
-  .open-thread-entry { grid-template-columns: 1fr; }
+  .open-thread-entry { grid-template-columns: minmax(0, 1fr); }
   .open-thread-entry-copy { min-height: 520px; padding: 64px 20px; }
   .open-thread-entry-image { min-height: 105vw; }
   .open-thread-entry-chapters > a { min-height: 230px; padding: 38px 20px; }

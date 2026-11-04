@@ -108,3 +108,16 @@ Source checks now cover six cases, including rejecting extra signed-token segmen
 The Supabase TRST project was rechecked and remains INACTIVE; no new customer-login system was introduced. The stored Printify admin credential is sensitive/non-readable through the connector, so it was neither extracted nor copied into Lab. Public catalog/cart checks remain the verified storefront path. Email provider credentials are not available on Lab: mail delivery cannot be claimed complete.
 
 Further deployed API/browser evidence is recorded below as checks complete. The live domain is not promoted by this follow-up; source differences with its CLI deployment still require reconciliation.
+
+
+### Follow-up execution evidence
+
+- All four real form handlers (subscriber, artwork, partner, Open Thread) persisted synthetic records to the isolated Lab store. Signed operations GET reconciled the three inquiry records, PATCH saved an approval, and anonymous GET returned 401. The four disposable records were removed.
+- Real Blob testing exposed missing `allowOverwrite` on partner/Open Thread delivery-status updates. Corrected both and repeated the three affected inquiry flows, verifying persisted `not_configured` mail status rather than false delivery. Artwork update opt-in metadata now records the actual provider result. Three new test records were removed after the targeted recheck.
+- On protected deployment `dpl_28ttPiHAF2pHY9Zxg8RzCsYnbkUr` / source `9f3b519...`, image/profile/film HEAD requests returned 200 with correct MIME types; subscriber GET reported configured true; anonymous operations GET returned 401. Film GET `bytes=0-1023` returned 206, 1,024 bytes, `Content-Range: bytes 0-1023/6732250`, and the expected MP4 signature.
+- A browser-driven homepage newsletter signup returned “You're on the list.” Test-only email was used, with email provider deliberately unconfigured. This proves signup storage, not email delivery.
+- The Realest Feeling Front/Back controls were exercised in the protected browser: Front selected camera 98445 and Back selected 98446; Escape closed the dialog.
+- Work layout measured within its viewport at 681, 454, and 340 CSS px; mobile menu keyboard activation and navigation worked. Process, Partners, and Open Thread fit the measured 340-px viewport. Follow-up measurements exposed a remaining Shop Open Thread grid minimum and an unbreakable About artist heading; both were corrected without hiding overflow globally.
+- The home feature file `public/editorial/full-of-grace.webp` was corrupt ASCII text rather than image bytes. It was removed and HomeCover now uses the verified allow-listed Blob grace endpoint. A full Pillow decode audit found no other invalid public raster files. Added a binary-container source test to prevent text-as-image regressions. Seven tests and the full build now pass.
+
+Final changed-preview checks, CI/deployment identity, and remaining provider limits will be summarized after the final application build.
