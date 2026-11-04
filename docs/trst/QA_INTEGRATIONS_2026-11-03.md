@@ -1,9 +1,12 @@
 # TRST — integration and website QA, November 3, 2026
 
 ## Current result
-**Not ready for a production completion claim.** Source build and four offline checks pass. Live navigation, portfolio lightbox, published Printify catalog, and a cart-to-checkout handoff were exercised. Blob delivery and subscriber storage fail on the live domain. Responsive and product-gallery defects were reproduced and corrected in this branch; browser regression of the changed preview remains required.
 
-This report supersedes the earlier read-only audit in this file. Observations were collected on November 3, Pacific time (November 4 UTC). No orders, signup records, outbound emails, database restoration, production promotion, or credential transfers were performed.
+**Applied to the protected Creative Lab, not promoted to the public custom domain.** An isolated private store now contains the nine verified media assets; subscriber/inquiry persistence and signed operations read/review have been exercised with disposable records. Seven source tests and the build pass. Protected browser tests verified the repaired homepage image, product Front/Back controls, Work responsiveness, and newsletter success. Further execution evidence and remaining provider limits appear at the end.
+
+The tables below preserve the initial audit of the live domain. That domain still serves a different CLI-deployed source ref. Email delivery remains unconfigured; Supabase is inactive and unused by the active storefront; authenticated Printify management is unavailable through its non-readable stored credential. These are not reported as successful integrations.
+
+Observations were collected on November 3, Pacific time (November 4 UTC). No orders, production promotion, customer-record migration, or database restoration were performed. Synthetic Lab form records were created and removed for verification. Only allow-listed media were copied to the new isolated store.
 
 ## Exact source and deployment mapping
 
@@ -19,7 +22,7 @@ This report supersedes the earlier read-only audit in this file. Observations we
 
 **A project's latest READY build is not necessarily the deployment serving its custom domain.** The creative branch and live source are different. Do not promote the creative branch on the assumption that it is the current live commit.
 
-## Verification matrix
+## Initial live-domain verification matrix
 
 | Requirement | Observed evidence | Status / remaining work |
 | --- | --- | --- |
@@ -57,7 +60,7 @@ Printify's own header exposed an `undefined logo` label and footer `Eco Essentia
 
 ## Configuration root cause and isolation decision
 
-Environment names and scopes were inspected without decrypting values:
+The initial environment inventory inspected names and scopes without decrypting values. The subsequent authorized media migration used the existing Blob credential privately to copy only the allow-listed files; it was not installed on Lab:
 
 - Live site: only `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, production scope.
 - Creative Lab: zero configured environment variables.
@@ -121,3 +124,14 @@ Further deployed API/browser evidence is recorded below as checks complete. The 
 - The home feature file `public/editorial/full-of-grace.webp` was corrupt ASCII text rather than image bytes. It was removed and HomeCover now uses the verified allow-listed Blob grace endpoint. A full Pillow decode audit found no other invalid public raster files. Added a binary-container source test to prevent text-as-image regressions. Seven tests and the full build now pass.
 
 Final changed-preview checks, CI/deployment identity, and remaining provider limits will be summarized after the final application build.
+
+
+### Catalog and final source reconciliation
+
+All five public Printify product detail pages expose an enabled Add to cart control for their observed default variant. Prices remain the five values in the table above. Realest Feeling, Capistrano Love, and No Bad Days show S–4XL; De Los Cielos and Sin Miedo show S–5XL. Updated the three legacy catalog records with the verified public product IDs and complete size-reference lists, and advanced catalogCheckedAt to November 3. No product artwork, price, provider stock, or Printify branding was changed.
+
+On `290adb0` / `dpl_AnL9YjkxkTbrbAwZ7ns8dCHPc2a2`, all three homepage images decoded successfully, including `/api/homepage-image?key=grace`. About fit the 340-CSS-px viewport after its heading fix. Shop's remaining nested chapter-link minimum width was traced and corrected with shrinking grid tracks and word wrapping. Final preview retest follows this commit.
+
+The browser newsletter record was read back with source `home-cover`, confirmed persisted with `emailDelivery:not_configured`, then removed. The isolated store should contain only its nine media files after all cleanup.
+
+Remaining external setup: a usable Resend API key and verified sender are needed for actual email delivery; account-side Codex Cloud workspace selection is not exposed by the current connectors. The existing inactive Supabase database was not restored because the storefront does not invoke it. Public Printify commerce is verified through product pages/cart; the protected management API has no readable credential available for Lab. Production rollout remains separate from this protected Lab application because the live domain serves a different source ref.

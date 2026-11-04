@@ -784,3 +784,7 @@ a { color: inherit; }
 .archive-hero { grid-template-columns: minmax(0, 1fr); }
 .archive-hero h1, .project-hero h1 { overflow-wrap: anywhere; }
 .story-copy, .artist-copy { min-width: 0; overflow-wrap: anywhere; }
+/* Nested chapter links must shrink with their mobile column. */
+.open-thread-entry-chapters { grid-template-columns: minmax(0, 1fr); }
+.open-thread-entry-chapters > a { min-width: 0; grid-template-columns: minmax(0, 1fr); }
+.open-thread-entry-chapters strong { overflow-wrap: anywhere; }
