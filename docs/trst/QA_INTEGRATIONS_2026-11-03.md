@@ -97,3 +97,14 @@ For a protected deployment supply its automation bypass via the environment, nev
 3. Run the changed protected preview in an authenticated browser: gallery Front/Back, narrow layout/overflow, mobile navigation, lightbox, keyboard behavior, portfolio filters, and forms.
 4. Reconcile source differences with the actual live ref before requesting production promotion. Re-run live provider checks after an approved deployment.
 5. If Codex Cloud is wanted, select this repository/branch in its account UI; repository CI and branch tracking are not account-level workspace provisioning.
+
+
+## Authorized follow-up application
+
+The user approved the isolated configuration and comprehensive follow-through. Created private Blob store `store_tRNrGd5v6UL65cDA` (`trst-creative-lab-isolated`, iad1) and connected it only to Creative Lab. Exactly nine allow-listed media assets were copied, signature checked, read back, and SHA-256 matched. Store metadata reports nine objects, 23,572,891 bytes. No production subscriber records were copied. Separate Lab operations and unsubscribe signing keys, operations allowlist, and Lab origin were configured; secret values remain outside the repository.
+
+Source checks now cover six cases, including rejecting extra signed-token segments, truthful unavailable-email responses, and valid/invalid film byte ranges. Film metadata now comes from Blob rather than a hardcoded length; invalid ranges return 416, and upstream range mismatches are rejected. Access and unsubscribe email links can use the configured Lab origin. Operations login reports unavailable delivery rather than a false success when Resend is absent.
+
+The Supabase TRST project was rechecked and remains INACTIVE; no new customer-login system was introduced. The stored Printify admin credential is sensitive/non-readable through the connector, so it was neither extracted nor copied into Lab. Public catalog/cart checks remain the verified storefront path. Email provider credentials are not available on Lab: mail delivery cannot be claimed complete.
+
+Further deployed API/browser evidence is recorded below as checks complete. The live domain is not promoted by this follow-up; source differences with its CLI deployment still require reconciliation.

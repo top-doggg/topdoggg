@@ -106,9 +106,15 @@ export default function OperationsDesk() {
   async function requestAccess(event) {
     event.preventDefault();
     setState("loading");
-    const response = await fetch("/api/operations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
-    setState("idle");
-    setMessage(response.ok ? "If the address is authorized, a private link is on its way." : "Could not request access.");
+    try {
+      const response = await fetch("/api/operations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
+      const body = await response.json();
+      setMessage(response.ok ? "If the address is authorized, a private link is on its way." : body.error || "Could not request access.");
+    } catch {
+      setMessage("Could not connect. Please try again.");
+    } finally {
+      setState("idle");
+    }
   }
 
   async function update(record, reviewStatus) {
@@ -124,7 +130,7 @@ export default function OperationsDesk() {
   }
 
   if (!token || state === "idle") {
-    return <main className="ops-login"><a href="/">TRST STUDIOS</a><section><p>Private operations</p><h1>Keep the thread moving.</h1><form onSubmit={requestAccess}><label>Operations email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></label><button>Send private access link</button></form>{message && <small>{message}</small>}</section></main>;
+    return <main className="ops-login"><a href="/">TRST STUDIOS</a><section><p>Private operations</p><h1>Keep the thread moving.</h1><form onSubmit={requestAccess}><label>Operations email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></label><button disabled={state === "loading"}>{state === "loading" ? "Requesting link…" : "Send private access link"}</button></form>{message && <small>{message}</small>}</section></main>;
   }
 
   return (

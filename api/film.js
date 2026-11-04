@@ -1,10 +1,9 @@
-import { get } from "@vercel/blob";
+import { get, head } from "@vercel/blob";
 import { Readable } from "node:stream";
 
 const PATHNAME = "media/4thetown-web-complete.mp4";
-const TOTAL_BYTES = 6732250;
 
-function parseRange(value, total) {
+export function parseRange(value, total) {
   if (!value) return null;
   const match = /^bytes=(\d*)-(\d*)$/i.exec(String(value).trim());
   if (!match) return null;
@@ -23,8 +22,8 @@ function parseRange(value, total) {
   }
 
   if (
-    !Number.isFinite(start) ||
-    !Number.isFinite(end) ||
+    !Number.isSafeInteger(start) ||
+    !Number.isSafeInteger(end) ||
     start < 0 ||
     start >= total ||
     end < start
@@ -44,12 +43,28 @@ export default async function handler(request, response) {
     return;
   }
 
-  const requestedRange = parseRange(request.headers.range, TOTAL_BYTES);
-  const rangeHeader = requestedRange
-    ? `bytes=${requestedRange.start}-${requestedRange.end}`
-    : undefined;
-
   try {
+    const metadata = await head(PATHNAME);
+    const total = metadata.size;
+    const requestedRange = parseRange(request.headers.range, total);
+    if (request.headers.range && !requestedRange) {
+      response.statusCode = 416;
+      response.setHeader("Content-Range", `bytes */${total}`);
+      response.end();
+      return;
+    }
+    const rangeHeader = requestedRange
+      ? `bytes=${requestedRange.start}-${requestedRange.end}` : undefined;
+    if (request.method === "HEAD") {
+      response.statusCode = 200;
+      response.setHeader("Content-Type", "video/mp4");
+      response.setHeader("Accept-Ranges", "bytes");
+      response.setHeader("Content-Length", String(total));
+      response.setHeader("X-Content-Type-Options", "nosniff");
+      response.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+      response.end();
+      return;
+    }
     const result = await get(PATHNAME, {
       access: "private",
       headers: rangeHeader ? { Range: rangeHeader } : undefined,
@@ -58,6 +73,13 @@ export default async function handler(request, response) {
     if (!result?.stream) {
       response.statusCode = 404;
       response.end("Film not found");
+      return;
+    }
+
+    if (requestedRange && result.headers.get("content-range") !== `bytes ${requestedRange.start}-${requestedRange.end}/${total}`) {
+      await result.stream.cancel();
+      response.statusCode = 502;
+      response.end("Film range delivery failed");
       return;
     }
 
@@ -71,17 +93,12 @@ export default async function handler(request, response) {
       response.statusCode = 206;
       response.setHeader(
         "Content-Range",
-        `bytes ${requestedRange.start}-${requestedRange.end}/${TOTAL_BYTES}`,
+        `bytes ${requestedRange.start}-${requestedRange.end}/${total}`,
       );
       response.setHeader("Content-Length", String(length));
     } else {
       response.statusCode = 200;
-      response.setHeader("Content-Length", String(TOTAL_BYTES));
-    }
-
-    if (request.method === "HEAD") {
-      response.end();
-      return;
+      response.setHeader("Content-Length", String(total));
     }
 
     Readable.fromWeb(result.stream).pipe(response);

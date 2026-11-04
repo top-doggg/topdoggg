@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 const RESEND_API_URL = "https://api.resend.com";
-const SITE_URL = "https://trststudios.online";
+const SITE_URL = (process.env.TRST_SITE_ORIGIN || "https://trststudios.online").replace(/\/$/, "");
 
 function configuredResend() {
   const apiKey = String(process.env.RESEND_API_KEY || "").trim();
@@ -227,6 +227,10 @@ export async function notifyOperations({ subject, text, html, idempotencyKey, ta
     throw error;
   }
   return { status: "sent", emailId: delivery.body.id || null };
+}
+
+export function operationsAccessReady() {
+  return Boolean(configuredResend() && (process.env.TRST_OPERATIONS_TOKEN_SECRET || process.env.SUBSCRIBER_UNSUBSCRIBE_SECRET));
 }
 
 export async function sendOperationsAccessLink({ email, accessUrl }) {
