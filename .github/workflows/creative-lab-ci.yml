@@ -46,9 +46,9 @@ jobs:
         shell: bash
         run: |
           test -s dist/index.html
-          test -s dist/shop/index.html
-          test -s dist/work/index.html
-          test -s dist/process/index.html
+          test -s dist/shop.html
+          test -s dist/work.html
+          test -s dist/process.html
           test -s dist/sitemap.xml
           test -s dist/robots.txt
       - name: Report
