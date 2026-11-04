@@ -13,7 +13,7 @@ Read `docs/trst/CREATIVE_DIRECTION.md`, `docs/trst/VERCEL_INTEGRATION.md`, and `
 
 ## Engineering guardrails
 - **Audit before editing**: Vercel's production deployment and domains, GitHub source mapping, framework, build commands, serverless/edge functions, Blob storage, Printify, Airtable, Auth0, and environment-variable names. Never expose secret values.
-- The public GitHub repo `top-doggg/topdoggg` was verified on 2026-11-03 to contain only `.gitignore` and `LICENSE` on `main`. Do not overwrite a working live deployment with this sparse source. Investigate the true production artifact/source first.
+- The default `main` branch is sparse, but the **actual website source** is on `trststudios-storefront` (Vite/React, src/, api/, public/, scripts/, supabase/, package.json). This creative working branch `creative/trststudios-site-lab` was created from that website branch. The Vercel site project used `trststudios-storefront` for a READY deployment. Preserve live project/domain; publish only to the separate `trst-creative-lab` Vercel project with protected access.
 - Vercel projects `trststudios.online` and `trststudios-replacement` were both linked to `top-doggg/topdoggg`; do not assume which owns current production routing. Validate domain assignment and production deployment.
 - Develop on branches, make small reviewed PRs, verify build and live screenshots, deploy only with explicit user approval.
 - Do not commit API keys, tokens, customer data, private photos, or AI-generated product mockups as certified originals. Keep video generation costs explicit.
