@@ -2,9 +2,9 @@
 
 ## Current result
 
-**Applied to the protected Creative Lab, not promoted to the public custom domain.** An isolated private store now contains the nine verified media assets; subscriber/inquiry persistence and signed operations read/review have been exercised with disposable records. Seven source tests and the build pass. Protected browser tests verified the repaired homepage image, product Front/Back controls, Work responsiveness, and newsletter success. Further execution evidence and remaining provider limits appear at the end.
+**Production rollout completed after explicit user approval; email integration deferred.** See [production rollout record](ROLLOUT_2026-11-03.md) for the active deployment and final public-domain checks. The following preview audit preserves the pre-rollout history. An isolated private store now contains the nine verified media assets; subscriber/inquiry persistence and signed operations read/review have been exercised with disposable records. Seven source tests and the build pass. Protected browser tests verified the repaired homepage image, product Front/Back controls, Work responsiveness, and newsletter success. Further execution evidence and remaining provider limits appear at the end.
 
-The tables below preserve the initial audit of the live domain. That domain still serves a different CLI-deployed source ref. Email delivery remains unconfigured; Supabase is inactive and unused by the active storefront; authenticated Printify management is unavailable through its non-readable stored credential. These are not reported as successful integrations.
+The tables below preserve the initial audit of the live domain, which at that time served a different CLI-deployed source ref. The production rollout record supersedes those historical routing and failure statuses. Email delivery remains unconfigured; Supabase is inactive and unused by the active storefront; authenticated Printify management is unavailable through its non-readable stored credential. These are not reported as successful integrations.
 
 Observations were collected on November 3, Pacific time (November 4 UTC). No orders, production promotion, customer-record migration, or database restoration were performed. Synthetic Lab form records were created and removed for verification. Only allow-listed media were copied to the new isolated store.
 
@@ -93,7 +93,7 @@ DEPLOYMENT_URL=https://trststudios.online bun run verify:integrations
 
 For a protected deployment supply its automation bypass via the environment, never a committed file or query-string log. The source CI intentionally runs without private provider credentials. A green source build must not be labeled external-integration success. Codex Cloud's account-level environment/default-branch selection is not exposed through the connected tools; it cannot be claimed configured by adding repository files.
 
-## Remaining completion gates
+## Original pre-rollout completion gates (historical)
 
 1. Configure isolated Lab media/intake storage and validate actual media bytes, MIME types, film ranges, form persistence, and intended email delivery.
 2. Confirm whether Supabase is intentionally retired or a new customer-login feature is desired. Existing storefront operations use their own signed email token flow.
