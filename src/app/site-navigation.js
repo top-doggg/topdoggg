@@ -9,5 +9,5 @@ export const primaryNavigation = [
 export const footerNavigation = [
   ...primaryNavigation,
   { label: "Fulfillment", href: "/fulfillment-policy" },
-  { label: "Instagram", href: "https://www.instagram.com/delacosta_" },
+  { label: "Instagram", href: "https://www.instagram.com/_de.la.costa_/" },
 ];

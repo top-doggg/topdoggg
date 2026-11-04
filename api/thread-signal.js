@@ -185,7 +185,7 @@ export default async function handler(request, response) {
     }
     try {
       await put(`open-thread/${chapter}/${record.receivedAt.slice(0, 10)}/${record.id}.json`, JSON.stringify(record, null, 2), {
-        access: "private", addRandomSuffix: false, contentType: "application/json", cacheControlMaxAge: 0,
+        access: "private", allowOverwrite: true, addRandomSuffix: false, contentType: "application/json", cacheControlMaxAge: 0,
       });
     } catch (error) {
       console.error("Open Thread operations status could not be saved", { status: error.statusCode || 500 });
