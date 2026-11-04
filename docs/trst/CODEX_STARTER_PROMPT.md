@@ -1,19 +1,11 @@
-# TRST Studios — Codex Cloud initial task
+# TRST Studios — Codex working task
 
-Read root `AGENTS.md` and the three files under `docs/trst/` in full. They are creative context and a verified Vercel/GitHub reconciliation memo, not proof that the current repository contains the production website.
+Use repository `top-doggg/topdoggg`, branch `creative/trststudios-site-lab`. This branch contains the actual Vite/React storefront source. Sparse `main` and `creative/trst-studio-lab` are not storefront starting points.
 
-## Task
-1. Audit Vercel projects `trststudios.online` and `trststudios-replacement` and establish the active custom-domain routing owner, deployed Git SHA/source directory, current build and assets.
-2. Reconcile their Git link `top-doggg/topdoggg` with the sparse root of `main`; locate the genuine editable storefront source before coding.
-3. Produce a verified integration map covering frontend routes, Vercel Blob, Printify catalog/store, Airtable, Auth0, functions and secrets NAMES (never values).
-4. Propose a non-destructive source recovery plan and a preview-first deployment setup.
-5. Recommend a portfolio/process page and TRST launch-campaign integration consistent with the creative brief and reference materials, without deploying or silently modifying the original products.
-6. Distinguish `vercel-labs/agent-desktop` (local accessibility automation) from hosted Codex Cloud capabilities; do not set up remote desktop access without explicit consent.
+Read root `AGENTS.md`, `docs/trst/CREATIVE_DIRECTION.md`, `docs/trst/VERCEL_INTEGRATION.md`, `docs/trst/AGENT_DESKTOP.md`, and `docs/trst/QA_INTEGRATIONS_2026-11-03.md` before changes. The QA report records the current domain/deployment reconciliation; older memos are historical observations.
 
-## Acceptance
-- All evidence points to exact files, deployments and current source.
-- Unknowns reported clearly; no invented build steps.
-- No changes to production domains, billing, deployment, credentials, functions or paid generation.
-- Suggest a small preview PR only after the actual site source is identified and tests are available.
+Install with `bun install --frozen-lockfile --linker hoisted --backend=copyfile`. Run `bun run test` and `bun run build`. For read-only live checks run `DEPLOYMENT_URL=<origin> bun run verify:integrations`; protected deployments need an environment-provided automation bypass. Never commit or print credentials. Treat offline CI and connected-provider verification separately.
 
-The longer private creative handoff ZIP (including reference images) was furnished in ChatGPT. Those private assets are intentionally **not committed** here.
+Preserve approved artwork and product imagery. Develop on the creative branch, keep changes in draft PR #10 into `trststudios-storefront`, and use only the protected Creative Lab preview. The custom domain currently serves a different CLI-deployed ref; reconcile it before any production promotion. Never dispatch a production deployment from the creative branch, copy subscriber data into preview, restore Supabase, or transfer credentials without the specific configuration decision required in the QA report.
+
+Account-level Codex Cloud environment selection still requires the account's setup UI; this document and CI do not configure it automatically. Finish the requested changes and report tested behavior and concrete remaining blockers without assuming a READY build means the website is fully functional.

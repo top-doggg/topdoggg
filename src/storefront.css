@@ -471,10 +471,10 @@ a { color: inherit; }
   .product-copy { grid-template-columns: 1fr; gap: 7px; }
   .product-copy h3 { font-size: .8rem; }
   .product-copy > strong { font-size: .82rem; }
-  .story-section { grid-template-columns: 1fr; }
+  .story-section { grid-template-columns: minmax(0, 1fr); }
   .story-image { min-height: 105vw; }
   .story-copy { padding: 54px 20px 64px; }
-  .artist-section { grid-template-columns: 1fr; min-height: auto; }
+  .artist-section { grid-template-columns: minmax(0, 1fr); min-height: auto; }
   .artist-mark { min-height: 260px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.35); }
   .artist-copy { padding: 60px 20px; }
   .available-section { padding: 70px 16px; }
@@ -779,3 +779,8 @@ a { color: inherit; }
     font-size: 1rem;
   }
 }
+
+/* Keep intrinsic heading widths inside narrow grid tracks. */
+.archive-hero { grid-template-columns: minmax(0, 1fr); }
+.archive-hero h1, .project-hero h1 { overflow-wrap: anywhere; }
+.story-copy, .artist-copy { min-width: 0; overflow-wrap: anywhere; }

@@ -1,50 +1,99 @@
-# TRST Creative Lab — Integration and website QA (2026-11-03)
+# TRST — integration and website QA, November 3, 2026
 
-## Scope
-Read-only verified GitHub storefront source on `creative/trststudios-site-lab`, Vercel project `trst-creative-lab`, deployment `dpl_HRDovKaKFnPivhnV8Bkefq3aW1bS`. The production website is `trststudios.online` in a separate Vercel project. No live production changes were authorized or made.
+## Current result
+**Not ready for a production completion claim.** Source build and four offline checks pass. Live navigation, portfolio lightbox, published Printify catalog, and a cart-to-checkout handoff were exercised. Blob delivery and subscriber storage fail on the live domain. Responsive and product-gallery defects were reproduced and corrected in this branch; browser regression of the changed preview remains required.
+
+This report supersedes the earlier read-only audit in this file. Observations were collected on November 3, Pacific time (November 4 UTC). No orders, signup records, outbound emails, database restoration, production promotion, or credential transfers were performed.
+
+## Exact source and deployment mapping
+
+| Surface | Verified mapping |
+| --- | --- |
+| Repository / working branch | `top-doggg/topdoggg`, `creative/trststudios-site-lab`; starting SHA `7ace34d11b054292daeb1538292e2e05bc32cdb6` |
+| Live custom domain | `trststudios.online`, project `prj_aBlXRunfVCyeMv5X9rNGVDx8O9WN` |
+| Actual live deployment | `dpl_BLBxGBE21f2fer9o4BW2y85bShMF`, source ref `port/trststudios-selective`, SHA `fde2abe29239f210260ee61d89876708e4343915`, source `cli`, target `production` |
+| Creative project | `trst-creative-lab`, `prj_V9iw0svtxOiCRWlutdk7oaFhClb8` |
+| Creative deployment at audit | `dpl_2LD9SBpULwAmgHj2sQ4jHWxncuQE`, SHA `7ace34d11b054292daeb1538292e2e05bc32cdb6`, READY, source `git`, target null, Vercel SSO enabled |
+| Integration-bearing older project | `trststudios-replacement`, `prj_Xw4luLyt6S4aETmvQ1JhZHzlhIUH`; does not serve the current custom domain |
+| Review | Draft PR [#10](https://github.com/top-doggg/topdoggg/pull/10), creative branch → `trststudios-storefront` |
+
+**A project's latest READY build is not necessarily the deployment serving its custom domain.** The creative branch and live source are different. Do not promote the creative branch on the assumption that it is the current live commit.
 
 ## Verification matrix
 
-| Area | Evidence | Outcome |
+| Requirement | Observed evidence | Status / remaining work |
 | --- | --- | --- |
-| Build/deployment | Vercel READY; Bun 1.3.14 install and Vite build completed | PASS: build only |
-| Public shell routes | Protected Vercel fetches of /, /shop, /work, /process, /about returned HTTP 200 with page-specific title/canonical markup | PASS: HTTP/static HTML; JS interactivity not verified |
-| Desktop/mobile rendering | Browser navigated to Creative Lab production alias but redirected to Vercel login protection | BLOCKED: must test in authenticated browser |
-| Navigation | `src/app/site-navigation.js` defines Shop, Work, Process, Partners, Open Thread, About, plus footer Journal and Fulfillment | CODE EXISTS, clicks not tested |
-| Portfolio/process | `src/Process.jsx` and `src/content/processProjects.js` define six projects and image lightbox; `src/Work.jsx` renders portfolio archive | CODE EXISTS; visual QA blocked |
-| Static portfolio assets | HTTP 200 from /portfolio/mask-drawing.webp | PASS: one tested asset |
-| Static product assets | HTTP 200 from /products/warriors-dance-tee.png | PASS: one tested asset |
-| Blob homepage | /api/homepage-image?key=grace returns HTTP 500 | FAIL: no Blob credentials |
-| Blob profile | /api/profile-image returns HTTP 500 | FAIL: no Blob credentials |
-| Blob video | /api/film returns HTTP 500 | FAIL: no Blob credentials |
-| Subscriber intake | GET /api/subscribe responds configured:false, storage:null | FAIL: storage unavailable; no POST performed |
-| Supabase | `supabase-trst-online` ref `gvitnxuulucuibvptqsf` reports INACTIVE | NOT OPERATIONAL. Creative Lab currently has no env vars. Storefront appears not to invoke Supabase login directly; admin auth via signed operations token. |
-| Printify public products | Code lists six product records (five shown, excluding Cheo's World) with static product links and offsite Printify checkout. | CODE PRESENT; live catalog/stock/checkout unverified |
-| Printify API | `/api/printify-connection` requires operations authorization + `PRINTIFY_API_TOKEN`. Lab has no env variables. | NOT CONFIGURED; no authorized API product list validation |
-| Vercel runtime | After API probes, three Blob-related grouped runtime errors on this deployment | CONFIRMS failure root cause |
-| Codex | Root `AGENTS.md`, creative brief, and `CODEX_STARTER_PROMPT.md` on site-derived creative branch; separate no-deploy CI workflow added | Repository-ready; Codex Cloud workspace selection requires user-side setup |
+| Homepage | Hydrated live page, CTA links, primary/footer navigation observed at 1363 CSS px; narrow homepage inspected at 340 CSS px | PASS for observed shell; static image decode timing not exhaustively checked |
+| Navigation | Clicked Shop, Process, Work, brand-home; mobile Menu opened and Work navigation completed | PASS for exercised paths; seven public HTTP shell routes returned 200 |
+| Portfolio | Process has six projects; Never Alone lightbox opened with decoded image and dismissed by Escape | PASS for exercised desktop lightbox; all curated archive/process source assets exist |
+| Mobile layout | Browser zoom created 454- and 340-CSS-px responsive viewports. At 340 px: Work widened to about 381 px; Shop to about 402 px. Homepage and Process had no horizontal page overflow in measured state | FAIL on live Work/Shop. Fixes prepared; rerun preview at 340, 390, 720, and 1363 px. This was responsive desktop-browser testing, not iOS/Android device emulation |
+| Product gallery | De Los Cielos front/back worked. Realest Feeling Front button still selected back image because handler reused `previewView` | Reproduced and corrected in creative source; changed preview click test pending |
+| Blob homepage | All seven allow-listed keys returned 500 on live HEAD probes | FAIL |
+| Blob profile / film | Both returned 500 on live HEAD probes | FAIL; range playback not proven |
+| Subscriber storage | GET `/api/subscribe` returned `configured:false` | FAIL; no subscriber POST or delivery verification performed |
+| Operations | Live GET `/api/operations` returned 503; source checks storage readiness before authorized operations | FAIL configuration; not a successful-login test |
+| Printify authorization | Anonymous live GET `/api/printify-connection` returned 401 JSON; offline handler test also rejected anonymous request | PASS denial boundary; authenticated admin API remains unconfigured on live/lab |
+| Supabase | TRST ref `gvitnxuulucuibvptqsf` reports INACTIVE. No Supabase client/auth calls found in active `src/` or `api/` | INACTIVE / not an active storefront runtime dependency; no Supabase login flow exists to verify |
+| Source validation | `npm test`: four passing tests; `npm run build`: passed discovery validation, Vite build, generated route/discovery assets; `git diff --check` clean | PASS; not proof of connected providers |
+| Creative CI at starting SHA | GitHub Actions run `41753307178` completed successfully on `7ace34d...` | PASS previous source build; inspect new commit's CI after push |
 
-## Security and configuration
-- Creative Lab has **zero environment variables** configured (verified via Vercel, no secret values read).
-- Production site project `trststudios.online` has Supabase-related env var names, but the linked Supabase TRST project reports INACTIVE.
-- `trststudios-replacement` has Blob and Printify integration env var names; their values were not read or copied. Do not assume it currently serves the custom domain.
-- The public custom domain `trststudios.online` was separately probed: its homepage image API also returned 500 and subscriber status configured:false at this observation time. Investigate production routing and existing store ownership before any changes.
-- Vercel Login protection blocked unauthenticated interactive/visual QA. Do not disable authentication or publish bypass secrets for convenience.
-- The site's generated canonical tags point to `https://trststudios.online` intentionally; do not index Creative Lab as the official site.
-- **NEVER copy production private Blob credentials, Printify admin token or Supabase secrets into a public repo or across projects without an explicit access/data-isolation decision.**
+Browser console inspection of the exercised desktop shop showed extension metadata errors, not an observed application exception. This is not an exhaustive all-page console audit.
 
-## Recommended actions in priority order
-1. Link the correct Vercel Blob store to the isolated Creative Lab project using Vercel-managed integration (store already used for production only after verifying owner); prefer a separate preview/test store if writes are involved. Verify `/api/homepage-image?key=grace`, `/api/profile-image`, `/api/film`, and newsletter status.
-2. Confirm if the active production Supabase project is needed for storefront traffic. Do not automatically restore a paused database or point preview at production customer records.
-3. Confirm Printify product publication, size/stock, current price, images, checkout redirects, and admin API authorization in an authenticated preview environment. Do not place orders or change products during QA.
-4. Open a browser authenticated to Vercel and test each desktop/mobile route, layout overflow, navigation, lightbox, modal, cart, image decode, API network results, and accessibility. Document screenshots and browser errors privately.
-5. In Codex Cloud select `top-doggg/topdoggg`, branch `creative/trststudios-site-lab`, read `AGENTS.md`; use reviewed PRs into `trststudios-storefront` only after a stable preview and full regression checks.
-6. Review whether non-storefront project(s) should auto-deploy this branch; repository is linked to multiple Vercel projects. Do not promote to the live domain without explicit approval.
+## Printify storefront reconciliation
 
-## Follow-up verification
-- Authenticated Vercel account fetch (temporary Vercel-protected share mechanism) returned HTTP 200 for `/partners`, `/open-thread`, `/journal`, `/fulfillment-policy`, `/shop/de-los-cielos`, `/shop/the-realest-feeling`, `/work/west-of-the-tracks`, `/journal/coming-back-home`, `/wholesale`, `/operations`, all with route-specific HTML titles. **This validates server response/metadata, not hydrated React interactions or authorization behind operations.**
-- Additional static files `/portfolio/vote-sketch.webp`, `/portfolio/never-alone-artwork.webp`, `/instagram/coming-back-home.jpg` returned HTTP 200 and image content types.
-- The storefront uses `src/printify.js` fallback `https://delacosta.printify.me` and product-specific URLs. Its `isPrintifyConfigured()` returns true from the hardcoded fallback, so the checkout button can appear available even when the live Printify product's availability has not been verified.
-- Main process page uses six curated projects with images/lightbox. CSS includes mobile media queries. Browser viewport-based layout testing remains BLOCKED due to Vercel SSO.
-- GitHub Creative Lab build workflow checks `dist/shop.html`, `dist/work.html`, `dist/process.html` (flat files generated by `scripts/generate-route-html.mjs`). Its run completion still requires GitHub Actions verification.
-- Created draft PR #10 from `creative/trststudios-site-lab` into `trststudios-storefront`; do not merge until external integration and browser checks pass.
+The public [All products](https://delacosta.printify.me/products) page lists exactly the five products shown on TRST, with matching starting prices:
+
+| TRST product | Published Pop-Up product ID | Live starting price |
+| --- | --- | --- |
+| De Los Cielos | 33676373 | $29.58 |
+| The Realest Feeling | 33675910 | $25.99 |
+| Capistrano Love | 30805178 | $31.01 |
+| No Bad Days For A Warrior | 30290414 | $29.05 |
+| Sin Miedo | 30190484 | $29.45 |
+
+De Los Cielos detail rendered six color options and S–5XL. White / M / quantity 1 was added to a temporary cart. Printify showed $29.58 plus $5.35 estimated shipping, total $34.93, and reached the checkout contact screen with that item. No contact, address, payment, terms acceptance, or order submission followed. The temporary test item was removed and Printify confirmed the cart was empty. Final taxes and shipping remain destination dependent. Catalog publication and this one orderable variant do not prove availability of every color/size combination. The frontend size selector is explicitly a reference and does not transfer a chosen variant to Printify.
+
+Printify's own header exposed an `undefined logo` label and footer `Eco Essentials`; store branding should be reconciled in Printify. No branding settings were changed.
+
+## Configuration root cause and isolation decision
+
+Environment names and scopes were inspected without decrypting values:
+
+- Live site: only `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, production scope.
+- Creative Lab: zero configured environment variables.
+- Replacement: `BLOB_READ_WRITE_TOKEN`, `BLOB_STORE_ID`, `PRINTIFY_API_TOKEN`, `PRINTIFY_ADMIN_SECRET`, `VITE_PRINTIFY_STORE_URL`, and preview `CRON_SECRET` entries.
+- Blob store `store_UM16dCIx7fpsssNf`, named `trststudios-subscribers`, is private, available, not quota exceeded, token not expired, and connected only to the replacement project. Metadata reports 16 objects. Individual object paths/content were not read, so their presence is not assumed.
+
+The active store includes subscriber storage as well as intended media. Connecting its read-write credential to Lab would also expose production records and let preview forms write there. Recommended concrete setup: **an isolated private Lab store containing only the nine allow-listed media objects (seven homepage images, profile, film), with preview intake stored separately from production records**. Confirm that isolation choice before moving private assets or credentials across projects. Do not restore the unrelated paused Supabase database merely to make a dashboard green.
+
+A production repair must target the actual custom-domain project, not just the older project holding credentials. Resend/mail and operations access configuration are also absent on live/lab; storage readiness alone does not prove mail delivery or successful private access.
+
+## Source changes in this update
+
+- Front gallery control always selects `front`; `previewView` still determines the initial view.
+- Mobile Story and Artist sections use `minmax(0, 1fr)` tracks; archive hero uses a shrinking grid track and headings wrap. This addresses measured intrinsic-width overflow without globally hiding it.
+- Footer Instagram URL now matches the approved `_de.la.costa_` account used elsewhere.
+- Creative CI runs offline authorization/readiness/curated-asset checks plus existing build checks; its path filter includes tests and routing/build configuration.
+- Production deploy workflow refuses its deploy step when manually dispatched from the creative branch.
+- `verify:integrations` adds read-only HTTP/MIME/readiness probes that fail on unavailable APIs, incorrect media types, SPA fallbacks, and unconfigured subscriber storage. It makes no purchase or data-write calls.
+
+## Codex development workflow
+
+Work in `top-doggg/topdoggg` on `creative/trststudios-site-lab`; read `AGENTS.md` and `docs/trst/CODEX_STARTER_PROMPT.md`. The actual source is now checked out and changes are tracked on that branch. Do not work from sparse `main` or `creative/trst-studio-lab`.
+
+```sh
+bun install --frozen-lockfile --linker hoisted --backend=copyfile
+bun run test
+bun run build
+DEPLOYMENT_URL=https://trststudios.online bun run verify:integrations
+```
+
+For a protected deployment supply its automation bypass via the environment, never a committed file or query-string log. The source CI intentionally runs without private provider credentials. A green source build must not be labeled external-integration success. Codex Cloud's account-level environment/default-branch selection is not exposed through the connected tools; it cannot be claimed configured by adding repository files.
+
+## Remaining completion gates
+
+1. Configure isolated Lab media/intake storage and validate actual media bytes, MIME types, film ranges, form persistence, and intended email delivery.
+2. Confirm whether Supabase is intentionally retired or a new customer-login feature is desired. Existing storefront operations use their own signed email token flow.
+3. Run the changed protected preview in an authenticated browser: gallery Front/Back, narrow layout/overflow, mobile navigation, lightbox, keyboard behavior, portfolio filters, and forms.
+4. Reconcile source differences with the actual live ref before requesting production promotion. Re-run live provider checks after an approved deployment.
+5. If Codex Cloud is wanted, select this repository/branch in its account UI; repository CI and branch tracking are not account-level workspace provisioning.
