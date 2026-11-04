@@ -135,3 +135,20 @@ On `290adb0` / `dpl_AnL9YjkxkTbrbAwZ7ns8dCHPc2a2`, all three homepage images dec
 The browser newsletter record was read back with source `home-cover`, confirmed persisted with `emailDelivery:not_configured`, then removed. The isolated store should contain only its nine media files after all cleanup.
 
 Remaining external setup: a usable Resend API key and verified sender are needed for actual email delivery; account-side Codex Cloud workspace selection is not exposed by the current connectors. The existing inactive Supabase database was not restored because the storefront does not invoke it. Public Printify commerce is verified through product pages/cart; the protected management API has no readable credential available for Lab. Production rollout remains separate from this protected Lab application because the live domain serves a different source ref.
+
+
+## Final applied-preview result
+
+Tested source: `f938f22251c0337022c3c7f664bd6101a86af801`. Protected deployment: `dpl_A9RXYxaFj81u5Nr25wAuhGF1KsFX`, READY, Git source on `creative/trststudios-site-lab`. GitHub Creative Lab CI run `41762613668` completed successfully. Seven source tests and the full build passed.
+
+All 19 `verify:integrations` HTTP checks passed on this deployment: seven public page shells, all seven homepage image keys, profile, film, subscriber readiness, and anonymous Printify/operations denial. Three additional film probes verified initial and suffix 1,024-byte ranges (206 with correct Content-Range) plus an unsatisfiable range (416). Four authorization/provider probes verified signed operations GET 200 with zero records, malformed signed token 401, unavailable operations email 503, and authenticated Printify-management missing-credential 503. Expected unconfigured-provider responses are not claims of provider functionality.
+
+The final browser pass showed all three homepage images decoded. Homepage and Shop fit a measured 340-CSS-px viewport with document scroll width 337 px; the remaining nested chapter overflow is resolved. About's heading fix was verified on the prior source and is unchanged here. Work fit 681, 454, and 340 px; Process, Partners, and Open Thread fit 340 px. The Sin Miedo modal shows S–5XL and selecting 5XL marks it active. The Realest Feeling Front/Back controls and Escape dismissal passed on unchanged gallery code. These are desktop-browser responsive checks, not physical-device emulation.
+
+Isolated store final metadata: nine objects, 23,572,891 bytes, only the Creative Lab project connected. Browser and handler test records were deleted. No production subscriber records were copied and no emails or orders were sent. Production remains on its separately deployed source; no public-domain promotion was performed.
+
+[Verified preview](https://trst-creative-p6aaf79bz-top-dogg.vercel.app/) requires Vercel access. Temporary test access links and credentials are deliberately excluded from this report. Screenshot captured from the tested preview after its lazy portfolio image loaded:
+
+![Verified Creative Lab homepage](qa-preview-2026-11-03.jpg)
+
+Remaining requirements are provider/account setup: configure Resend API key and a verified sender for actual mail; choose the Codex Cloud workspace account settings if desired; decide any future Supabase login feature separately; provide an appropriate Printify management credential if admin synchronization is required. Public Printify product browsing/cart/checkout is the current verified commerce path. A production rollout requires reconciliation with the actual live CLI source rather than blindly promoting this creative branch.
