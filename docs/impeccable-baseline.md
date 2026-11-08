@@ -1,0 +1,30 @@
+# Impeccable baseline — TRST Studios
+
+Date: 2026-11-08. Device: top-doggg. Isolated worktree: `chore/impeccable-baseline` at `C:\Users\stadi\TRST\impeccable-baseline`. Source baseline: `origin/trststudios-storefront` (`ee14b55`). No production files were deployed or modified.
+
+## Project verification
+
+React 19, Vite 8, Bun 1.3.14; Node 24.x target; Vercel deployment. `bun install --frozen-lockfile` passed (63 packages installed). `bun run build` passed. Vite dev server returned HTTP 200 at `http://127.0.0.1:5173/`.
+
+Build emitted a nonfatal discovery metadata warning for `4-the-town`: missing `name`, `thumbnailUrl`, `uploadDate`, and `watchPath`. This remains a separate content-quality review item.
+
+## Baseline detector
+
+Installed global Impeccable skill: 4.8.1, engine 0.1.19. Source scan `detect --json src` returned code 2 with **10 total findings**:
+
+- **9** `overused-font` findings (warning; inspect against approved editorial direction before changing typography).
+- **1** `codex-grid-background` finding (advisory in `src/App.css`; may reflect intentional graphic language).
+
+Rendered URL detector `detect --json http://127.0.0.1:5173` returned code 0 with an empty list for the tested page. This is not a full manual accessibility audit or cross-viewport visual review.
+
+Baseline raw JSON artifacts are stored locally under `.impeccable/review/` and intentionally excluded from version control.
+
+## Integration and safeguards
+
+`PRODUCT.md` already existed. A brand-preserving `DESIGN.md` has been added from existing product guidance and `src/styles/tokens.css`. Nonblocking PR workflow `.github/workflows/impeccable-review.yml` runs a pinned CLI source scan and publishes JSON as a build artifact without failing the PR for cosmetic findings.
+
+Live-mode local setup uses `index.html` and a CSP check that found no CSP; `impeccable live` boot succeeded with helper on port 8400 and the dev server on port 5173. Automated Playwright verification used local Microsoft Edge at 1440×900 and 390×844. Both loaded the storefront, with no JavaScript exceptions; the mobile viewport had no horizontal document overflow (390px scroll width at 390px viewport). Helper endpoints `/live.js`, `/events`, and `/status` returned HTTP 200 in an authorized browser session. The live picker mounted and clicking the homepage H1 exposed the Freeform/Bolder/Quieter/Polish/Typeset/Colorize/Layout/etc. action menu. No variant was generated or accepted; accept/discard persistence remains untested. Helper was stopped and injection removed. The isolated browser test artifacts are under `C:\Users\stadi\tmp\impeccable-browser-qa`.
+
+## Next gate
+
+Before merging: review the `DESIGN.md` palette and brand constraints, confirm workflow YAML on a PR, run viewport- and interaction-level checks in a real browser, and reconcile the Vercel production branch/deployment routing. A live-mode variant can then be tested on the isolated checkout, with accept/discard behavior verified before any production use.

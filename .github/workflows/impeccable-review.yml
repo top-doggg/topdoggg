@@ -1,0 +1,42 @@
+name: Impeccable design review (advisory)
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "index.html"
+      - "DESIGN.md"
+      - ".impeccable/**"
+      - ".github/workflows/impeccable-review.yml"
+  workflow_dispatch:
+
+jobs:
+  design-review:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Scan source (advisory)
+        shell: bash
+        run: |
+          set +e
+          npx --yes impeccable@4.8.1 detect --json src > impeccable-findings.json
+          result=$?
+          echo "Impeccable exit code: $result (0=clear; 2=findings; 1=scan error)"
+          if [ "$result" -eq 1 ]; then
+            echo "::warning::Impeccable source scan could not complete"
+          elif [ "$result" -eq 2 ]; then
+            echo "::notice::Impeccable reported design findings for review"
+          fi
+          exit 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: impeccable-source-findings
+          path: impeccable-findings.json
+          if-no-files-found: ignore
