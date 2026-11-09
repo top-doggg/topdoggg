@@ -1,7 +1,7 @@
 import { get, list, put } from "@vercel/blob";
 import { checkRateLimit } from "./_rate-limit.js";
 import { createOperationsToken, operationsEmails, verifyOperationsToken } from "./_operations-auth.js";
-import { sendOperationsAccessLink } from "./_resend.js";
+import { operationsAccessReady, sendOperationsAccessLink } from "./_resend.js";
 
 const reviewStatuses = new Set(["new", "approved", "follow-up", "declined", "published"]);
 
@@ -53,6 +53,7 @@ function session(request) {
 export default async function handler(request, response) {
   if (!storageReady()) return sendJson(response, 503, { ok: false, error: "Operations storage is not connected." });
   if (request.method === "POST") {
+    if (!operationsAccessReady()) return sendJson(response, 503, { ok: false, error: "Private access email is not connected yet. Contact the studio directly." });
     const limit = checkRateLimit(request, { limit: 3, windowMs: 15 * 60_000 });
     if (!limit.ok) return sendJson(response, 429, { ok: false, error: "Try again shortly." });
     try {
@@ -61,7 +62,9 @@ export default async function handler(request, response) {
       if (operationsEmails().includes(email)) {
         const token = createOperationsToken(email);
         if (!token) throw new Error("Operations access is not configured.");
-        await sendOperationsAccessLink({ email, accessUrl: `https://trststudios.online/operations?token=${encodeURIComponent(token)}` });
+        const origin = (process.env.TRST_SITE_ORIGIN || "https://trststudios.online").replace(/\/$/, "");
+        const delivery = await sendOperationsAccessLink({ email, accessUrl: `${origin}/operations?token=${encodeURIComponent(token)}` });
+        if (delivery.status !== "sent") throw new Error("Operations email was not sent.");
       }
       return sendJson(response, 200, { ok: true });
     } catch (error) {

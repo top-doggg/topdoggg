@@ -12,6 +12,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "verify:deployment": "node scripts/verify-deployment.mjs",
     "validate:discovery": "node scripts/validate-discovery-facts.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "verify:integrations": "node scripts/verify-integrations.mjs",
     "verify:interactions": "node scripts/check-react-interactions.mjs --base origin/trststudios-storefront",
     "test:interaction-contract": "node --test scripts/check-react-interactions.test.mjs"
   },
