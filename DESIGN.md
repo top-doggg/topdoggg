@@ -40,7 +40,8 @@ TRST Studios / DE.LA.COSTA is an independent, Chicano neighborhood-rooted visual
 - Treat original illustration, source photography, shirt graphics, logos, and their proportions as immutable unless an exact change is explicitly approved.
 - Distinguish sketches, studies, product mockups, print-ready assets, and published products.
 - Preserve semantic navigation, responsive routes, readable contrast, focus indicators, keyboard-closeable dialogs, and reduced-motion behavior.
-- After every Impeccable live-mode accept, compare the accepted JSX against the original and verify retained `href`/routing, React `onClick` and other event handlers, accessible names, and keyboard interaction. A successful `live-complete` alone does not prove these behaviors survived.
+- After every Impeccable live-mode accept, run `bun run verify:interactions` and inspect the accepted JSX against the original. Verify retained `href`/routing, React `onClick` and other event handlers, accessible names, keyboard behavior, and any downstream callback implementation. A successful `live-complete` alone does not prove these behaviors survived.
+- PR CI includes a **blocking** React interaction contract check against the target branch's base commit. Never suppress it or convert it into an advisory job to merge a live edit; any intentionally changed interaction requires an explicit source-level review and new acceptance tests.
 - Printify remains commerce system of record; do not handle payment credentials in this frontend.
 - Preserve existing product catalog, prices, domain routing, and current fulfillment links.
 
