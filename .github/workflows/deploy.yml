@@ -18,7 +18,11 @@ jobs:
       - run: bun install --frozen-lockfile --linker hoisted --backend=copyfile
       - run: bun run build
       - name: Deploy to Vercel
-        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/trststudios-storefront')
+        # Explicit opt-in: the repository's existing VERCEL_TOKEN secret is rejected
+        # by Vercel CLI. Keep release validation green while production deploys
+        # are performed through the authenticated Vercel integration.
+        # Re-enable only after rotating the token and setting the repo variable.
+        if: github.event_name != 'pull_request' && vars.VERCEL_CLI_DEPLOY_ENABLED == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/trststudios-storefront')
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -29,3 +33,6 @@ jobs:
             exit 0
           fi
           npx vercel@latest --prod --yes
+      - name: Report Vercel deployment channel
+        if: github.event_name != 'pull_request' && vars.VERCEL_CLI_DEPLOY_ENABLED != 'true'
+        run: echo "::notice::GitHub CLI production deploy disabled until the Vercel CLI token is repaired. Release builds use Vercel's production-environment deployment API."

@@ -39,3 +39,13 @@ Impeccable's deterministic demonstration generator was previously observed delet
 ## External provider limits
 
 No real purchase, live email, new permanent subscription, or sensitive operations request was submitted during browser testing. Printify management credentials and Resend outbound email setup are separate provider issues. Production must be built with **production environment variables**, not by promoting a preview build that may use isolated Lab storage or preview settings. Post-deployment checks should confirm HTTP responses, production media, and existing public domains.
+
+## Production promotion and post-release verification
+
+- PR [#11](https://github.com/top-doggg/topdoggg/pull/11) merged into `trststudios-storefront` at `9cddf0f090adc52157aa1770c6d7af2d418082c6` after all required PR checks passed.
+- Production was **rebuilt from the merged Git SHA** through the authenticated Vercel production deployment API; **not** by re-aliasing a preview with different storage credentials.
+- Vercel project `prj_aBlXRunfVCyeMv5X9rNGVDx8O9WN`, immutable release `dpl_4L18MrLKu19WYjc4oYkWqo1XA1tH`, state READY. Both `trststudios.online` and `www.trststudios.online` were checked by alias lookup and point to this same release.
+- On the public production domain, `bun run verify:deployment`: **8/8 PASS**, `bun run verify:integrations`: **19/19 PASS** (including production Blob-backed media, film, subscriber readiness and anonymous management denials).
+- Live-domain Playwright Chrome functional suite: **17/17 PASS**, including actual CTA routing, mobile menu and keyboard skip link, quick-view Front/Back/size/Escape behavior, product outbound link, deep links, mocked newsletter submission, and 340 px overflow probes. The subscriber test intercepts the HTTP request; it does **not** create a real subscriber.
+- GitHub's older `deploy.yml` production CLI step failed after merge because the stored `VERCEL_TOKEN` was rejected by the CLI. The production Vercel API release above succeeded independently. A follow-up pipeline correction disables CLI production execution unless explicitly enabled by `VERCEL_CLI_DEPLOY_ENABLED=true` after the repository token is rotated; it retains build validation. The Vercel deployment API remains the release path until the CLI credential is repaired.
+- No customer data migration, real customer checkout, account-side provider credential read, or real outbound email was attempted. Resend delivery remains deferred per prior rollout.

@@ -10,6 +10,8 @@ on:
       - "scripts/check-react-interactions*"
       - "tests/browser/**"
       - "playwright.config.mjs"
+      - "playwright.production.config.mjs"
+      - ".github/workflows/deploy.yml"
       - "package.json"
       - "bun.lock"
       - ".github/workflows/impeccable-review.yml"
