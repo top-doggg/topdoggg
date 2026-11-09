@@ -27,7 +27,9 @@ export function createOperationsToken(email) {
 export function verifyOperationsToken(token) {
   const key = secret();
   if (!key || !token || !String(token).includes(".")) return null;
-  const [payload, received] = String(token).split(".");
+  const parts = String(token).split(".");
+  if (parts.length !== 2) return null;
+  const [payload, received] = parts;
   const expected = Buffer.from(signature(payload, key));
   const actual = Buffer.from(received || "");
   if (expected.length !== actual.length || !timingSafeEqual(expected, actual)) return null;

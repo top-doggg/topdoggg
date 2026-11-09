@@ -3,7 +3,7 @@
 // Source: approved Printify mockups pulled live in Storefront modal.
 // Do not invent products, pricing, or availability.
 
-export const catalogCheckedAt = "2026-10-31";
+export const catalogCheckedAt = "2026-11-03";
 
 export const allProducts = [
   {
@@ -27,6 +27,8 @@ export const allProducts = [
 
   {
     id: "capistrano-love",
+    printifyProductId: "30805178",
+    sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"],
     name: "Capistrano Love Tee",
     price: "$31.01",
     badge: "New release",
@@ -47,6 +49,8 @@ export const allProducts = [
   },
   {
     id: "no-bad-days",
+    printifyProductId: "30290414",
+    sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"],
     name: "No Bad Days For A Warrior Tee",
     price: "$29.05",
     badge: "Daily uniform",
@@ -57,6 +61,8 @@ export const allProducts = [
   },
   {
     id: "sin-miedo",
+    printifyProductId: "30190484",
+    sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
     name: "Sin Miedo Tee",
     price: "$29.45",
     badge: "Edition 001",

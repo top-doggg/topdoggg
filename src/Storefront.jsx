@@ -218,7 +218,7 @@ function ProductModal({ product, onClose }) {
         <div className="product-gallery">
           <img src={view === "front" ? product.image : product.backImage} alt={`${product.name}, ${view} view`} loading="lazy" decoding="async" />
           <div className="gallery-controls" aria-label="Product views">
-            <button className={view === "front" ? "active" : ""} type="button" onClick={() => { setView(product.previewView || "front"); trackStorefront("Product view changed", { product: product.id, view: "front" }); }}>Front</button>
+            <button className={view === "front" ? "active" : ""} type="button" onClick={() => { setView("front"); trackStorefront("Product view changed", { product: product.id, view: "front" }); }}>Front</button>
             <button className={view === "back" ? "active" : ""} type="button" onClick={() => { setView("back"); trackStorefront("Product view changed", { product: product.id, view: "back" }); }}>Back</button>
           </div>
         </div>

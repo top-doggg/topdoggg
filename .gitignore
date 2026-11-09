@@ -20,3 +20,19 @@ top-dog-ai/
 __pycache__/
 *.pyc
 *.pyo
+
+# Impeccable local diagnostics and runtime state
+.impeccable/review/
+.impeccable/live/server.json
+.impeccable/live/roots.json
+.impeccable/live/inject-journal.json
+.impeccable/live/sessions/
+.impeccable/live/previews/
+.impeccable/live/annotations/
+.impeccable/live/cache/
+.impeccable/live/*.png
+.impeccable/live/*.jsonl
+
+# Playwright generated browser artifacts
+test-results/
+playwright-report/

@@ -1,0 +1,100 @@
+name: Impeccable design review and React interaction safety
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "index.html"
+      - "DESIGN.md"
+      - ".impeccable/**"
+      - "scripts/check-react-interactions*"
+      - "tests/browser/**"
+      - "playwright.config.mjs"
+      - "package.json"
+      - "bun.lock"
+      - ".github/workflows/impeccable-review.yml"
+  workflow_dispatch:
+
+jobs:
+  design-review:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Scan source (advisory)
+        shell: bash
+        run: |
+          set +e
+          npx --yes impeccable@4.8.1 detect --json src > impeccable-findings.json
+          result=$?
+          echo "Impeccable exit code: $result (0=clear; 2=findings; 1=scan error)"
+          if [ "$result" -eq 1 ]; then
+            echo "::warning::Impeccable source scan could not complete"
+          elif [ "$result" -eq 2 ]; then
+            echo "::notice::Impeccable reported design findings for review"
+          fi
+          exit 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: impeccable-source-findings
+          path: impeccable-findings.json
+          if-no-files-found: ignore
+
+  interaction-contract:
+    name: React interaction contract (blocking)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.14"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install exact dependency lockfile
+        run: bun install --frozen-lockfile
+      - name: Test regression detector
+        run: node --test scripts/check-react-interactions.test.mjs
+      - name: Verify React source against latest trusted baseline
+        # Checker resolves the verified November 3 release if it is newer than
+        # the PR target; otherwise compares directly against the PR base.
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/check-react-interactions.mjs --base "$BASE_REF"
+
+  browser-functional:
+    name: React browser functional regression (blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.14"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
+      - name: Install Chromium for browser tests
+        run: bunx playwright install --with-deps chromium
+      - name: Test routes, React events, mobile layout and mocked forms
+        run: bun run test:browser
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-failure-evidence
+          path: test-results/
+          if-no-files-found: ignore

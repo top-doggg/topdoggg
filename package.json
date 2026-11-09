@@ -11,7 +11,12 @@
     "build": "node scripts/validate-discovery-facts.mjs && vite build && node scripts/generate-route-html.mjs && node scripts/generate-discovery-assets.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "verify:deployment": "node scripts/verify-deployment.mjs",
-    "validate:discovery": "node scripts/validate-discovery-facts.mjs"
+    "validate:discovery": "node scripts/validate-discovery-facts.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "verify:integrations": "node scripts/verify-integrations.mjs",
+    "verify:interactions": "node scripts/check-react-interactions.mjs --base origin/trststudios-storefront",
+    "test:interaction-contract": "node --test scripts/check-react-interactions.test.mjs",
+    "test:browser": "playwright test"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
@@ -24,5 +29,9 @@
     "react-dom": "latest",
     "vite": "latest"
   },
-  "packageManager": "bun@1.3.14"
+  "packageManager": "bun@1.3.14",
+  "devDependencies": {
+    "@babel/parser": "7.28.5",
+    "@playwright/test": "1.64.1"
+  }
 }
