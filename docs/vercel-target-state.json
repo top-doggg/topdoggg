@@ -1,6 +1,7 @@
 {
-  "schemaVersion": 1,
-  "researchedAt": "2026-09-20",
+  "schemaVersion": 2,
+  "researchedAt": "2026-10-27",
+  "classification": "repository configuration snapshot and proposed target state; not a live database",
   "project": {
     "teamId": "team_3ucEA2CqYmlQcdwNrEDXTSSn",
     "projectId": "prj_Xw4luLyt6S4aETmvQ1JhZHzlhIUH",
@@ -10,25 +11,83 @@
     "productionDomains": [
       "trststudios.online",
       "www.trststudios.online"
-    ]
+    ],
+    "framework": "React + Vite",
+    "packageManager": "Bun"
   },
   "observed": {
+    "checkedAt": "2026-10-27",
     "production": {
-      "deploymentId": "dpl_Bg18xj5YNJMpGuGmzVPf5CXhLME8",
-      "commit": "c42b4264ceda03db3bbaef1c59fd4d7d68d85d6a",
-      "state": "READY"
-    },
-    "phase2Preview": {
-      "deploymentId": "dpl_HSGcHUqBFQWRPNiMyLZA4TRC3s9N",
-      "commit": "615aa0a04bfbb77a2063f55547736b0506398dd4",
+      "deploymentId": "dpl_F2dU9nAwLhDQxAGTnB4eptdaVGyQ",
+      "commit": "c3d1d2826daa7c0c69479fd3a0d90d1495a1d258",
       "state": "READY",
-      "protected": true
+      "sourceBranch": "trststudios-storefront"
     },
-    "previewFetchIssue": "Vercel Authentication redirects stateless automated requests to SSO before application routing."
+    "buildAndRouting": {
+      "rootComponent": "src/HomeCover.jsx",
+      "routeSelector": "src/app/routes.js",
+      "entry": "src/main.jsx",
+      "routeHtmlGenerator": "scripts/generate-route-html.mjs",
+      "discoveryGenerator": "scripts/generate-discovery-assets.mjs"
+    },
+    "serverlessFunctions": {
+      "countFromRepository": 12,
+      "hobbyLimit": 12,
+      "helperFilesExcluded": true,
+      "requiresNoNewRoute": true
+    },
+    "envPresence": {
+      "PRINTIFY_API_TOKEN": [
+        "production",
+        "preview"
+      ],
+      "PRINTIFY_ADMIN_SECRET": [
+        "production",
+        "preview"
+      ],
+      "VITE_PRINTIFY_STORE_URL": [
+        "production",
+        "preview"
+      ],
+      "CRON_SECRET": [
+        "preview"
+      ]
+    },
+    "environmentDisclosure": "Presence and target only; credentials not read or stored in repository.",
+    "commerce": {
+      "publicPopUpStore": "https://delacosta.printify.me",
+      "apiShopObservation": {
+        "checkedAt": "2026-10-15",
+        "id": 28340085,
+        "title": "My new store",
+        "salesChannel": "disconnected"
+      },
+      "mappingVerified": false,
+      "customerCheckoutProvider": "Printify"
+    },
+    "contentRisk": {
+      "catalogStatusSplit": true,
+      "cheosWorldExcludedByDataFilter": true,
+      "additionalCssVisibilityWorkaround": true,
+      "contentGraphProductCanonicalConflict": true
+    },
+    "historicalReference": {
+      "oldResearchedAt": "2026-09-20",
+      "previousProductionDeployment": "dpl_Bg18xj5YNJMpGuGmzVPf5CXhLME8",
+      "phase2PreviewDeployment": "dpl_HSGcHUqBFQWRPNiMyLZA4TRC3s9N"
+    },
+    "previewProtection": "Vercel Authentication enabled for non-custom deployment URLs; automation test access must remain secured"
   },
   "target": {
+    "experienceArchitecture": "Living Archive / Edition House",
+    "sourceOfTruthDocuments": [
+      "docs/trst-experience-audit-and-blueprint-2026-10-27.md",
+      "docs/trst-superdesign-creative-brief-v2.md",
+      "docs/data-architecture.md"
+    ],
+    "designState": "proposed: Superdesign CLI launched but authentication not completed; no design canvas drafted",
+    "designApproval": "human approval before source implementation and production deployment",
     "deploymentProtection": {
-      "scope": "standard",
       "keepEnabled": true,
       "preferredAutomationAccess": [
         "trusted-sources-oidc",
@@ -36,42 +95,53 @@
       ],
       "humanAccess": "shareable-links"
     },
-    "requiredProductionEnv": [
-      "CRON_SECRET"
+    "serverlessFunctionLimit": 12,
+    "productReleaseGate": "Require actual DelaCosta shop mapping, published SKU/variant data, real checkout URL, truthful prices/availability, approved front/back artwork.",
+    "mandatoryPageRoutes": [
+      "/",
+      "/work",
+      "/shop",
+      "/open-thread",
+      "/journal",
+      "/about",
+      "/partners",
+      "/fulfillment-policy"
     ],
-    "systemEnvWhenConfigured": [
-      "VERCEL_AUTOMATION_BYPASS_SECRET"
+    "proposedPublicationModel": [
+      "draft",
+      "ready-for-review",
+      "preview",
+      "published",
+      "archived"
     ],
-    "promotionMode": "manual-after-preview-validation",
-    "indexNow": {
-      "cronPath": "/api/indexnow-sync",
-      "keyFile": "/9db50a3983c44815e0a030a0c2def0da.txt",
-      "requiresProduction": true
+    "targetMetrics": {
+      "LCP_p75_ms": 2500,
+      "INP_p75_ms": 200,
+      "CLS_p75": 0.1,
+      "measurement": "targets only, not observed scores"
     },
-    "runtimeDependencies": {
-      "supabase": false,
-      "huggingFace": false,
-      "hubspot": false,
-      "semrush": false
-    }
+    "accessibilityTarget": "WCAG 2.2 AA",
+    "costs": "No paid dependencies or Vercel plan upgrades without a measured need."
   },
   "verificationRoutes": [
     "/",
+    "/shop",
+    "/shop/capistrano-love",
+    "/work",
     "/journal",
-    "/journal/coming-back-home",
-    "/journal/old-town-boogie",
-    "/journal/the-realest-feeling",
-    "/rss.xml",
+    "/open-thread",
+    "/partners",
+    "/fulfillment-policy",
     "/sitemap.xml",
-    "/9db50a3983c44815e0a030a0c2def0da.txt",
+    "/rss.xml",
     "/api/indexnow-sync"
   ],
   "pendingConfiguration": [
-    "Create or confirm automation access: Trusted Sources/OIDC where supported, otherwise Protection Bypass for Automation.",
-    "Create or confirm CRON_SECRET in Production.",
-    "Redeploy after protection-bypass changes.",
-    "Run authenticated preview verification.",
-    "Promote Phase 2 only after verification passes.",
-    "Verify production cron and IndexNow after promotion."
+    "Verify Printify API shop belongs to existing DelaCosta Pop-Up store before publishing product or generating checkout CTA.",
+    "Confirm or add CRON_SECRET to Production and test the IndexNow cron in an authorized request context.",
+    "Eliminate retired-product visibility CSS workaround and unify catalog publication state.",
+    "Reconcile sitemap product paths, ProductDetail canonicals, and contentGraph product links.",
+    "Authenticate Superdesign and create a source-faithful existing-home reproduction before generating a redesign.",
+    "Keep preview protection and 12-function quota; QA all devices and routes before production promotion."
   ]
 }
